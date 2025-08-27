@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
+using Shipstone.AspNetCore.Http;
 using Shipstone.Extensions.Identity;
 using Shipstone.Extensions.Security;
 using Shipstone.Utilities.Security;
@@ -54,6 +55,7 @@ builder.Services
     .AddOpenBookControllers();
 
 builder.Services
+    .AddArgumentExceptionHandling()
     .AddIdentityExtensions()
     .AddOpenBookCore()
     .AddOpenBookInfrastructureAuthentication(authenticationSection.Bind)
@@ -82,6 +84,7 @@ builder.Services
 
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();
+app.UseArgumentExceptionHandling();
 app.MapControllers();
 await app.RunAsync();
 return 0;
