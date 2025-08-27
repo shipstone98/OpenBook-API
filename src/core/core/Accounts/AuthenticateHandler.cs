@@ -35,31 +35,17 @@ internal sealed class AuthenticateHandler : IAuthenticateHandler
         this._repository = repository;
     }
 
-    async Task IAuthenticateHandler.HandleAsync(
+    private async Task HandleAsync(
         String emailAddress,
         String password,
         CancellationToken cancellationToken
     )
     {
-        ArgumentNullException.ThrowIfNull(emailAddress);
-        ArgumentNullException.ThrowIfNull(password);
-        IUserRepository userRepository = this._repository.Users;
-
-        UserEntity? user =
-            await userRepository.RetrieveAsync(
+        UserEntity user =
+            await this._repository.RetrieveActiveUserAsync(
                 emailAddress,
                 cancellationToken
             );
-
-        if (user is null)
-        {
-            throw new NotFoundException("A user whose email address matches the provided email address could not be found.");
-        }
-
-        if (!user.IsActive)
-        {
-            throw new UserNotActiveException("The user whose email address matches the provided email address is not active.");
-        }
 
         String? passwordHash = user.PasswordHash;
 
@@ -97,7 +83,7 @@ internal sealed class AuthenticateHandler : IAuthenticateHandler
         );
 
         user.Updated = now;
-        await userRepository.UpdateAsync(user, cancellationToken);
+        await this._repository.Users.UpdateAsync(user, cancellationToken);
         await this._repository.SaveAsync(cancellationToken);
         TimeSpan difference = user.OtpExpires!.Value.Subtract(now);
 
@@ -106,5 +92,16 @@ internal sealed class AuthenticateHandler : IAuthenticateHandler
             (int) difference.TotalMinutes,
             cancellationToken
         );
+    }
+
+    Task IAuthenticateHandler.HandleAsync(
+        String emailAddress,
+        String password,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(emailAddress);
+        ArgumentNullException.ThrowIfNull(password);
+        return this.HandleAsync(emailAddress, password, cancellationToken);
     }
 }

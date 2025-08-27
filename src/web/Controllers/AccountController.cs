@@ -25,7 +25,7 @@ internal sealed class AccountController(ILogger<AccountController> logger)
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status410Gone)]
-    public async Task<IActionResult> AuthenticateAsync(
+    public Task<IActionResult> AuthenticateAsync(
         [FromServices] IAuthenticateHandler handler,
         [FromBody] AuthenticateRequest request,
         CancellationToken cancellationToken
@@ -34,6 +34,19 @@ internal sealed class AccountController(ILogger<AccountController> logger)
         ArgumentNullException.ThrowIfNull(handler);
         ArgumentNullException.ThrowIfNull(request);
 
+        return this.AuthenticateAsyncCore(
+            handler,
+            request,
+            cancellationToken
+        );
+    }
+
+    private async Task<IActionResult> AuthenticateAsyncCore(
+        IAuthenticateHandler handler,
+        AuthenticateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
         try
         {
             await handler.HandleAsync(

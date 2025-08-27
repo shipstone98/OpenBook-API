@@ -26,13 +26,11 @@ internal sealed class UserRepository : IUserRepository
         this._normalization = normalization;
     }
 
-    async Task<UserEntity?> IUserRepository.RetrieveAsync(
+    private async Task<UserEntity?> RetrieveAsync(
         String emailAddress,
         CancellationToken cancellationToken
     )
     {
-        ArgumentNullException.ThrowIfNull(emailAddress);
-
         String emailAddressNormalized =
             this._normalization.Normalize(emailAddress);
 
@@ -43,6 +41,15 @@ internal sealed class UserRepository : IUserRepository
                 .ToArrayAsync(cancellationToken);
 
         return users.FirstOrDefault(u => emailAddress.Equals(u.EmailAddress));
+    }
+
+    Task<UserEntity?> IUserRepository.RetrieveAsync(
+        String emailAddress,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(emailAddress);
+        return this.RetrieveAsync(emailAddress, cancellationToken);
     }
 
     Task IUserRepository.UpdateAsync(
