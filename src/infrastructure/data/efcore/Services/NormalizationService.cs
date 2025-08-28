@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
+namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Services;
 
 internal sealed class NormalizationService : INormalizationService
 {

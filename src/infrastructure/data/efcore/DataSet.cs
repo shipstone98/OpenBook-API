@@ -12,13 +12,18 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 
 internal sealed class DataSet<TEntity> : IDataSet<TEntity> where TEntity : class
 {
+    private readonly IQueryable<TEntity> _query;
     private readonly DbSet<TEntity> _set;
 
-    Type IQueryable.ElementType => (this._set as IQueryable).ElementType;
-    Expression IQueryable.Expression => (this._set as IQueryable).Expression;
-    IQueryProvider IQueryable.Provider => (this._set as IQueryable).Provider;
+    Type IQueryable.ElementType => this._query.ElementType;
+    Expression IQueryable.Expression => this._query.Expression;
+    IQueryProvider IQueryable.Provider => this._query.Provider;
 
-    internal DataSet(DbSet<TEntity> dbSet) => this._set = dbSet;
+    internal DataSet(DbSet<TEntity> dbSet)
+    {
+        this._query = dbSet.AsNoTracking();
+        this._set = dbSet;
+    }
 
     Task IDataSet<TEntity>.SetStateAsync(
         TEntity entity,
@@ -49,9 +54,8 @@ internal sealed class DataSet<TEntity> : IDataSet<TEntity> where TEntity : class
         return Task.CompletedTask;
     }
 
-    IEnumerator IEnumerable.GetEnumerator() =>
-        (this._set as IEnumerable).GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => this._query.GetEnumerator();
 
     IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator() =>
-        (this._set as IEnumerable<TEntity>).GetEnumerator();
+        this._query.GetEnumerator();
 }

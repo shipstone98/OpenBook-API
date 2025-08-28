@@ -2,6 +2,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Repositories;
+using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Services;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
