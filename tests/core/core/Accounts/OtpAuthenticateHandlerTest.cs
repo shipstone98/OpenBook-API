@@ -114,8 +114,11 @@ public sealed class OtpAuthenticateHandlerTest
                     OtpExpires = DateTime.MinValue
                 };
 
+            users._updateAction = _ => { };
             return users;
         };
+
+        this._repository._saveAction = () => { };
 
         // Act and assert
         await Assert.ThrowsAsync<ForbiddenException>(() =>
@@ -143,8 +146,11 @@ public sealed class OtpAuthenticateHandlerTest
                     Otp = OTP
                 };
 
+            users._updateAction = _ => { };
             return users;
         };
+
+        this._repository._saveAction = () => { };
 
         // Act and assert
         await Assert.ThrowsAsync<ForbiddenException>(() =>
@@ -228,8 +234,11 @@ public sealed class OtpAuthenticateHandlerTest
                     OtpExpires = DateTime.MaxValue
                 };
 
+            users._updateAction = _ => { };
             return users;
         };
+
+        this._repository._saveAction = () => { };
 
         this._repository._userRolesFunc = () =>
         {
@@ -253,8 +262,6 @@ public sealed class OtpAuthenticateHandlerTest
             userRefreshTokens._createAction = _ => { };
             return userRefreshTokens;
         };
-
-        this._repository._saveAction = () => { };
 #endregion
 
         // Act

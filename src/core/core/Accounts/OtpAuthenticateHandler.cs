@@ -48,9 +48,15 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
             throw new ForbiddenException("The provided OTP does not match the OTP for the user whose email address matches the provided email address.");
         }
 
+        Nullable<DateTime> otpExpires = userOtpExpires;
+        user.Otp = null;
+        user.OtpExpires = null;
+        await this._repository.Users.UpdateAsync(user, cancellationToken);
+        await this._repository.SaveAsync(cancellationToken);
+
         if (
-            !userOtpExpires.HasValue
-            || DateTime.Compare(now, userOtpExpires.Value) > 0
+            !otpExpires.HasValue
+            || DateTime.Compare(now, otpExpires.Value) > 0
         )
         {
             throw new ForbiddenException("The provided OTP has expired.");
