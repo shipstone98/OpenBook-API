@@ -42,10 +42,18 @@ public sealed class CoreServiceCollectionExtensionsTest
         // Assert
         Assert.True(Object.ReferenceEquals(services, result));
 
-        ServiceDescriptor descriptor =
-            collection.First(s =>
-                s.ServiceType.Equals(typeof (IAuthenticateHandler)));
+        IEnumerable<Type> types = new Type[]
+        {
+            typeof (IAuthenticateHandler),
+            typeof (IOtpAuthenticateHandler)
+        };
 
-        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        foreach (Type type in types)
+        {
+            ServiceDescriptor descriptor =
+                collection.First(s => s.ServiceType.Equals(type));
+
+            Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        }
     }
 }

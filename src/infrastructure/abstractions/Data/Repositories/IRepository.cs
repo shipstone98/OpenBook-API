@@ -10,6 +10,24 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 public interface IRepository
 {
     /// <summary>
+    /// Gets the role repository.
+    /// </summary>
+    /// <value>The role repository.</value>
+    IRoleRepository Roles { get; }
+
+    /// <summary>
+    /// Gets the user refresh token repository.
+    /// </summary>
+    /// <value>The user refresh token repository.</value>
+    IUserRefreshTokenRepository UserRefreshTokens { get; }
+
+    /// <summary>
+    /// Gets the user-role association repository.
+    /// </summary>
+    /// <value>The user-role association repository.</value>
+    IUserRoleRepository UserRoles { get; }
+
+    /// <summary>
     /// Gets the user repository.
     /// </summary>
     /// <value>The user repository.</value>

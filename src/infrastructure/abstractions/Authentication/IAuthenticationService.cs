@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Shipstone.OpenBook.Api.Core.Accounts;
 
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
@@ -11,6 +14,24 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Authentication;
 /// </summary>
 public interface IAuthenticationService
 {
+    /// <summary>
+    /// Asynchronously authenticates the specified user.
+    /// </summary>
+    /// <param name="user">The user to authenticate.</param>
+    /// <param name="roles">A collection containing the roles assigned to the user.</param>
+    /// <param name="now">The date and time the user was authenticated.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous authenticate operation. The value of <see cref="Task{TResult}.Result" /> contains the <see cref="IAuthenticateResult" />.</returns>
+    /// <exception cref="ArgumentException"><c><paramref name="roles" /></c> contains one or more elements that are <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException"><c><paramref name="user" /></c> is <c>null</c> -or- <c><paramref name="roles" /></c> is <c>null</c>.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task<IAuthenticateResult> AuthenticateAsync(
+        UserEntity user,
+        IEnumerable<String> roles,
+        DateTime now,
+        CancellationToken cancellationToken
+    );
+
     /// <summary>
     /// Asynchronously generates a one-time passcode (OTP) for the specified user.
     /// </summary>

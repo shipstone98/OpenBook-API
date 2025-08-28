@@ -51,5 +51,17 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<UserEntity>
         builder
             .HasIndex(u => u.UserNameNormalized)
             .IsUnique();
+
+        builder
+            .HasMany<UserRefreshTokenEntity>()
+            .WithOne()
+            .HasForeignKey(urt => urt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany<UserRoleEntity>()
+            .WithOne()
+            .HasForeignKey(ur => ur.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

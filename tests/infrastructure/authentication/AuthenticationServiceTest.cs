@@ -4,8 +4,10 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Xunit;
 
+using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
@@ -20,6 +22,7 @@ public sealed class AuthenticationServiceTest
 
     private readonly IAuthenticationService _authentication;
     private readonly MockRandomNumberGenerator _rng;
+    private readonly MockSecurityTokenHandler _tokenHandler;
 
     public AuthenticationServiceTest()
     {
@@ -35,13 +38,103 @@ public sealed class AuthenticationServiceTest
 
         MockRandomNumberGenerator rng = new();
         services.AddSingleton<RandomNumberGenerator>(rng);
+        MockSecurityTokenHandler tokenHandler = new();
+        services.AddSingleton<SecurityTokenHandler>(tokenHandler);
         IServiceProvider provider = new MockServiceProvider(services);
 
         this._authentication =
             provider.GetRequiredService<IAuthenticationService>();
 
         this._rng = rng;
+        this._tokenHandler = tokenHandler;
     }
+
+#region AuthenticateAsync method
+#region Invalid arguments
+    [Fact]
+    public async Task TestAuthenticateAsync_Invalid_RolesContainsNull()
+    {
+        // Arrange
+        IEnumerable<String> roles = new String[1] { null! };
+
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                this._authentication.AuthenticateAsync(
+                    new UserEntity { },
+                    roles,
+                    DateTime.UtcNow,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("roles", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestAuthenticateAsync_Invalid_RolesNull()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._authentication.AuthenticateAsync(
+                    new UserEntity { },
+                    null!,
+                    DateTime.UtcNow,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("roles", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestAuthenticateAsync_Invalid_UserNull()
+    {
+        // Arrange
+        IEnumerable<String> roles = Array.Empty<String>();
+
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._authentication.AuthenticateAsync(
+                    null!,
+                    roles,
+                    DateTime.UtcNow,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("user", ex.ParamName);
+    }
+#endregion
+
+    [Fact]
+    public async Task TestAuthenticateAsync_Valid()
+    {
+        // Arrange
+        const String TOKEN = "My token";
+        IEnumerable<String> roles = Array.Empty<String>();
+        DateTime now = DateTime.UtcNow;
+        this._tokenHandler._createTokenFunc = _ => new MockSecurityToken();
+        this._tokenHandler._writeTokenFunc = _ => TOKEN;
+
+        // Act
+        IAuthenticateResult result =
+            await this._authentication.AuthenticateAsync(
+                new UserEntity { },
+                roles,
+                now,
+                CancellationToken.None
+            );
+
+        // Assert
+        Assert.Equal(TOKEN, result.AccessToken);
+        Assert.Equal(TOKEN, result.RefreshToken);
+        Assert.False(DateTime.Equals(now, result.RefreshTokenExpires));
+        Assert.Equal(DateTimeKind.Utc, result.RefreshTokenExpires.Kind);
+    }
+#endregion
 
     [Fact]
     public async Task TestGenerateOtpAsync_Invalid()

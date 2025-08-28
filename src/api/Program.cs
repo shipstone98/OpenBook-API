@@ -1,4 +1,5 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -80,7 +81,8 @@ builder.Services
     {
         RandomNumberGenerator rng = RandomNumberGenerator.Create();
         return new ConcurrentRandomNumberGenerator(rng);
-    });
+    })
+    .AddSingleton<SecurityTokenHandler, JwtSecurityTokenHandler>();
 
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();

@@ -14,7 +14,7 @@ using Shipstone.OpenBook.Api.Infrastructure.Entities;
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Mocks;
 using Shipstone.Test.Mocks;
 
-namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest;
+namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Repositories;
 
 public sealed class UserRepositoryTest
 {
@@ -59,24 +59,22 @@ public sealed class UserRepositoryTest
     {
         // Arrange
         const String EMAIL_ADDRESS = "john.doe@contoso.com";
-
-        IEnumerable<UserEntity> users = new List<UserEntity>
-        {
-            new UserEntity
-            {
-                EmailAddress = EMAIL_ADDRESS
-            }
-        };
-
         this._hmac._hashCoreAction = (_, _, _) => { };
         this._hmac._hashFinalFunc = () => Array.Empty<byte>();
         this._hmac._initializeAction = () => { };
 
         this._dataSource._usersFunc = () =>
         {
+            IEnumerable<UserEntity> users = new List<UserEntity>
+            {
+                new UserEntity
+                {
+                    EmailAddress = EMAIL_ADDRESS
+                }
+            };
+
             IQueryable<UserEntity> query = users.AsQueryable();
-            MockDataSet<UserEntity> userDataSet = new(query);
-            return userDataSet;
+            return new MockDataSet<UserEntity>(query);
         };
 
         // Act
@@ -106,8 +104,7 @@ public sealed class UserRepositoryTest
                     .Empty<UserEntity>()
                     .AsQueryable();
 
-            MockDataSet<UserEntity> userDataSet = new(query);
-            return userDataSet;
+            return new MockDataSet<UserEntity>(query);
         };
 
         // Act
@@ -147,9 +144,9 @@ public sealed class UserRepositoryTest
                     .Empty<UserEntity>()
                     .AsQueryable();
 
-            MockDataSet<UserEntity> userDataSet = new(query);
-            userDataSet._setStateAction = (_, _) => { };
-            return userDataSet;
+            MockDataSet<UserEntity> dataSet = new(query);
+            dataSet._setStateAction = (_, _) => { };
+            return dataSet;
         };
 
         // Act

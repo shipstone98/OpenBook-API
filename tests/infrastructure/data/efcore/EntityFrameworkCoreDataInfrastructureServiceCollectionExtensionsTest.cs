@@ -42,8 +42,14 @@ public sealed class EntityFrameworkCoreDataInfrastructureServiceCollectionExtens
         // Assert
         Assert.True(Object.ReferenceEquals(services, result));
 
-        IEnumerable<Type> serviceTypes =
-            new Type[] { typeof (IRepository), typeof (IUserRepository) };
+        IEnumerable<Type> serviceTypes = new Type[]
+        {
+            typeof (IRepository),
+            typeof (IRoleRepository),
+            typeof (IUserRefreshTokenRepository),
+            typeof (IUserRoleRepository),
+            typeof (IUserRepository)
+        };
 
         foreach (Type serviceType in serviceTypes)
         {

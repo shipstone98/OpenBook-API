@@ -12,6 +12,24 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 public interface IDataSource
 {
     /// <summary>
+    /// Gets the role data set.
+    /// </summary>
+    /// <value>An <see cref="IDataSet{TEntity}" /> containing the roles.</value>
+    IDataSet<RoleEntity> Roles { get; }
+
+    /// <summary>
+    /// Gets the user refresh token data set.
+    /// </summary>
+    /// <value>An <see cref="IDataSet{TEntity}" /> containing the user refresh tokens.</value>
+    IDataSet<UserRefreshTokenEntity> UserRefreshTokens { get; }
+
+    /// <summary>
+    /// Gets the user-role association data set.
+    /// </summary>
+    /// <value>An <see cref="IDataSet{TEntity}" /> containing the user-role associations.</value>
+    IDataSet<UserRoleEntity> UserRoles { get; }
+
+    /// <summary>
     /// Gets the user data set.
     /// </summary>
     /// <value>An <see cref="IDataSet{TEntity}" /> containing the users.</value>

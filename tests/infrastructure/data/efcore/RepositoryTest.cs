@@ -37,13 +37,31 @@ public sealed class RepositoryTest
     }
 
     [Fact]
+    public void TestRoles_Get()
+    {
+        // Act and assert
+        Assert.NotNull(this._repository.Roles);
+    }
+
+    [Fact]
+    public void TestUserRefreshTokens_Get()
+    {
+        // Act and assert
+        Assert.NotNull(this._repository.UserRefreshTokens);
+    }
+
+    [Fact]
+    public void TestUserRoles_Get()
+    {
+        // Act and assert
+        Assert.NotNull(this._repository.UserRoles);
+    }
+
+    [Fact]
     public void TestUsers_Get()
     {
-        // Act
-        IUserRepository users = this._repository.Users;
-
-        // Assert
-        Assert.NotNull(users);
+        // Act and assert
+        Assert.NotNull(this._repository.Users);
     }
 
     [Fact]

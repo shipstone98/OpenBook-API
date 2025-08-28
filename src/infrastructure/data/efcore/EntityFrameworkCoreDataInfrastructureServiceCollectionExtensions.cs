@@ -24,6 +24,9 @@ public static class EntityFrameworkCoreDataInfrastructureServiceCollectionExtens
         return services
             .AddSingleton<INormalizationService, NormalizationService>()
             .AddScoped<IRepository, Repository>()
+            .AddScoped<IRoleRepository, RoleRepository>()
+            .AddScoped<IUserRefreshTokenRepository, UserRefreshTokenRepository>()
+            .AddScoped<IUserRoleRepository, UserRoleRepository>()
             .AddScoped<IUserRepository, UserRepository>();
     }
 }

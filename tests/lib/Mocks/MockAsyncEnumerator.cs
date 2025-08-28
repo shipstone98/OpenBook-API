@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Mocks;
+namespace Shipstone.Test.Mocks;
 
-internal sealed class MockAsyncEnumerator<T> : IAsyncEnumerator<T>
+public sealed class MockAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
     private readonly IEnumerator<T> _enumerator;
 
     T IAsyncEnumerator<T>.Current => this._enumerator.Current;
 
-    internal MockAsyncEnumerator(IEnumerator<T> enumerator) =>
+    public MockAsyncEnumerator(IEnumerator<T> enumerator) =>
         this._enumerator = enumerator;
 
     ValueTask IAsyncDisposable.DisposeAsync()

@@ -19,6 +19,9 @@ public static class CoreServiceCollectionExtensions
     public static IServiceCollection AddOpenBookCore(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        return services.AddScoped<IAuthenticateHandler, AuthenticateHandler>();
+
+        return services
+            .AddScoped<IAuthenticateHandler, AuthenticateHandler>()
+            .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>();
     }
 }
