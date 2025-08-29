@@ -13,7 +13,8 @@ internal sealed class OpenBookControllerFeatureProvider
     private readonly IReadOnlySet<Type> _types;
 
     internal OpenBookControllerFeatureProvider() =>
-        this._types = new HashSet<Type> { typeof(AccountController) };
+        this._types = new HashSet<Type>
+            { typeof(AccountController), typeof (UserController) };
 
     protected sealed override bool IsController(TypeInfo typeInfo)
     {

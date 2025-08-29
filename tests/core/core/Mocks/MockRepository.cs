@@ -8,12 +8,13 @@ namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 
 internal sealed class MockRepository : IRepository
 {
+    internal Func<IRoleRepository> _rolesFunc;
     internal Action _saveAction;
     internal Func<IUserRefreshTokenRepository> _userRefreshTokensFunc;
     internal Func<IUserRoleRepository> _userRolesFunc;
     internal Func<IUserRepository> _usersFunc;
 
-    IRoleRepository IRepository.Roles => throw new NotImplementedException();
+    IRoleRepository IRepository.Roles => this._rolesFunc();
 
     IUserRefreshTokenRepository IRepository.UserRefreshTokens =>
         this._userRefreshTokensFunc();
@@ -23,6 +24,7 @@ internal sealed class MockRepository : IRepository
 
     public MockRepository()
     {
+        this._rolesFunc = () => throw new NotImplementedException();
         this._saveAction = () => throw new NotImplementedException();
 
         this._userRefreshTokensFunc = () =>

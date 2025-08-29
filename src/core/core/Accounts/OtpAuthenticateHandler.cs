@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Shipstone.Utilities.Linq;
-
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
@@ -64,34 +62,19 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
 
         Guid userId = user.Id;
 
-        IEnumerable<UserRoleEntity> userRoles =
-            await this._repository.UserRoles.ListForUserAsync(
+        IAsyncEnumerable<String> roles =
+            await this._repository.RetrieveRolesAsync(
                 userId,
                 cancellationToken
             );
 
-        IEnumerable<String> roles =
-            userRoles
-                .SelectAsync(
-                    async (ur, ct) =>
-                    {
-                        RoleEntity? role =
-                            await this._repository.Roles.RetrieveAsync(
-                                ur.RoleId,
-                                ct
-                            );
-
-                        return role?.Name;
-                    },
-                    cancellationToken
-                )
-                .WithoutNullAsync(cancellationToken)
-                .ToBlockingEnumerable(cancellationToken);
+        IEnumerable<String> roleCollection =
+            roles.ToBlockingEnumerable(cancellationToken);
 
         IAuthenticateResult result =
             await this._authentication.AuthenticateAsync(
                 user,
-                roles,
+                roleCollection,
                 now,
                 cancellationToken
             );

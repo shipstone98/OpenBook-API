@@ -53,6 +53,25 @@ internal sealed class UserRepository : IUserRepository
         return this.RetrieveAsync(emailAddress, cancellationToken);
     }
 
+    Task<UserEntity?> IUserRepository.RetrieveAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        if (Guid.Equals(id, Guid.Empty))
+        {
+            throw new ArgumentException(
+                $"{nameof (id)} is equal to Guid.Empty.",
+                nameof (id)
+            );
+        }
+
+        return this._dataSource.Users.FirstOrDefaultAsync(
+            u => Guid.Equals(id, u.Id),
+            cancellationToken
+        );
+    }
+
     Task IUserRepository.UpdateAsync(
         UserEntity user,
         CancellationToken cancellationToken

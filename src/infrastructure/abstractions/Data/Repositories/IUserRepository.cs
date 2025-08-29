@@ -25,6 +25,19 @@ public interface IUserRepository
     );
 
     /// <summary>
+    /// Asynchronously retrieves a user with the specified ID.
+    /// </summary>
+    /// <param name="id">A <see cref="Guid" /> containing the ID of the user to retrieve.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous retrieve operation. The value of <see cref="Task{TResult}.Result" /> contains the retrieved user, if found; otherwise, <c>null</c>.</returns>
+    /// <exception cref="ArgumentException"><c><paramref name="id" /></c> is equal to <see cref="Guid.Empty" />.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task<UserEntity?> RetrieveAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    );
+
+    /// <summary>
     /// Asynchronously updates a user with the specified properties.
     /// </summary>
     /// <param name="user">The user to update.</param>

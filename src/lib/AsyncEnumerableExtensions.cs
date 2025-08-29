@@ -8,6 +8,37 @@ namespace Shipstone.Utilities.Linq;
 
 public static class AsyncEnumerableExtensions
 {
+    public static Task<SortedSet<TSource>> ToSortedSetAsync<TSource>(
+        this IAsyncEnumerable<TSource> source,
+        IComparer<TSource>? comparer = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return AsyncEnumerableExtensions.ToSortedSetAsyncCore(
+            source,
+            comparer,
+            cancellationToken
+        );
+    }
+
+    private static async Task<SortedSet<TSource>> ToSortedSetAsyncCore<TSource>(
+        IAsyncEnumerable<TSource> source,
+        IComparer<TSource>? comparer,
+        CancellationToken cancellationToken
+    )
+    {
+        SortedSet<TSource> sortedSet = new(comparer);
+
+        await foreach (TSource item in source.WithCancellation(cancellationToken))
+        {
+            sortedSet.Add(item);
+        }
+
+        return sortedSet;
+    }
+
     public static IAsyncEnumerable<TSource> WithoutNullAsync<TSource>(
         this IAsyncEnumerable<TSource?> source,
         CancellationToken cancellationToken = default

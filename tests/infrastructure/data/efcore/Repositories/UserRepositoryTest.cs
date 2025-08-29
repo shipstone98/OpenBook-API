@@ -42,8 +42,79 @@ public sealed class UserRepositoryTest
     }
 
 #region RetrieveAsync method
+#region Guid parameter
     [Fact]
-    public async Task TestRetrieveAsync_Invalid()
+    public async Task TestRetrieveAsync_Guid_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                this._repository.RetrieveAsync(
+                    Guid.Empty,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("id", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestRetrieveAsync_Guid_Valid_Contains()
+    {
+        // Arrange
+        Guid id = Guid.NewGuid();
+
+        this._dataSource._usersFunc = () =>
+        {
+            IEnumerable<UserEntity> users = new List<UserEntity>
+            {
+                new UserEntity
+                {
+                    Id = id
+                }
+            };
+
+            IQueryable<UserEntity> query = users.AsQueryable();
+            return new MockDataSet<UserEntity>(query);
+        };
+
+        // Act
+        UserEntity? user =
+            await this._repository.RetrieveAsync(id, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(user);
+        Assert.Equal(id, user.Id);
+    }
+
+    [Fact]
+    public async Task TestRetrieveAsync_Guid_Valid_NotContains()
+    {
+        // Arrange
+        Guid id = Guid.NewGuid();
+
+        this._dataSource._usersFunc = () =>
+        {
+            IQueryable<UserEntity> query =
+                Array
+                    .Empty<UserEntity>()
+                    .AsQueryable();
+
+            return new MockDataSet<UserEntity>(query);
+        };
+
+        // Act
+        UserEntity? user =
+            await this._repository.RetrieveAsync(id, CancellationToken.None);
+
+        // Assert
+        Assert.Null(user);
+    }
+#endregion
+
+#region String parameter
+    [Fact]
+    public async Task TestRetrieveAsync_String_Invalid()
     {
         // Act
         ArgumentException ex =
@@ -55,7 +126,7 @@ public sealed class UserRepositoryTest
     }
 
     [Fact]
-    public async Task TestRetrieveAsync_Valid_Contains()
+    public async Task TestRetrieveAsync_String_Valid_Contains()
     {
         // Arrange
         const String EMAIL_ADDRESS = "john.doe@contoso.com";
@@ -90,7 +161,7 @@ public sealed class UserRepositoryTest
     }
 
     [Fact]
-    public async Task TestRetrieveAsync_Valid_NotContains()
+    public async Task TestRetrieveAsync_String_Valid_NotContains()
     {
         // Arrange
         this._hmac._hashCoreAction = (_, _, _) => { };
@@ -117,6 +188,7 @@ public sealed class UserRepositoryTest
         // Assert
         Assert.Null(user);
     }
+#endregion
 #endregion
 
     [Fact]

@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Xunit;
+
+using Shipstone.OpenBook.Api.WebTest.Mocks;
+
+namespace Shipstone.OpenBook.Api.WebTest;
+
+public sealed class ApplicationBuilderExtensionsTest
+{
+    [Fact]
+    public void TestUseOpenBookWebClaims_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            Assert.Throws<ArgumentNullException>(() =>
+                Web.ApplicationBuilderExtensions.UseOpenBookWebClaims(null!));
+
+        // Assert
+        Assert.Equal("app", ex.ParamName);
+    }
+
+    [Fact]
+    public void TestUseOpenBookWebClaims_Valid()
+    {
+        // Arrange
+        ICollection<Func<RequestDelegate, RequestDelegate>> middleware =
+            new List<Func<RequestDelegate, RequestDelegate>>();
+
+        MockApplicationBuilder app = new();
+
+        app._useFunc = m =>
+        {
+            middleware.Add(m);
+            return app;
+        };
+
+        // Act
+        IApplicationBuilder result =
+            Web.ApplicationBuilderExtensions.UseOpenBookWebClaims(app);
+
+        // Assert
+        Assert.True(Object.ReferenceEquals(app, result));
+        Assert.NotEmpty(middleware);
+    }
+}

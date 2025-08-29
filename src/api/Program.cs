@@ -62,6 +62,7 @@ builder.Services
     .AddOpenBookInfrastructureAuthentication(authenticationSection.Bind)
     .AddOpenBookInfrastructureDataEntityFrameworkCore()
     .AddOpenBookInfrastructureDataMySql(connectionString)
+    .AddOpenBookWebClaims()
     .AddSingleton<IEncryptionService, StubEncryptionService>()
     .AddSingleton<IMailService, StubMailService>()
     .AddSingleton<IPasswordHasher<IPasswordService>, PasswordHasher<IPasswordService>>()
@@ -87,6 +88,9 @@ builder.Services
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();
 app.UseArgumentExceptionHandling();
+app.UseAuthentication();
+app.UseOpenBookWebClaims();
+app.UseAuthorization();
 app.MapControllers();
 await app.RunAsync();
 return 0;

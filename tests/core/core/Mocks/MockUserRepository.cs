@@ -9,12 +9,14 @@ namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 
 internal sealed class MockUserRepository : IUserRepository
 {
-    internal Func<String, UserEntity?> _retrieveFunc;
+    internal Func<Guid, UserEntity?> _retrieve_GuidFunc;
+    internal Func<String, UserEntity?> _retrieve_StringFunc;
     internal Action<UserEntity> _updateAction;
 
     public MockUserRepository()
     {
-        this._retrieveFunc = _ => throw new NotImplementedException();
+        this._retrieve_GuidFunc = _ => throw new NotImplementedException();
+        this._retrieve_StringFunc = _ => throw new NotImplementedException();
         this._updateAction = _ => throw new NotImplementedException();
     }
 
@@ -23,7 +25,16 @@ internal sealed class MockUserRepository : IUserRepository
         CancellationToken cancellationToken
     )
     {
-        UserEntity? result = this._retrieveFunc(emailAddress);
+        UserEntity? result = this._retrieve_StringFunc(emailAddress);
+        return Task.FromResult(result);
+    }
+
+    Task<UserEntity?> IUserRepository.RetrieveAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        UserEntity? result = this._retrieve_GuidFunc(id);
         return Task.FromResult(result);
     }
 

@@ -6,6 +6,7 @@ using Xunit;
 
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
+using Shipstone.OpenBook.Api.Core.Users;
 
 using Shipstone.Test.Mocks;
 
@@ -45,7 +46,8 @@ public sealed class CoreServiceCollectionExtensionsTest
         IEnumerable<Type> types = new Type[]
         {
             typeof (IAuthenticateHandler),
-            typeof (IOtpAuthenticateHandler)
+            typeof (IOtpAuthenticateHandler),
+            typeof (IUserRetrieveHandler)
         };
 
         foreach (Type type in types)

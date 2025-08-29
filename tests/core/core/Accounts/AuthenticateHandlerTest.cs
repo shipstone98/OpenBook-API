@@ -94,7 +94,7 @@ public sealed class AuthenticateHandlerTest
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._retrieveFunc = _ => null;
+            users._retrieve_StringFunc = _ => null;
             return users;
         };
 
@@ -117,7 +117,7 @@ public sealed class AuthenticateHandlerTest
         {
             MockUserRepository users = new();
 
-            users._retrieveFunc = _ =>
+            users._retrieve_StringFunc = _ =>
                 new UserEntity
                 {
                     IsActive = true,
@@ -149,7 +149,7 @@ public sealed class AuthenticateHandlerTest
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._retrieveFunc = _ => new();
+            users._retrieve_StringFunc = _ => new();
             return users;
         };
 
@@ -172,7 +172,7 @@ public sealed class AuthenticateHandlerTest
         {
             MockUserRepository users = new();
 
-            users._retrieveFunc = _ =>
+            users._retrieve_StringFunc = _ =>
                 new UserEntity
                 {
                     IsActive = true
@@ -199,7 +199,7 @@ public sealed class AuthenticateHandlerTest
         {
             MockUserRepository users = new();
 
-            users._retrieveFunc = _ =>
+            users._retrieve_StringFunc = _ =>
                 new UserEntity
                 {
                     IsActive = true,
@@ -237,7 +237,7 @@ public sealed class AuthenticateHandlerTest
         {
             MockUserRepository users = new();
 
-            users._retrieveFunc = _ =>
+            users._retrieve_StringFunc = _ =>
                 new UserEntity
                 {
                     IsActive = true,

@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Shipstone.Utilities.Linq;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
@@ -33,5 +36,32 @@ internal static class RepositoryExtensions
         }
 
         return user;
+    }
+
+    internal static async Task<IAsyncEnumerable<String>> RetrieveRolesAsync(
+        this IRepository repository,
+        Guid userId,
+        CancellationToken cancellationToken
+    )
+    {
+
+        IEnumerable<UserRoleEntity> userRoles =
+            await repository.UserRoles.ListForUserAsync(
+                userId,
+                cancellationToken
+            );
+
+        return userRoles
+            .SelectAsync(
+                async (ur, ct) =>
+                {
+                    RoleEntity? role =
+                        await repository.Roles.RetrieveAsync(ur.RoleId, ct);
+
+                    return role?.Name;
+                },
+                cancellationToken
+            )
+            .WithoutNullAsync(cancellationToken);
     }
 }

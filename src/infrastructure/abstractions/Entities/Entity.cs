@@ -21,9 +21,9 @@ public abstract class Entity<TId> where TId : struct
     public TId Id { get; init; }
 
     /// <summary>
-    /// Gets or sets the date and time the entity was updated.
+    /// Gets or sets the date and time the entity was last updated.
     /// </summary>
-    /// <value>The date and time the entity was updated.</value>
+    /// <value>The date and time the entity was last updated.</value>
     public DateTime Updated { get; set; }
 
     /// <summary>
