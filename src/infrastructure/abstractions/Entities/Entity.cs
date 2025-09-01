@@ -3,7 +3,7 @@ using System;
 namespace Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 /// <summary>
-/// Represents an entity with a simple primary key.
+/// Represents an entity with a simple primary key. This class cannot be instantiated.
 /// </summary>
 /// <typeparam name="TId">The type of the ID of the entity.</typeparam>
 public abstract class Entity<TId> where TId : struct

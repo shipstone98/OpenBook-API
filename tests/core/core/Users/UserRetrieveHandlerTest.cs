@@ -15,7 +15,7 @@ using Shipstone.OpenBook.Api.Infrastructure.Entities;
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
 using Shipstone.Test.Mocks;
 
-namespace Shipstone.OpenBook.Api.CoreTest.Accounts;
+namespace Shipstone.OpenBook.Api.CoreTest.Users;
 
 public sealed class UserRetrieveHandlerTest
 {
@@ -104,7 +104,7 @@ public sealed class UserRetrieveHandlerTest
         // Arrange
         Guid id = Guid.NewGuid();
         DateTime created = DateTime.UtcNow;
-        DateTime updated = created.AddDays(123456);
+        DateTime updated = created.AddDays(12345);
         const String EMAIL_ADDRESS = "john.doe@contoso.com";
         const String USER_NAME = "johndoe2025";
         const String FORENAME = "John";
@@ -223,7 +223,7 @@ public sealed class UserRetrieveHandlerTest
         // Arrange
         Guid id = Guid.NewGuid();
         DateTime created = DateTime.UtcNow;
-        DateTime updated = created.AddDays(123456);
+        DateTime updated = created.AddDays(12345);
         const String EMAIL_ADDRESS = "john.doe@contoso.com";
         const String USER_NAME = "johndoe2025";
         const String FORENAME = "John";

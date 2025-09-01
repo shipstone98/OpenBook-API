@@ -11,7 +11,7 @@ using Shipstone.OpenBook.Api.Infrastructure.Entities;
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 
 /// <summary>
-/// Represents a database.
+/// Represents a database. This class cannot be instantiated.
 /// </summary>
 /// <typeparam name="TContext">The type of the database context.</typeparam>
 public abstract class DbContext<TContext> : DbContext, IDataSource
