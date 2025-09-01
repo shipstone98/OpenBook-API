@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -91,7 +92,7 @@ public sealed class ClaimsMiddlewareTest
             Claim idClaim = new(ClaimTypes.NameIdentifier, idString);
             Claim userNameClaim = new(ClaimTypes.Name, String.Empty);
             IEnumerable<Claim> claims = new Claim[] { idClaim, userNameClaim };
-            ClaimsIdentity identity = new(claims);
+            IIdentity identity = new ClaimsIdentity(claims);
             return new(identity);
         };
 
@@ -114,7 +115,7 @@ public sealed class ClaimsMiddlewareTest
             IEnumerable<Claim> claims =
                 new Claim[] { emailAddressClaim, userNameClaim };
 
-            ClaimsIdentity identity = new(claims);
+            IIdentity identity = new ClaimsIdentity(claims);
             return new(identity);
         };
 
@@ -142,7 +143,7 @@ public sealed class ClaimsMiddlewareTest
             IEnumerable<Claim> claims =
                 new Claim[] { emailAddressClaim, idClaim };
 
-            ClaimsIdentity identity = new(claims);
+            IIdentity identity = new ClaimsIdentity(claims);
             return new(identity);
         };
 
@@ -172,7 +173,7 @@ public sealed class ClaimsMiddlewareTest
             IEnumerable<Claim> claims =
                 new Claim[3] { emailAddressClaim, idClaim, userNameClaim };
 
-            ClaimsIdentity identity = new(claims);
+            IIdentity identity = new ClaimsIdentity(claims);
             return new(identity);
         };
 
@@ -199,7 +200,7 @@ public sealed class ClaimsMiddlewareTest
             IEnumerable<Claim> claims =
                 new Claim[3] { emailAddressClaim, idClaim, userNameClaim };
 
-            ClaimsIdentity identity = new(claims);
+            IIdentity identity = new ClaimsIdentity(claims);
             return new(identity);
         };
 
