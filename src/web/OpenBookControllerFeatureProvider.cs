@@ -14,7 +14,11 @@ internal sealed class OpenBookControllerFeatureProvider
 
     internal OpenBookControllerFeatureProvider() =>
         this._types = new HashSet<Type>
-            { typeof(AccountController), typeof (UserController) };
+        {
+            typeof (AccountController),
+            typeof (PostController),
+            typeof (UserController)
+        };
 
     protected sealed override bool IsController(TypeInfo typeInfo)
     {

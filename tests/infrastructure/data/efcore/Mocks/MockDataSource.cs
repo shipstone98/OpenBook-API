@@ -9,11 +9,13 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Moc
 
 internal sealed class MockDataSource : IDataSource
 {
+    internal Func<IDataSet<PostEntity>> _postsFunc;
     internal Func<IDataSet<RoleEntity>> _rolesFunc;
     internal Action _saveAction;
     internal Func<IDataSet<UserRefreshTokenEntity>> _userRefreshTokensFunc;
     internal Func<IDataSet<UserEntity>> _usersFunc;
 
+    IDataSet<PostEntity> IDataSource.Posts => this._postsFunc();
     IDataSet<RoleEntity> IDataSource.Roles => this._rolesFunc();
 
     IDataSet<UserRefreshTokenEntity> IDataSource.UserRefreshTokens =>

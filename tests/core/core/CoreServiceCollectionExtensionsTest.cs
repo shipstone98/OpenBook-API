@@ -6,6 +6,7 @@ using Xunit;
 
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
+using Shipstone.OpenBook.Api.Core.Posts;
 using Shipstone.OpenBook.Api.Core.Users;
 
 using Shipstone.Test.Mocks;
@@ -47,6 +48,8 @@ public sealed class CoreServiceCollectionExtensionsTest
         {
             typeof (IAuthenticateHandler),
             typeof (IOtpAuthenticateHandler),
+            typeof (IPostCreateHandler),
+            typeof (IPostRetrieveHandler),
             typeof (IUserRetrieveHandler)
         };
 

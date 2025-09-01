@@ -18,11 +18,13 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
     where TContext : DbContext<TContext>
 {
     private readonly IEncryptionService _encryption;
+    private readonly DbSet<PostEntity> _posts;
     private readonly DbSet<RoleEntity> _roles;
     private readonly DbSet<UserRefreshTokenEntity> _userRefreshTokens;
     private readonly DbSet<UserRoleEntity> _userRoles;
     private readonly DbSet<UserEntity> _users;
 
+    public DbSet<PostEntity> Posts => this._posts;
     public DbSet<RoleEntity> Roles => this._roles;
 
     public DbSet<UserRefreshTokenEntity> UserRefreshTokens =>
@@ -30,6 +32,9 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
 
     public DbSet<UserRoleEntity> UserRoles => this._userRoles;
     public DbSet<UserEntity> Users => this._users;
+
+    IDataSet<PostEntity> IDataSource.Posts =>
+        new DataSet<PostEntity>(this._posts);
 
     IDataSet<RoleEntity> IDataSource.Roles =>
         new DataSet<RoleEntity>(this._roles);
@@ -50,6 +55,7 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
     {
         ArgumentNullException.ThrowIfNull(encryption);
         this._encryption = encryption;
+        this._posts = this.Set<PostEntity>();
         this._roles = this.Set<RoleEntity>();
         this._userRefreshTokens = this.Set<UserRefreshTokenEntity>();
         this._userRoles = this.Set<UserRoleEntity>();
@@ -59,6 +65,9 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        IEntityTypeConfiguration<PostEntity> postConfiguration =
+            new PostConfiguration();
 
         IEntityTypeConfiguration<RoleEntity> roleConfiguration =
             new RoleConfiguration();
@@ -70,6 +79,7 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
             new UserRoleConfiguration();
 
         modelBuilder
+            .ApplyConfiguration(postConfiguration)
             .ApplyConfiguration(roleConfiguration)
             .ApplyConfiguration(userConfiguration)
             .ApplyConfiguration(userRoleConfiguration);

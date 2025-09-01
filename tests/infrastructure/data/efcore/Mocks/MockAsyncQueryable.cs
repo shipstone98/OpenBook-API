@@ -19,7 +19,7 @@ internal class MockAsyncQueryable<T> : MockAsyncEnumerable<T>, IQueryable<T>
 
     internal MockAsyncQueryable(IQueryable<T> queryable) : base(queryable)
     {
-        this._provider = new MockQueryProvider(queryable.Provider);
+        this._provider = new MockAsyncQueryProvider(queryable.Provider);
         this._queryable = queryable;
     }
 

@@ -1,6 +1,8 @@
 using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
+using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Web.Middleware;
 using Shipstone.OpenBook.Api.Web.Services;
@@ -27,5 +29,23 @@ public static class WebServiceCollectionExtensions
                 provider.GetRequiredService<ClaimsService>())
             .AddScoped<ClaimsService>()
             .AddScoped<ClaimsMiddleware>();
+    }
+
+    /// <summary>
+    /// Registers OpenBook web <see cref="NotFoundException" /> handling services with the specified <see cref="IServiceCollection" />.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection" /> to register services with.</param>
+    /// <param name="statusCode">The HTTP status code to return when an instance of <see cref="NotFoundException" /> is thrown.</param>
+    /// <returns>A reference to <c><paramref name="services" /></c> that can be further used to register services.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="services" /></c> is <c>null</c>.</exception>
+    public static IServiceCollection AddOpenBookWebNotFoundExceptionHandling(
+        this IServiceCollection services,
+        int statusCode = StatusCodes.Status404NotFound
+    )
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        return services.AddSingleton(_ =>
+            new NotFoundExceptionHandlingMiddleware(statusCode));
     }
 }

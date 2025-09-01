@@ -28,9 +28,30 @@ public sealed class ClaimsServiceTest
     }
 
     [Fact]
+    public void TestEmailAddress_Get()
+    {
+        // Act and assert
+        Assert.Throws<UnauthorizedException>(() => this._claims.EmailAddress);
+    }
+
+    [Fact]
     public void TestId_Get()
     {
         // Act and assert
         Assert.Throws<UnauthorizedException>(() => this._claims.Id);
+    }
+
+    [Fact]
+    public void TestIsAuthenticated_Get()
+    {
+        // Act and assert
+        Assert.False(this._claims.IsAuthenticated);
+    }
+
+    [Fact]
+    public void TestUserName_Get()
+    {
+        // Act and assert
+        Assert.Throws<UnauthorizedException>(() => this._claims.UserName);
     }
 }

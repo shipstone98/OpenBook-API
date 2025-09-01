@@ -12,6 +12,9 @@ internal sealed class Repository : IRepository
     private readonly IDataSource _dataSource;
     private readonly IServiceProvider _provider;
 
+    IPostRepository IRepository.Posts =>
+        this._provider.GetRequiredService<IPostRepository>();
+
     IRoleRepository IRepository.Roles =>
         this._provider.GetRequiredService<IRoleRepository>();
 

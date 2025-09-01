@@ -10,6 +10,12 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 public interface IRepository
 {
     /// <summary>
+    /// Gets the post repository.
+    /// </summary>
+    /// <value>The post repository.</value>
+    IPostRepository Posts { get; }
+
+    /// <summary>
     /// Gets the role repository.
     /// </summary>
     /// <value>The role repository.</value>

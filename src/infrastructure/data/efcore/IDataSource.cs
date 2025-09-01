@@ -12,6 +12,12 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 public interface IDataSource
 {
     /// <summary>
+    /// Gets the post data set.
+    /// </summary>
+    /// <value>An <see cref="IDataSet{TEntity}" /> containing the posts.</value>
+    IDataSet<PostEntity> Posts { get; }
+
+    /// <summary>
     /// Gets the role data set.
     /// </summary>
     /// <value>An <see cref="IDataSet{TEntity}" /> containing the roles.</value>

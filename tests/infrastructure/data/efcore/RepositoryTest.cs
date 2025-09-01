@@ -37,6 +37,13 @@ public sealed class RepositoryTest
     }
 
     [Fact]
+    public void TestPosts_Get()
+    {
+        // Act and assert
+        Assert.NotNull(this._repository.Posts);
+    }
+
+    [Fact]
     public void TestRoles_Get()
     {
         // Act and assert

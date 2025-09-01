@@ -15,6 +15,42 @@ namespace Shipstone.OpenBook.Api.WebTest;
 public sealed class WebServiceCollectionExtensionsTest
 {
     [Fact]
+    public void TestAddOpenBookWebNotFoundExceptionHandling_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            Assert.Throws<ArgumentNullException>(() =>
+                WebServiceCollectionExtensions.AddOpenBookWebNotFoundExceptionHandling(null!));
+
+        // Assert
+        Assert.Equal("services", ex.ParamName);
+    }
+
+    [Fact]
+    public void TestAddOpenBookWebNotFoundExceptionHandling_Valid()
+    {
+        // Arrange
+        ICollection<ServiceDescriptor> collection =
+            new List<ServiceDescriptor>();
+
+        MockServiceCollection services = new();
+        services._addAction = collection.Add;
+
+        // Act
+        IServiceCollection result =
+            WebServiceCollectionExtensions.AddOpenBookWebNotFoundExceptionHandling(services);
+
+        // Assert
+        Assert.True(Object.ReferenceEquals(services, result));
+
+        ServiceDescriptor descriptor =
+            collection.First(s =>
+                s.ServiceType.IsAssignableTo(typeof (IMiddleware)));
+
+        Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
+    }
+
+    [Fact]
     public void TestAddOpenBookWebClaims_Invalid()
     {
         // Act

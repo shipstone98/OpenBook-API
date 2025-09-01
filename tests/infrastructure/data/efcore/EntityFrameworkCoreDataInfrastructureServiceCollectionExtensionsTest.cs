@@ -44,6 +44,7 @@ public sealed class EntityFrameworkCoreDataInfrastructureServiceCollectionExtens
 
         IEnumerable<Type> serviceTypes = new Type[]
         {
+            typeof (IPostRepository),
             typeof (IRepository),
             typeof (IRoleRepository),
             typeof (IUserRefreshTokenRepository),

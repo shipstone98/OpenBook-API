@@ -53,6 +53,12 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             .IsUnique();
 
         builder
+            .HasMany<PostEntity>()
+            .WithOne()
+            .HasForeignKey(p => p.CreatorId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder
             .HasMany<UserRefreshTokenEntity>()
             .WithOne()
             .HasForeignKey(urt => urt.UserId)

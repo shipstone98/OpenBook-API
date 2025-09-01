@@ -2,6 +2,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
+using Shipstone.OpenBook.Api.Core.Posts;
 using Shipstone.OpenBook.Api.Core.Users;
 
 namespace Shipstone.OpenBook.Api.Core;
@@ -24,6 +25,8 @@ public static class CoreServiceCollectionExtensions
         return services
             .AddScoped<IAuthenticateHandler, AuthenticateHandler>()
             .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>()
+            .AddScoped<IPostCreateHandler, PostCreateHandler>()
+            .AddScoped<IPostRetrieveHandler, PostRetrieveHandler>()
             .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>();
     }
 }

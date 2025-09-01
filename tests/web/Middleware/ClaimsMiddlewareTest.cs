@@ -72,18 +72,25 @@ public sealed class ClaimsMiddlewareTest
         await this._next.Invoke(this._context);
 
         // Assert
-        Assert.Throws<UnauthorizedException>(() => this._claims.Id);
+        this._claims.AssertNotAuthenticated();
     }
 
 #region Claims not empty
+#region Missing
     [Fact]
-    public async Task TestInvokeAsync_ClaimsNotEmpty_ContainsId_ValueNotValid()
+    public async Task TestInvokeAsync_ClaimsNotEmpty_Missing_EmailAddress()
     {
         // Arrange
         this._context._userFunc = () =>
         {
-            Claim claim = new(ClaimTypes.NameIdentifier, "123456");
-            IEnumerable<Claim> claims = new Claim[1] { claim };
+            String idString =
+                Guid
+                    .NewGuid()
+                    .ToString();
+
+            Claim idClaim = new(ClaimTypes.NameIdentifier, idString);
+            Claim userNameClaim = new(ClaimTypes.Name, String.Empty);
+            IEnumerable<Claim> claims = new Claim[] { idClaim, userNameClaim };
             ClaimsIdentity identity = new(claims);
             return new(identity);
         };
@@ -92,20 +99,79 @@ public sealed class ClaimsMiddlewareTest
         await this._next.Invoke(this._context);
 
         // Assert
-        Assert.Throws<UnauthorizedException>(() => this._claims.Id);
+        this._claims.AssertNotAuthenticated();
     }
 
     [Fact]
-    public async Task TestInvokeAsync_ClaimsNotEmpty_ContainsId_ValueValid()
+    public async Task TestInvokeAsync_ClaimsNotEmpty_Missing_Id()
+    {
+        // Arrange
+        this._context._userFunc = () =>
+        {
+            Claim emailAddressClaim = new(ClaimTypes.Name, String.Empty);
+            Claim userNameClaim = new(ClaimTypes.Name, String.Empty);
+
+            IEnumerable<Claim> claims =
+                new Claim[] { emailAddressClaim, userNameClaim };
+
+            ClaimsIdentity identity = new(claims);
+            return new(identity);
+        };
+
+        // Act
+        await this._next.Invoke(this._context);
+
+        // Assert
+        this._claims.AssertNotAuthenticated();
+    }
+
+    [Fact]
+    public async Task TestInvokeAsync_ClaimsNotEmpty_Missing_UserName()
+    {
+        // Arrange
+        this._context._userFunc = () =>
+        {
+            String idString =
+                Guid
+                    .NewGuid()
+                    .ToString();
+
+            Claim emailAddressClaim = new(ClaimTypes.Name, String.Empty);
+            Claim idClaim = new(ClaimTypes.NameIdentifier, idString);
+
+            IEnumerable<Claim> claims =
+                new Claim[] { emailAddressClaim, idClaim };
+
+            ClaimsIdentity identity = new(claims);
+            return new(identity);
+        };
+
+        // Act
+        await this._next.Invoke(this._context);
+
+        // Assert
+        this._claims.AssertNotAuthenticated();
+    }
+#endregion
+
+    [Fact]
+    public async Task TestInvokeAsync_ClaimsNotEmpty_NotMissing_Correct()
     {
         // Arrange
         Guid id = Guid.NewGuid();
+        const String EMAIL_ADDRESS = "john.doe@contoso.com";
+        const String USER_NAME = "johndoe2025";
 
         this._context._userFunc = () =>
         {
             String idString = id.ToString();
-            Claim claim = new(ClaimTypes.NameIdentifier, idString);
-            IEnumerable<Claim> claims = new Claim[1] { claim };
+            Claim emailAddressClaim = new(ClaimTypes.Email, EMAIL_ADDRESS);
+            Claim idClaim = new(ClaimTypes.NameIdentifier, idString);
+            Claim userNameClaim = new(ClaimTypes.Name, USER_NAME);
+
+            IEnumerable<Claim> claims =
+                new Claim[3] { emailAddressClaim, idClaim, userNameClaim };
+
             ClaimsIdentity identity = new(claims);
             return new(identity);
         };
@@ -114,17 +180,25 @@ public sealed class ClaimsMiddlewareTest
         await this._next.Invoke(this._context);
 
         // Assert
+        Assert.Equal(EMAIL_ADDRESS, this._claims.EmailAddress);
         Assert.Equal(id, this._claims.Id);
+        Assert.True(this._claims.IsAuthenticated);
+        Assert.Equal(USER_NAME, this._claims.UserName);
     }
 
     [Fact]
-    public async Task TestInvokeAsync_ClaimsNotEmpty_NotContainsId()
+    public async Task TestInvokeAsync_ClaimsNotEmpty_NotMissing_NotCorrect()
     {
         // Arrange
         this._context._userFunc = () =>
         {
-            Claim claim = new(ClaimTypes.Name, "123456");
-            IEnumerable<Claim> claims = new Claim[1] { claim };
+            Claim emailAddressClaim = new(ClaimTypes.Email, String.Empty);
+            Claim idClaim = new(ClaimTypes.NameIdentifier, "12345");
+            Claim userNameClaim = new(ClaimTypes.Name, String.Empty);
+
+            IEnumerable<Claim> claims =
+                new Claim[3] { emailAddressClaim, idClaim, userNameClaim };
+
             ClaimsIdentity identity = new(claims);
             return new(identity);
         };
@@ -133,7 +207,7 @@ public sealed class ClaimsMiddlewareTest
         await this._next.Invoke(this._context);
 
         // Assert
-        Assert.Throws<UnauthorizedException>(() => this._claims.Id);
+        this._claims.AssertNotAuthenticated();
     }
 #endregion
 #endregion
