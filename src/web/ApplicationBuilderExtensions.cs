@@ -25,6 +25,18 @@ public static class ApplicationBuilderExtensions
     }
 
     /// <summary>
+    /// Adds OpenBook web <see cref="ConflictException" /> middleware to the specified <see cref="IApplicationBuilder" />.
+    /// </summary>
+    /// <param name="app">The <see cref="IApplicationBuilder" /> to add middleware to with.</param>
+    /// <returns>A reference to <c><paramref name="app" /></c> that can be further used to add middleware.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="app" /></c> is <c>null</c>.</exception>
+    public static IApplicationBuilder UseOpenBookWebConflictExceptionHandling(this IApplicationBuilder app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+        return app.UseMiddleware<ConflictExceptionHandlingMiddleware>();
+    }
+
+    /// <summary>
     /// Adds OpenBook web <see cref="ForbiddenException" /> middleware to the specified <see cref="IApplicationBuilder" />.
     /// </summary>
     /// <param name="app">The <see cref="IApplicationBuilder" /> to add middleware to with.</param>

@@ -59,6 +59,18 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             .OnDelete(DeleteBehavior.NoAction);
 
         builder
+            .HasMany<UserFollowingEntity>()
+            .WithOne()
+            .HasForeignKey(uf => uf.FolloweeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany<UserFollowingEntity>()
+            .WithOne()
+            .HasForeignKey(uf => uf.FollowerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
             .HasMany<UserRefreshTokenEntity>()
             .WithOne()
             .HasForeignKey(urt => urt.UserId)

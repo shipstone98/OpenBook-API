@@ -12,11 +12,15 @@ internal sealed class MockDataSource : IDataSource
     internal Func<IDataSet<PostEntity>> _postsFunc;
     internal Func<IDataSet<RoleEntity>> _rolesFunc;
     internal Action _saveAction;
+    internal Func<IDataSet<UserFollowingEntity>> _userFollowingsFunc;
     internal Func<IDataSet<UserRefreshTokenEntity>> _userRefreshTokensFunc;
     internal Func<IDataSet<UserEntity>> _usersFunc;
 
     IDataSet<PostEntity> IDataSource.Posts => this._postsFunc();
     IDataSet<RoleEntity> IDataSource.Roles => this._rolesFunc();
+
+    IDataSet<UserFollowingEntity> IDataSource.UserFollowings =>
+        this._userFollowingsFunc();
 
     IDataSet<UserRefreshTokenEntity> IDataSource.UserRefreshTokens =>
         this._userRefreshTokensFunc();
@@ -31,6 +35,7 @@ internal sealed class MockDataSource : IDataSource
         this._postsFunc = () => throw new NotImplementedException();
         this._rolesFunc = () => throw new NotImplementedException();
         this._saveAction = () => throw new NotImplementedException();
+        this._userFollowingsFunc = () => throw new NotImplementedException();
 
         this._userRefreshTokensFunc = () =>
             throw new NotImplementedException();

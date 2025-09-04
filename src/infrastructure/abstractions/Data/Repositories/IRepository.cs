@@ -22,6 +22,12 @@ public interface IRepository
     IRoleRepository Roles { get; }
 
     /// <summary>
+    /// Gets the follower-followee association repository.
+    /// </summary>
+    /// <value>The follower-followee association repository.</value>
+    IUserFollowingRepository UserFollowings { get; }
+
+    /// <summary>
     /// Gets the user refresh token repository.
     /// </summary>
     /// <value>The user refresh token repository.</value>

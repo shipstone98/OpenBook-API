@@ -86,6 +86,7 @@ builder.Services
     .AddOpenBookInfrastructureDataMySql(connectionString)
     .AddOpenBookWebAuthorization()
     .AddOpenBookWebClaims()
+    .AddOpenBookWebConflictExceptionHandling()
     .AddOpenBookWebForbiddenExceptionHandling()
     .AddOpenBookWebNotFoundExceptionHandling()
     .AddSingleton<IEncryptionService, StubEncryptionService>()
@@ -116,6 +117,7 @@ app.UseNcsaCommonLogging();
 app.UseArgumentExceptionHandling();
 app.UseOpenBookWebForbiddenExceptionHandling();
 app.UseOpenBookWebNotFoundExceptionHandling();
+app.UseOpenBookWebConflictExceptionHandling();
 app.UseAuthentication();
 app.UseOpenBookWebClaims();
 app.UseAuthorization();

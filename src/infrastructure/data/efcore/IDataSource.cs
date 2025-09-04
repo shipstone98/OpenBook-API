@@ -24,6 +24,12 @@ public interface IDataSource
     IDataSet<RoleEntity> Roles { get; }
 
     /// <summary>
+    /// Gets the follower-followee association data set.
+    /// </summary>
+    /// <value>An <see cref="IDataSet{TEntity}" /> containing the follower-followee associations.</value>
+    IDataSet<UserFollowingEntity> UserFollowings { get; }
+
+    /// <summary>
     /// Gets the user refresh token data set.
     /// </summary>
     /// <value>An <see cref="IDataSet{TEntity}" /> containing the user refresh tokens.</value>

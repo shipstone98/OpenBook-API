@@ -11,12 +11,16 @@ internal sealed class MockRepository : IRepository
     internal Func<IPostRepository> _postsFunc;
     internal Func<IRoleRepository> _rolesFunc;
     internal Action _saveAction;
+    internal Func<IUserFollowingRepository> _userFollowingsFunc;
     internal Func<IUserRefreshTokenRepository> _userRefreshTokensFunc;
     internal Func<IUserRoleRepository> _userRolesFunc;
     internal Func<IUserRepository> _usersFunc;
 
     IPostRepository IRepository.Posts => this._postsFunc();
     IRoleRepository IRepository.Roles => this._rolesFunc();
+
+    IUserFollowingRepository IRepository.UserFollowings =>
+        this._userFollowingsFunc();
 
     IUserRefreshTokenRepository IRepository.UserRefreshTokens =>
         this._userRefreshTokensFunc();
@@ -29,6 +33,7 @@ internal sealed class MockRepository : IRepository
         this._postsFunc = () => throw new NotImplementedException();
         this._rolesFunc = () => throw new NotImplementedException();
         this._saveAction = () => throw new NotImplementedException();
+        this._userFollowingsFunc = () => throw new NotImplementedException();
 
         this._userRefreshTokensFunc = () =>
             throw new NotImplementedException();

@@ -16,6 +16,7 @@ internal sealed class OpenBookControllerFeatureProvider
         this._types = new HashSet<Type>
         {
             typeof (AccountController),
+            typeof (FollowingController),
             typeof (PostController),
             typeof (UserController)
         };

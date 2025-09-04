@@ -1,12 +1,26 @@
 using System;
 using Xunit;
 
+using Shipstone.OpenBook.Api.Core.Followings;
 using Shipstone.OpenBook.Api.Core.Posts;
 
 namespace Shipstone.OpenBook.Api.CoreTest;
 
 internal static class Internals
 {
+    internal static void AssertEqual(
+        this IFollowing following,
+        String followerEmailAddress,
+        String followeeName,
+        DateTime followed
+    )
+    {
+        Assert.Equal(followed, following.Followed);
+        Assert.Equal(DateTimeKind.Utc, following.Followed.Kind);
+        Assert.Equal(followeeName, following.FolloweeName);
+        Assert.Equal(followerEmailAddress, following.FollowerEmailAddress);
+    }
+
     internal static void AssertEqual(
         this IPost post,
         long id,

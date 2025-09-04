@@ -28,6 +28,7 @@ public static class EntityFrameworkCoreDataInfrastructureServiceCollectionExtens
             .AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IRepository, Repository>()
             .AddScoped<IRoleRepository, RoleRepository>()
+            .AddScoped<IUserFollowingRepository, UserFollowingRepository>()
             .AddScoped<IUserRefreshTokenRepository, UserRefreshTokenRepository>()
             .AddScoped<IUserRoleRepository, UserRoleRepository>()
             .AddScoped<IUserRepository, UserRepository>();

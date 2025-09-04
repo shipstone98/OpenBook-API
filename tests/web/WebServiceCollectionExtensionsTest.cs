@@ -57,6 +57,42 @@ public sealed class WebServiceCollectionExtensionsTest
     }
 
     [Fact]
+    public void TestAddOpenBookWebConflictExceptionHandling_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            Assert.Throws<ArgumentNullException>(() =>
+                WebServiceCollectionExtensions.AddOpenBookWebConflictExceptionHandling(null!));
+
+        // Assert
+        Assert.Equal("services", ex.ParamName);
+    }
+
+    [Fact]
+    public void TestAddOpenBookWebConflictExceptionHandling_Valid()
+    {
+        // Arrange
+        ICollection<ServiceDescriptor> collection =
+            new List<ServiceDescriptor>();
+
+        MockServiceCollection services = new();
+        services._addAction = collection.Add;
+
+        // Act
+        IServiceCollection result =
+            WebServiceCollectionExtensions.AddOpenBookWebConflictExceptionHandling(services);
+
+        // Assert
+        Assert.True(Object.ReferenceEquals(services, result));
+
+        ServiceDescriptor descriptor =
+            collection.First(s =>
+                s.ServiceType.IsAssignableTo(typeof (IMiddleware)));
+
+        Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
+    }
+
+    [Fact]
     public void TestAddOpenBookWebForbiddenExceptionHandling_Invalid()
     {
         // Act

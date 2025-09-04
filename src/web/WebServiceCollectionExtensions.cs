@@ -61,10 +61,28 @@ public static class WebServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Registers OpenBook web <see cref="ConflictException" /> handling services with the specified <see cref="IServiceCollection" />.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection" /> to register services with.</param>
+    /// <param name="statusCode">The HTTP status code to return when an instance of <see cref="ConflictException" /> is thrown.</param>
+    /// <returns>A reference to <c><paramref name="services" /></c> that can be further used to register services.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="services" /></c> is <c>null</c>.</exception>
+    public static IServiceCollection AddOpenBookWebConflictExceptionHandling(
+        this IServiceCollection services,
+        int statusCode = StatusCodes.Status409Conflict
+    )
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        return services.AddSingleton(_ =>
+            new ConflictExceptionHandlingMiddleware(statusCode));
+    }
+
+    /// <summary>
     /// Registers OpenBook web <see cref="ForbiddenException" /> handling services with the specified <see cref="IServiceCollection" />.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to register services with.</param>
-    /// <param name="statusCode">The HTTP status code to return when an instance of <see cref="NotFoundException" /> is thrown.</param>
+    /// <param name="statusCode">The HTTP status code to return when an instance of <see cref="ForbiddenException" /> is thrown.</param>
     /// <returns>A reference to <c><paramref name="services" /></c> that can be further used to register services.</returns>
     /// <exception cref="ArgumentNullException"><c><paramref name="services" /></c> is <c>null</c>.</exception>
     public static IServiceCollection AddOpenBookWebForbiddenExceptionHandling(
