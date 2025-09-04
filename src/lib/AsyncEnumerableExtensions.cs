@@ -55,7 +55,7 @@ public static class AsyncEnumerableExtensions
 
     private static async IAsyncEnumerable<TSource> WithoutNullAsyncCore<TSource>(
         this IAsyncEnumerable<TSource?> source,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default
+        [EnumeratorCancellation] CancellationToken cancellationToken
     )
     {
         await foreach (TSource? item in source.WithCancellation(cancellationToken))

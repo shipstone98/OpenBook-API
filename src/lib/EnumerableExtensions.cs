@@ -27,7 +27,7 @@ public static class EnumerableExtensions
     private static async IAsyncEnumerable<TResult> SelectAsyncCore<TSource, TResult>(
         this IEnumerable<TSource> source,
         Func<TSource, CancellationToken, Task<TResult>> selector,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default
+        [EnumeratorCancellation] CancellationToken cancellationToken
     )
     {
         foreach (TSource item in source)
