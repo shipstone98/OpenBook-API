@@ -41,7 +41,7 @@ public sealed class UserRepositoryTest
         this._repository = provider.GetRequiredService<IUserRepository>();
     }
 
-#region RetrieveAsync method
+#region RetrieveAsync methods
 #region Guid parameter
     [Fact]
     public async Task TestRetrieveAsync_Guid_Invalid()
