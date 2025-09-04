@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,18 @@ public static class HttpServiceCollectionExtensions
 
         return services.AddSingleton(_ =>
             new ArgumentExceptionHandlingMiddleware(statusCode));
+    }
+
+    public static IServiceCollection AddNcsaCommonLogging(
+        this IServiceCollection services,
+        TextWriter writer
+    )
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(writer);
+
+        return services.AddSingleton(_ =>
+            new NcsaCommonLoggingMiddleware(writer));
     }
 
     public static IServiceCollection AddPagination(

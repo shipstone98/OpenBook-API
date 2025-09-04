@@ -11,6 +11,12 @@ public static class HttpApplicationBuilderExtensions
         return app.UseMiddleware<ArgumentExceptionHandlingMiddleware>();
     }
 
+    public static IApplicationBuilder UseNcsaCommonLogging(this IApplicationBuilder app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+        return app.UseMiddleware<NcsaCommonLoggingMiddleware>();
+    }
+
     public static IApplicationBuilder UsePagination(this IApplicationBuilder app)
     {
         ArgumentNullException.ThrowIfNull(app);

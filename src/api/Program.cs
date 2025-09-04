@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 using Shipstone.AspNetCore.Http;
@@ -31,6 +33,11 @@ IConfigurationSection authenticationSection =
 
 String? connectionString =
     builder.Configuration.GetConnectionString("MySql");
+
+TextWriter ncsaCommonLoggingWriter =
+    builder.Environment.IsDevelopment()
+        ? new StreamWriter("log.txt", true)
+        : TextWriter.Null;
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -66,6 +73,7 @@ builder.Services
 builder.Services
     .AddArgumentExceptionHandling()
     .AddIdentityExtensions()
+    .AddNcsaCommonLogging(ncsaCommonLoggingWriter)
     .AddPagination(
         builder.Configuration
             .GetSection("Pagination")
@@ -104,6 +112,7 @@ builder.Services
 
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();
+app.UseNcsaCommonLogging();
 app.UseArgumentExceptionHandling();
 app.UseOpenBookWebForbiddenExceptionHandling();
 app.UseOpenBookWebNotFoundExceptionHandling();
