@@ -285,7 +285,7 @@ public sealed class UserRepositoryTest
     }
 
     [Fact]
-    public async Task TestUpdateAsync_Valid()
+    public Task TestUpdateAsync_Valid()
     {
         // Arrange
         UserEntity user = new();
@@ -303,7 +303,7 @@ public sealed class UserRepositoryTest
         };
 
         // Act
-        await this._repository.UpdateAsync(user, CancellationToken.None);
+        return this._repository.UpdateAsync(user, CancellationToken.None);
 
         // Nothing to assert
     }

@@ -51,7 +51,7 @@ public sealed class UserRefreshTokenRepositoryTest
     }
 
     [Fact]
-    public async Task TestCreateAsync_Valid()
+    public Task TestCreateAsync_Valid()
     {
         // Arrange
         UserRefreshTokenEntity userRefreshToken = new();
@@ -69,7 +69,7 @@ public sealed class UserRefreshTokenRepositoryTest
         };
 
         // Act
-        await this._repository.CreateAsync(
+        return this._repository.CreateAsync(
             userRefreshToken,
             CancellationToken.None
         );

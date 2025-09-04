@@ -198,7 +198,7 @@ public sealed class PostListHandlerTest
 
 #region Valid arguments
     [Fact]
-    public async Task TestHandleAsync_String_Valid_Failure()
+    public Task TestHandleAsync_String_Valid_Failure()
     {
         // Arrange
         this._repository._usersFunc = () =>
@@ -209,7 +209,7 @@ public sealed class PostListHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(String.Empty, CancellationToken.None));
     }
 

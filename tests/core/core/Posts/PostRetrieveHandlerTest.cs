@@ -61,7 +61,7 @@ public sealed class PostRetrieveHandlerTest
 
 #region Valid arguments
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_CreatorNotFound()
+    public Task TestHandleAsync_Valid_Failure_CreatorNotFound()
     {
         // Arrange
         this._repository._postsFunc = () =>
@@ -81,12 +81,12 @@ public sealed class PostRetrieveHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(12345, CancellationToken.None));
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_PostNotFound()
+    public Task TestHandleAsync_Valid_Failure_PostNotFound()
     {
         // Arrange
         this._repository._postsFunc = () =>
@@ -97,7 +97,7 @@ public sealed class PostRetrieveHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(1, CancellationToken.None));
     }
 

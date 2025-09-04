@@ -56,7 +56,7 @@ public sealed class PostCreateHandlerTest
 
 #region Valid arguments
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_ParentIdNotNull()
+    public Task TestHandleAsync_Valid_Failure_ParentIdNotNull()
     {
         // Arrange
         this._claims._idFunc = Guid.NewGuid;
@@ -71,7 +71,7 @@ public sealed class PostCreateHandlerTest
         this._repository._saveAction = () => throw new();
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
                 new PostBuilder
                 {

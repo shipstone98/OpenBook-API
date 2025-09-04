@@ -87,7 +87,7 @@ public sealed class PostDeleteHandlerTest
 #region Valid arguments
 #region Failure
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_CreatorNotFound()
+    public Task TestHandleAsync_Valid_Failure_CreatorNotFound()
     {
         // Arrange
         this._repository._postsFunc = () =>
@@ -108,7 +108,7 @@ public sealed class PostDeleteHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
                 12345,
                 String.Empty,
@@ -117,7 +117,7 @@ public sealed class PostDeleteHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_PostNotFound()
+    public Task TestHandleAsync_Valid_Failure_PostNotFound()
     {
         // Arrange
         this._repository._postsFunc = () =>
@@ -128,7 +128,7 @@ public sealed class PostDeleteHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
                 12345,
                 String.Empty,

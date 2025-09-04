@@ -88,7 +88,7 @@ public sealed class AuthenticateHandlerTest
 #region Valid arguments
 #region Failure
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_EmailAddressNotFound()
+    public Task TestHandleAsync_Valid_Failure_EmailAddressNotFound()
     {
         // Arrange
         this._repository._usersFunc = () =>
@@ -99,7 +99,7 @@ public sealed class AuthenticateHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
@@ -143,7 +143,7 @@ public sealed class AuthenticateHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_UserNotActive()
+    public Task TestHandleAsync_Valid_Failure_UserNotActive()
     {
         // Arrange
         this._repository._usersFunc = () =>
@@ -154,7 +154,7 @@ public sealed class AuthenticateHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<UserNotActiveException>(() =>
+        return Assert.ThrowsAsync<UserNotActiveException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
@@ -163,7 +163,7 @@ public sealed class AuthenticateHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_UserNotVerified()
+    public Task TestHandleAsync_Valid_Failure_UserNotVerified()
     {
         // Arrange
         Exception innerException = new IncorrectPasswordException();
@@ -182,7 +182,7 @@ public sealed class AuthenticateHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<ForbiddenException>(() =>
+        return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
@@ -192,7 +192,7 @@ public sealed class AuthenticateHandlerTest
 #endregion
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Success_PasswordNotSecure()
+    public Task TestHandleAsync_Valid_Success_PasswordNotSecure()
     {
         // Arrange
         this._repository._usersFunc = () =>
@@ -220,7 +220,7 @@ public sealed class AuthenticateHandlerTest
         this._mail._sendOtpAction = (_, _) => { };
 
         // Act
-        await this._handler.HandleAsync(
+        return this._handler.HandleAsync(
             String.Empty,
             String.Empty,
             CancellationToken.None
@@ -230,7 +230,7 @@ public sealed class AuthenticateHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Success_PasswordSecure()
+    public Task TestHandleAsync_Valid_Success_PasswordSecure()
     {
         // Arrange
         this._repository._usersFunc = () =>
@@ -257,7 +257,7 @@ public sealed class AuthenticateHandlerTest
         this._mail._sendOtpAction = (_, _) => { };
 
         // Act
-        await this._handler.HandleAsync(
+        return this._handler.HandleAsync(
             String.Empty,
             String.Empty,
             CancellationToken.None

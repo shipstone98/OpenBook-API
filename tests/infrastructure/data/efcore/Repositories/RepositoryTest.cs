@@ -79,13 +79,13 @@ public sealed class RepositoryTest
     }
 
     [Fact]
-    public async Task TestSaveAsync()
+    public Task TestSaveAsync()
     {
         // Arrange
         this._dataSource._saveAction = () => { };
 
         // Act
-        await this._repository.SaveAsync(CancellationToken.None);
+        return this._repository.SaveAsync(CancellationToken.None);
 
         // Nothing to assert
     }

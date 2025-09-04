@@ -46,7 +46,7 @@ public sealed class UserRetrieveHandlerTest
 #region HandleAsync method
 #region Failure
     [Fact]
-    public async Task TestHandleAsync_Failure_UserNotActive()
+    public Task TestHandleAsync_Failure_UserNotActive()
     {
         // Arrange
         this._claims._idFunc = Guid.NewGuid;
@@ -59,7 +59,7 @@ public sealed class UserRetrieveHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<UserNotActiveException>(() =>
+        return Assert.ThrowsAsync<UserNotActiveException>(() =>
             this._handler.HandleAsync(CancellationToken.None));
     }
 
@@ -80,7 +80,7 @@ public sealed class UserRetrieveHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Failure_UserNotFound()
+    public Task TestHandleAsync_Failure_UserNotFound()
     {
         // Arrange
         this._claims._idFunc = Guid.NewGuid;
@@ -93,7 +93,7 @@ public sealed class UserRetrieveHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(CancellationToken.None));
     }
 #endregion

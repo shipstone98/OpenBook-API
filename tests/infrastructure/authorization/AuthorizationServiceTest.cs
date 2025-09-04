@@ -75,7 +75,7 @@ public sealed class AuthorizationServiceTest
     }
 
     [Fact]
-    public async Task TestAuthorizeAsync_Valid_Failure()
+    public Task TestAuthorizeAsync_Valid_Failure()
     {
         // Arrange
         CreatableEntity<int> entity = new MockCreatableEntity<int>();
@@ -84,7 +84,7 @@ public sealed class AuthorizationServiceTest
             Microsoft.AspNetCore.Authorization.AuthorizationResult.Failed();
 
         // Act and assert
-        await Assert.ThrowsAsync<ForbiddenException>(() =>
+        return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._authorization.AuthorizeAsync(
                 entity,
                 String.Empty,
@@ -93,7 +93,7 @@ public sealed class AuthorizationServiceTest
     }
 
     [Fact]
-    public async Task TestAuthorizeAsync_Valid_Success()
+    public Task TestAuthorizeAsync_Valid_Success()
     {
         // Arrange
         CreatableEntity<int> entity = new MockCreatableEntity<int>();
@@ -102,7 +102,7 @@ public sealed class AuthorizationServiceTest
             Microsoft.AspNetCore.Authorization.AuthorizationResult.Success();
 
         // Act
-        await this._authorization.AuthorizeAsync(
+        return this._authorization.AuthorizeAsync(
             entity,
             String.Empty,
             CancellationToken.None

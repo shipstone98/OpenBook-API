@@ -58,7 +58,7 @@ public sealed class PostRepositoryTest
     }
 
     [Fact]
-    public async Task TestCreateAsync_Valid()
+    public Task TestCreateAsync_Valid()
     {
         // Arrange
         PostEntity post = new();
@@ -76,7 +76,7 @@ public sealed class PostRepositoryTest
         };
 
         // Act
-        await this._repository.CreateAsync(
+        return this._repository.CreateAsync(
             post,
             CancellationToken.None
         );
@@ -97,7 +97,7 @@ public sealed class PostRepositoryTest
     }
 
     [Fact]
-    public async Task TestDeleteAsync_Valid()
+    public Task TestDeleteAsync_Valid()
     {
         // Arrange
         PostEntity post = new();
@@ -115,7 +115,7 @@ public sealed class PostRepositoryTest
         };
 
         // Act
-        await this._repository.DeleteAsync(
+        return this._repository.DeleteAsync(
             post,
             CancellationToken.None
         );

@@ -77,7 +77,7 @@ public sealed class OtpAuthenticateHandlerTest
 #region Valid arguments
 #region Failure
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_EmailAddressNotFound()
+    public Task TestHandleAsync_Valid_Failure_EmailAddressNotFound()
     {
         // Arrange
         this._repository._usersFunc = () =>
@@ -88,7 +88,7 @@ public sealed class OtpAuthenticateHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<NotFoundException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
@@ -97,7 +97,7 @@ public sealed class OtpAuthenticateHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_OtpExpired_OtpExpiresNotNull()
+    public Task TestHandleAsync_Valid_Failure_OtpExpired_OtpExpiresNotNull()
     {
         // Arrange
         const String OTP = "123456";
@@ -121,7 +121,7 @@ public sealed class OtpAuthenticateHandlerTest
         this._repository._saveAction = () => { };
 
         // Act and assert
-        await Assert.ThrowsAsync<ForbiddenException>(() =>
+        return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
                 OTP,
@@ -130,7 +130,7 @@ public sealed class OtpAuthenticateHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_OtpExpired_OtpExpiresNull()
+    public Task TestHandleAsync_Valid_Failure_OtpExpired_OtpExpiresNull()
     {
         // Arrange
         const String OTP = "123456";
@@ -153,7 +153,7 @@ public sealed class OtpAuthenticateHandlerTest
         this._repository._saveAction = () => { };
 
         // Act and assert
-        await Assert.ThrowsAsync<ForbiddenException>(() =>
+        return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
                 OTP,
@@ -164,7 +164,7 @@ public sealed class OtpAuthenticateHandlerTest
     [InlineData(null)]
     [InlineData("123456")]
     [Theory]
-    public async Task TestHandleAsync_Valid_Failure_OtpNotEqual(String? otp)
+    public Task TestHandleAsync_Valid_Failure_OtpNotEqual(String? otp)
     {
         // Arrange
         this._repository._usersFunc = () =>
@@ -182,7 +182,7 @@ public sealed class OtpAuthenticateHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<ForbiddenException>(() =>
+        return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
@@ -191,7 +191,7 @@ public sealed class OtpAuthenticateHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Failure_UserNotActive()
+    public Task TestHandleAsync_Valid_Failure_UserNotActive()
     {
         // Arrange
         this._repository._usersFunc = () =>
@@ -202,7 +202,7 @@ public sealed class OtpAuthenticateHandlerTest
         };
 
         // Act and assert
-        await Assert.ThrowsAsync<UserNotActiveException>(() =>
+        return Assert.ThrowsAsync<UserNotActiveException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
                 String.Empty,
