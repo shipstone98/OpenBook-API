@@ -28,6 +28,7 @@ internal sealed class MockDataSource : IDataSource
 
     public MockDataSource()
     {
+        this._postsFunc = () => throw new NotImplementedException();
         this._rolesFunc = () => throw new NotImplementedException();
         this._saveAction = () => throw new NotImplementedException();
 
