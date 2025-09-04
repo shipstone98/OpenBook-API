@@ -18,10 +18,9 @@ using Shipstone.OpenBook.Api.Web.Models.Post;
 
 namespace Shipstone.OpenBook.Api.Web.Controllers;
 
-internal sealed class PostController : ControllerBase<PostController>
+internal sealed class PostController(ILogger<PostController> logger)
+    : ControllerBase<PostController>(logger)
 {
-    public PostController(ILogger<PostController> logger) : base(logger) { }
-
     [ActionName("Create")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]

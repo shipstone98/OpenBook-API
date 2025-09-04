@@ -10,10 +10,9 @@ using Shipstone.OpenBook.Api.Web.Models.User;
 
 namespace Shipstone.OpenBook.Api.Web.Controllers;
 
-internal sealed class UserController : ControllerBase<UserController>
+internal sealed class UserController(ILogger<UserController> logger)
+    : ControllerBase<UserController>(logger)
 {
-    public UserController(ILogger<UserController> logger) : base(logger) { }
-
     [ActionName("Retrieve")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
