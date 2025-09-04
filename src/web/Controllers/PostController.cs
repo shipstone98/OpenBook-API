@@ -1,9 +1,14 @@
 using System;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
+using Shipstone.Utilities.Collections;
+using Shipstone.Utilities.Linq;
 
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
@@ -96,7 +101,138 @@ internal sealed class PostController : ControllerBase<PostController>
         );
     }
 
+    [ActionName("Delete")]
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> DeleteAsync(
+        [FromServices] IPostDeleteHandler handler,
+        [FromServices] IClaimsService claims,
+        [FromQuery] long id,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(claims);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(id, 0);
+        return this.DeleteAsyncCore(handler, claims, id, cancellationToken);
+    }
+
+    private async Task<IActionResult> DeleteAsyncCore(
+        IPostDeleteHandler handler,
+        IClaimsService claims,
+        long id,
+        CancellationToken cancellationToken
+    )
+    {
+        IPost post;
+
+        try
+        {
+            post =
+                await handler.HandleAsync(
+                    id,
+                    Policies.ResourceOwner,
+                    cancellationToken
+                );
+        }
+
+        catch (ForbiddenException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: User {EmailAddress} failed to delete post {Id} - not authorized",
+                DateTime.UtcNow,
+                claims.EmailAddress,
+                id
+            );
+
+            throw;
+        }
+
+        catch (NotFoundException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: User {EmailAddress} failed to delete post {Id} - not found",
+                DateTime.UtcNow,
+                claims.EmailAddress,
+                id
+            );
+
+            throw;
+        }
+
+        this._logger.LogInformation(
+            "{TimeStamp}: User {EmailAddress} deleted post {Id}",
+            post.Updated,
+            post.CreatorEmailAddress,
+            post.Id
+        );
+
+        return this.NoContent();
+    }
+
+    [ActionName("List")]
+    [AllowAnonymous]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Route("/api/[controller]/[action]")]
+    public Task<IActionResult> ListAsync(
+        [FromServices] IPostListHandler handler,
+        [FromQuery] String? userName,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+
+        if (userName is null)
+        {
+            ClaimsPrincipal user = this.HttpContext.User;
+
+            if (user.Identity is null || !user.Identity.IsAuthenticated)
+            {
+                IActionResult result = this.Unauthorized();
+                return Task.FromResult(result);
+            }
+
+            return this.ListAsyncCore(handler, cancellationToken);
+        }
+
+        return this.ListAsyncCore(handler, userName, cancellationToken);
+    }
+
+    private async Task<IActionResult> ListAsyncCore(
+        IPostListHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        IReadOnlyPaginatedList<IPost> posts =
+            await handler.HandleAsync(cancellationToken);
+
+        Object? response = posts.Select(p => new RetrieveResponse(p));
+        return this.Ok(response);
+    }
+
+    private async Task<IActionResult> ListAsyncCore(
+        IPostListHandler handler,
+        String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        IReadOnlyPaginatedList<IPost> posts =
+            await handler.HandleAsync(userName, cancellationToken);
+
+        Object? response = posts.Select(p => new RetrieveResponse(p));
+        return this.Ok(response);
+    }
+
     [ActionName("Retrieve")]
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

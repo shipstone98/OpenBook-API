@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
+
+using Shipstone.Extensions.Pagination;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
@@ -18,6 +21,7 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Rep
 public sealed class PostRepositoryTest
 {
     private readonly MockDataSource _dataSource;
+    private readonly PaginationOptions _options;
     private readonly IPostRepository _repository;
 
     public PostRepositoryTest()
@@ -31,8 +35,13 @@ public sealed class PostRepositoryTest
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
         MockDataSource dataSource = new();
         services.AddSingleton<IDataSource>(dataSource);
+        MockOptionsSnapshot<PaginationOptions> options = new();
+        services.AddSingleton<IOptionsSnapshot<PaginationOptions>>(options);
+        PaginationOptions optionsValue = new();
+        options._valueFunc = () => optionsValue;
         IServiceProvider provider = new MockServiceProvider(services);
         this._dataSource = dataSource;
+        this._options = optionsValue;
         this._repository = provider.GetRequiredService<IPostRepository>();
     }
 
@@ -68,6 +77,45 @@ public sealed class PostRepositoryTest
 
         // Act
         await this._repository.CreateAsync(
+            post,
+            CancellationToken.None
+        );
+
+        // Nothing to assert
+    }
+
+    [Fact]
+    public async Task TestDeleteAsync_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._repository.DeleteAsync(null!, CancellationToken.None));
+
+        // Assert
+        Assert.Equal("post", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestDeleteAsync_Valid()
+    {
+        // Arrange
+        PostEntity post = new();
+
+        this._dataSource._postsFunc = () =>
+        {
+            IQueryable<PostEntity> query =
+                Array
+                    .Empty<PostEntity>()
+                    .AsQueryable();
+
+            MockDataSet<PostEntity> dataSet = new(query);
+            dataSet._setStateAction = (_, _) => { };
+            return dataSet;
+        };
+
+        // Act
+        await this._repository.DeleteAsync(
             post,
             CancellationToken.None
         );

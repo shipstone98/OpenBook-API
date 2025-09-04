@@ -24,6 +24,7 @@ public static class EntityFrameworkCoreDataInfrastructureServiceCollectionExtens
 
         return services
             .AddSingleton<INormalizationService, NormalizationService>()
+            .AddScoped<IPaginationService, PaginationService>()
             .AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IRepository, Repository>()
             .AddScoped<IRoleRepository, RoleRepository>()

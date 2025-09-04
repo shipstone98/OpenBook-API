@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -12,9 +13,11 @@ using Shipstone.AspNetCore.Http;
 using Shipstone.Extensions.Identity;
 using Shipstone.Extensions.Security;
 using Shipstone.Utilities.Security;
+using Shipstone.Utilities.Text.Json;
 
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
+using Shipstone.OpenBook.Api.Infrastructure.Authorization;
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 using Shipstone.OpenBook.Api.Infrastructure.Data.MySql;
 using Shipstone.OpenBook.Api.Infrastructure.Mail;
@@ -53,16 +56,30 @@ builder.Services
 
 builder.Services
     .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        JsonConverter converter = new PaginatedListJsonConverterFactory();
+        options.JsonSerializerOptions.Converters.Add(converter);
+    })
     .AddOpenBookControllers();
 
 builder.Services
     .AddArgumentExceptionHandling()
     .AddIdentityExtensions()
+    .AddPagination(
+        builder.Configuration
+            .GetSection("Pagination")
+            .Bind
+    )
     .AddOpenBookCore()
     .AddOpenBookInfrastructureAuthentication(authenticationSection.Bind)
+    .AddOpenBookInfrastructureAuthorization()
     .AddOpenBookInfrastructureDataEntityFrameworkCore()
     .AddOpenBookInfrastructureDataMySql(connectionString)
+    .AddOpenBookWebAuthorization()
     .AddOpenBookWebClaims()
+    .AddOpenBookWebForbiddenExceptionHandling()
+    .AddOpenBookWebNotFoundExceptionHandling()
     .AddSingleton<IEncryptionService, StubEncryptionService>()
     .AddSingleton<IMailService, StubMailService>()
     .AddSingleton<IPasswordHasher<IPasswordService>, PasswordHasher<IPasswordService>>()
@@ -88,9 +105,12 @@ builder.Services
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();
 app.UseArgumentExceptionHandling();
+app.UseOpenBookWebForbiddenExceptionHandling();
+app.UseOpenBookWebNotFoundExceptionHandling();
 app.UseAuthentication();
 app.UseOpenBookWebClaims();
 app.UseAuthorization();
+app.UsePagination();
 app.MapControllers();
 await app.RunAsync();
 return 0;

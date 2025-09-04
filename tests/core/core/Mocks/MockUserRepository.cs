@@ -11,12 +11,14 @@ internal sealed class MockUserRepository : IUserRepository
 {
     internal Func<Guid, UserEntity?> _retrieve_GuidFunc;
     internal Func<String, UserEntity?> _retrieve_StringFunc;
+    internal Func<String, UserEntity?> _retrieveForNameFunc;
     internal Action<UserEntity> _updateAction;
 
     public MockUserRepository()
     {
         this._retrieve_GuidFunc = _ => throw new NotImplementedException();
         this._retrieve_StringFunc = _ => throw new NotImplementedException();
+        this._retrieveForNameFunc = _ => throw new NotImplementedException();
         this._updateAction = _ => throw new NotImplementedException();
     }
 
@@ -35,6 +37,15 @@ internal sealed class MockUserRepository : IUserRepository
     )
     {
         UserEntity? result = this._retrieve_GuidFunc(id);
+        return Task.FromResult(result);
+    }
+
+    Task<UserEntity?> IUserRepository.RetrieveForNameAsync(
+        String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        UserEntity? result = this._retrieveForNameFunc(userName);
         return Task.FromResult(result);
     }
 

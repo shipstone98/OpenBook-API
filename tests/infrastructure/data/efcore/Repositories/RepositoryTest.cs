@@ -4,7 +4,10 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
+
+using Shipstone.Extensions.Pagination;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
@@ -12,7 +15,7 @@ using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Mocks;
 using Shipstone.Test.Mocks;
 
-namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest;
+namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Repositories;
 
 public sealed class RepositoryTest
 {
@@ -30,6 +33,10 @@ public sealed class RepositoryTest
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
         MockDataSource dataSource = new();
         services.AddSingleton<IDataSource>(dataSource);
+        MockOptionsSnapshot<PaginationOptions> options = new();
+        services.AddSingleton<IOptionsSnapshot<PaginationOptions>>(options);
+        PaginationOptions optionsValue = new();
+        options._valueFunc = () => optionsValue;
         services.AddSingleton<HMAC, MockHMAC>();
         IServiceProvider provider = new MockServiceProvider(services);
         this._dataSource = dataSource;

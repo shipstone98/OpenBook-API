@@ -7,4 +7,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.8" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\core\abstractions\Shipstone.OpenBook.Api.Core.AbstractionsTest.csproj" />
+  </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Builder;
 
 using Shipstone.OpenBook.Api.Core;
+using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Web.Middleware;
 
 namespace Shipstone.OpenBook.Api.Web;
@@ -21,6 +22,18 @@ public static class ApplicationBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(app);
         return app.UseMiddleware<ClaimsMiddleware>();
+    }
+
+    /// <summary>
+    /// Adds OpenBook web <see cref="ForbiddenException" /> middleware to the specified <see cref="IApplicationBuilder" />.
+    /// </summary>
+    /// <param name="app">The <see cref="IApplicationBuilder" /> to add middleware to with.</param>
+    /// <returns>A reference to <c><paramref name="app" /></c> that can be further used to add middleware.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="app" /></c> is <c>null</c>.</exception>
+    public static IApplicationBuilder UseOpenBookWebForbiddenExceptionHandling(this IApplicationBuilder app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+        return app.UseMiddleware<ForbiddenExceptionHandlingMiddleware>();
     }
 
     /// <summary>

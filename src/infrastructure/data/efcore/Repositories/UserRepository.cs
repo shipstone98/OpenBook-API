@@ -44,6 +44,21 @@ internal sealed class UserRepository : IUserRepository
         return users.FirstOrDefault(u => emailAddress.Equals(u.EmailAddress));
     }
 
+    private async Task<UserEntity?> RetrieveForNameAsync(
+        String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        String userNameNormalized = this._normalization.Normalize(userName);
+
+        IEnumerable<UserEntity> users =
+            await this._dataSource.Users
+                .Where(u => userNameNormalized.Equals(u.UserNameNormalized))
+                .ToArrayAsync(cancellationToken);
+
+        return users.FirstOrDefault(u => userName.Equals(u.UserName));
+    }
+
     Task<UserEntity?> IUserRepository.RetrieveAsync(
         String emailAddress,
         CancellationToken cancellationToken
@@ -70,6 +85,15 @@ internal sealed class UserRepository : IUserRepository
             u => Guid.Equals(id, u.Id),
             cancellationToken
         );
+    }
+
+    Task<UserEntity?> IUserRepository.RetrieveForNameAsync(
+        String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(userName);
+        return this.RetrieveForNameAsync(userName, cancellationToken);
     }
 
     Task IUserRepository.UpdateAsync(

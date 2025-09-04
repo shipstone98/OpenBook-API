@@ -34,34 +34,11 @@ internal sealed class PostRetrieveHandler : IPostRetrieveHandler
             throw new NotFoundException("A post whose ID matches the provided ID could not be found.");
         }
 
-        Guid creatorId = post.CreatorId;
-        String creatorEmailAddress;
-        String creatorName;
-
-        if (this._claims.IsAuthenticated && Guid.Equals(creatorId, this._claims.Id))
-        {
-            creatorEmailAddress = this._claims.EmailAddress;
-            creatorName = this._claims.UserName;
-        }
-
-        else
-        {
-            UserEntity? creator =
-                await this._repository.Users.RetrieveAsync(
-                    creatorId,
-                    cancellationToken
-                );
-
-            if (creator is null)
-            {
-                throw new NotFoundException("A user whose ID matches the creator ID of the post whose ID matches the provided ID could not be found.");
-            }
-
-            creatorEmailAddress = creator.EmailAddress;
-            creatorName = creator.UserName;
-        }
-
-        return new Post(post, creatorEmailAddress, creatorName);
+        return await this._repository.RetrievePostAsync(
+            this._claims,
+            post,
+            cancellationToken
+        );
     }
 
     Task<IPost> IPostRetrieveHandler.HandleAsync(

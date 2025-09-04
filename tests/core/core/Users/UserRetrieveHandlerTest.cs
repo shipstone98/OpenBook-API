@@ -13,6 +13,7 @@ using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
+using Shipstone.OpenBook.Api.Test.Mocks;
 using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.CoreTest.Users;

@@ -191,6 +191,87 @@ public sealed class UserRepositoryTest
 #endregion
 #endregion
 
+#region RetrieveForName method
+    [Fact]
+    public async Task TestRetrieveForNameAsync_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._repository.RetrieveForNameAsync(
+                    null!,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("userName", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestRetrieveForNameAsync_Valid_Contains()
+    {
+        // Arrange
+        const String USER_NAME = "johndoe2025";
+        this._hmac._hashCoreAction = (_, _, _) => { };
+        this._hmac._hashFinalFunc = () => Array.Empty<byte>();
+        this._hmac._initializeAction = () => { };
+
+        this._dataSource._usersFunc = () =>
+        {
+            IEnumerable<UserEntity> users = new List<UserEntity>
+            {
+                new UserEntity
+                {
+                    UserName = USER_NAME
+                }
+            };
+
+            IQueryable<UserEntity> query = users.AsQueryable();
+            return new MockDataSet<UserEntity>(query);
+        };
+
+        // Act
+        UserEntity? user =
+            await this._repository.RetrieveForNameAsync(
+                USER_NAME,
+                CancellationToken.None
+            );
+
+        // Assert
+        Assert.NotNull(user);
+        Assert.Equal(USER_NAME, user.UserName);
+    }
+
+    [Fact]
+    public async Task TestRetrieveForNameAsync_Valid_NotContains()
+    {
+        // Arrange
+        this._hmac._hashCoreAction = (_, _, _) => { };
+        this._hmac._hashFinalFunc = () => Array.Empty<byte>();
+        this._hmac._initializeAction = () => { };
+
+        this._dataSource._usersFunc = () =>
+        {
+            IQueryable<UserEntity> query =
+                Array
+                    .Empty<UserEntity>()
+                    .AsQueryable();
+
+            return new MockDataSet<UserEntity>(query);
+        };
+
+        // Act
+        UserEntity? user =
+            await this._repository.RetrieveForNameAsync(
+                "johndoe2025",
+                CancellationToken.None
+            );
+
+        // Assert
+        Assert.Null(user);
+    }
+#endregion
+
     [Fact]
     public async Task TestUpdateAsync_Invalid()
     {

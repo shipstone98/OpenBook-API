@@ -2,14 +2,14 @@ using System;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
 
-namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
+namespace Shipstone.OpenBook.Api.Test.Mocks;
 
-internal sealed class MockClaimsService : IClaimsService
+public sealed class MockClaimsService : IClaimsService
 {
-    internal Func<String> _emailAddressFunc;
-    internal Func<Guid> _idFunc;
-    internal Func<bool> _isAuthenticatedFunc;
-    internal Func<String> _userNameFunc;
+    public Func<String> _emailAddressFunc;
+    public Func<Guid> _idFunc;
+    public Func<bool> _isAuthenticatedFunc;
+    public Func<String> _userNameFunc;
 
     String IClaimsService.EmailAddress => this._emailAddressFunc();
     Guid IClaimsService.Id => this._idFunc();

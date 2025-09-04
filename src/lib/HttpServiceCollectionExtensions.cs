@@ -2,6 +2,8 @@ using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
+using Shipstone.Extensions.Pagination;
+
 namespace Shipstone.AspNetCore.Http;
 
 public static class HttpServiceCollectionExtensions
@@ -15,5 +17,23 @@ public static class HttpServiceCollectionExtensions
 
         return services.AddSingleton(_ =>
             new ArgumentExceptionHandlingMiddleware(statusCode));
+    }
+
+    public static IServiceCollection AddPagination(
+        this IServiceCollection services,
+        Action<PaginationOptions>? configurePagination = null
+    )
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        return services
+            .AddScoped<PaginationMiddleware>()
+            .Configure<PaginationOptions>(options =>
+            {
+                if (configurePagination is not null)
+                {
+                    configurePagination(options);
+                }
+            });
     }
 }
