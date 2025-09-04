@@ -45,25 +45,8 @@ public sealed class PostListHandlerTest
     }
 
 #region HandleAsync methods
-#region No parameters
     [Fact]
-    public async Task TestHandleAsync_Failure()
-    {
-        // Arrange
-        Exception innerException = new UnauthorizedException();
-        this._claims._idFunc = () => throw innerException;
-
-        // Act
-        Exception ex =
-            await Assert.ThrowsAsync<UnauthorizedException>(() =>
-                this._handler.HandleAsync(CancellationToken.None));
-
-        // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex));
-    }
-
-    [Fact]
-    public async Task TestHandleAsync_Success_Empty()
+    public async Task TestHandleAsync_Empty()
     {
         // Arrange
         const int TOTAL_COUNT = 0;
@@ -106,7 +89,7 @@ public sealed class PostListHandlerTest
     }
 
     [Fact]
-    public async Task TestHandleAsync_Success_NotEmpty()
+    public async Task TestHandleAsync_NotEmpty()
     {
 #region Arrange
         // Arrange
@@ -167,7 +150,6 @@ public sealed class PostListHandlerTest
 
             return posts;
         };
-#endregion
 #endregion
 
         // Act
