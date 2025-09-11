@@ -18,6 +18,9 @@ internal sealed class Repository : IRepository
     IRoleRepository IRepository.Roles =>
         this._provider.GetRequiredService<IRoleRepository>();
 
+    IUserDeviceRepository IRepository.UserDevices =>
+        this._provider.GetRequiredService<IUserDeviceRepository>();
+
     IUserFollowingRepository IRepository.UserFollowings =>
         this._provider.GetRequiredService<IUserFollowingRepository>();
 

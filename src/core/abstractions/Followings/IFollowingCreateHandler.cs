@@ -15,6 +15,7 @@ public interface IFollowingCreateHandler
     /// Asynchronously follows the specified user for the current user.
     /// </summary>
     /// <param name="userName">The name of the user to follow.</param>
+    /// <param name="isSubscribed"><c>true</c> if the current user is to be subscribed to the user whose name matches <c><paramref name="userName" /></c>; otherwise, <c>false</c>.</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous retrieve operation. The value of <see cref="Task{TResult}.Result" /> contains the created <see cref="IFollowing" />.</returns>
     /// <exception cref="ArgumentNullException"><c><paramref name="userName" /></c> is <c>null</c>.</exception>
@@ -25,6 +26,7 @@ public interface IFollowingCreateHandler
     /// <exception cref="UserNotActiveException">The user whose name matches the provided user name is not active.</exception>
     Task<IFollowing> HandleAsync(
         String userName,
+        bool isSubscribed,
         CancellationToken cancellationToken
     );
 }

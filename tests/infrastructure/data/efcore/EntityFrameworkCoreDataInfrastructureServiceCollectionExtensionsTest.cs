@@ -47,6 +47,7 @@ public sealed class EntityFrameworkCoreDataInfrastructureServiceCollectionExtens
             typeof (IPostRepository),
             typeof (IRepository),
             typeof (IRoleRepository),
+            typeof (IUserDeviceRepository),
             typeof (IUserFollowingRepository),
             typeof (IUserRefreshTokenRepository),
             typeof (IUserRoleRepository),

@@ -22,6 +22,12 @@ public interface IRepository
     IRoleRepository Roles { get; }
 
     /// <summary>
+    /// Gets the user device repository.
+    /// </summary>
+    /// <value>The user device repository.</value>
+    IUserDeviceRepository UserDevices { get; }
+
+    /// <summary>
     /// Gets the follower-followee association repository.
     /// </summary>
     /// <value>The follower-followee association repository.</value>

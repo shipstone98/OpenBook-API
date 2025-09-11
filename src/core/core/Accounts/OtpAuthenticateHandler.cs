@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.Utilities.Linq;
+
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
@@ -69,7 +71,7 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
             );
 
         IEnumerable<String> roleCollection =
-            roles.ToBlockingEnumerable(cancellationToken);
+            await roles.ToListAsync(cancellationToken);
 
         IAuthenticateResult result =
             await this._authentication.AuthenticateAsync(

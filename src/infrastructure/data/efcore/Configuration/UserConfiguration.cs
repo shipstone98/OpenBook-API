@@ -59,6 +59,12 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             .OnDelete(DeleteBehavior.NoAction);
 
         builder
+            .HasMany<UserDeviceEntity>()
+            .WithOne()
+            .HasForeignKey(ud => ud.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder
             .HasMany<UserFollowingEntity>()
             .WithOne()
             .HasForeignKey(uf => uf.FolloweeId)

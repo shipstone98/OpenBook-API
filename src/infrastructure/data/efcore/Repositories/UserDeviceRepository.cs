@@ -9,18 +9,18 @@ using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Repositories;
 
-internal sealed class UserRoleRepository : IUserRoleRepository
+internal sealed class UserDeviceRepository : IUserDeviceRepository
 {
     private readonly IDataSource _dataSource;
 
-    public UserRoleRepository(IDataSource dataSource)
+    public UserDeviceRepository(IDataSource dataSource)
     {
         ArgumentNullException.ThrowIfNull(dataSource);
         this._dataSource = dataSource;
     }
 
 #warning Not tested
-    Task<UserRoleEntity[]> IUserRoleRepository.ListForUserAsync(
+    Task<UserDeviceEntity[]> IUserDeviceRepository.ListForUserAsync(
         Guid userId,
         CancellationToken cancellationToken
     )
@@ -33,8 +33,8 @@ internal sealed class UserRoleRepository : IUserRoleRepository
             );
         }
 
-        return this._dataSource.UserRoles
-            .Where(ur => Guid.Equals(userId, ur.UserId))
+        return this._dataSource.UserDevices
+            .Where(ud => Guid.Equals(userId, ud.UserId))
             .ToArrayAsync(cancellationToken);
     }
 }

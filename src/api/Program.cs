@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using Shipstone.AspNetCore.Http;
 using Shipstone.Extensions.Identity;
+using Shipstone.Extensions.Notifications;
 using Shipstone.Extensions.Security;
 using Shipstone.Utilities.Security;
 using Shipstone.Utilities.Text.Json;
@@ -23,6 +24,7 @@ using Shipstone.OpenBook.Api.Infrastructure.Authorization;
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 using Shipstone.OpenBook.Api.Infrastructure.Data.MySql;
 using Shipstone.OpenBook.Api.Infrastructure.Mail;
+using Shipstone.OpenBook.Api.Infrastructure.Notifications;
 using Shipstone.OpenBook.Api.Web;
 using Shipstone.OpenBook.Api.WebApi;
 
@@ -74,6 +76,7 @@ builder.Services
     .AddArgumentExceptionHandling()
     .AddIdentityExtensions()
     .AddNcsaCommonLogging(ncsaCommonLoggingWriter)
+    .AddNotificationsExtensions()
     .AddPagination(
         builder.Configuration
             .GetSection("Pagination")
@@ -84,6 +87,7 @@ builder.Services
     .AddOpenBookInfrastructureAuthorization()
     .AddOpenBookInfrastructureDataEntityFrameworkCore()
     .AddOpenBookInfrastructureDataMySql(connectionString)
+    .AddOpenBookInfrastructureNotifications()
     .AddOpenBookWebAuthorization()
     .AddOpenBookWebClaims()
     .AddOpenBookWebConflictExceptionHandling()

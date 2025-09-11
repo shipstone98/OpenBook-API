@@ -7,19 +7,19 @@ using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 
-internal sealed class MockUserRoleRepository : IUserRoleRepository
+internal sealed class MockUserDeviceRepository : IUserDeviceRepository
 {
-    internal Func<Guid, UserRoleEntity[]> _listForUserFunc;
+    internal Func<Guid, UserDeviceEntity[]> _listForUserFunc;
 
-    internal MockUserRoleRepository() =>
+    internal MockUserDeviceRepository() =>
         this._listForUserFunc = _ => throw new NotImplementedException();
 
-    Task<UserRoleEntity[]> IUserRoleRepository.ListForUserAsync(
+    Task<UserDeviceEntity[]> IUserDeviceRepository.ListForUserAsync(
         Guid userId,
         CancellationToken cancellationToken
     )
     {
-        UserRoleEntity[] result = this._listForUserFunc(userId);
-        return Task.FromResult(result);
+        UserDeviceEntity[] userDevices = this._listForUserFunc(userId);
+        return Task.FromResult(userDevices);
     }
 }

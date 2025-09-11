@@ -24,6 +24,12 @@ public interface IDataSource
     IDataSet<RoleEntity> Roles { get; }
 
     /// <summary>
+    /// Gets the user device data set.
+    /// </summary>
+    /// <value>An <see cref="IDataSet{TEntity}" /> containing the user devices.</value>
+    IDataSet<UserDeviceEntity> UserDevices { get; }
+
+    /// <summary>
     /// Gets the follower-followee association data set.
     /// </summary>
     /// <value>An <see cref="IDataSet{TEntity}" /> containing the follower-followee associations.</value>

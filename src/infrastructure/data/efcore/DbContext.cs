@@ -20,6 +20,7 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
     private readonly IEncryptionService _encryption;
     private readonly DbSet<PostEntity> _posts;
     private readonly DbSet<RoleEntity> _roles;
+    private readonly DbSet<UserDeviceEntity> _userDevices;
     private readonly DbSet<UserFollowingEntity> _userFollowings;
     private readonly DbSet<UserRefreshTokenEntity> _userRefreshTokens;
     private readonly DbSet<UserRoleEntity> _userRoles;
@@ -27,6 +28,7 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
 
     public DbSet<PostEntity> Posts => this._posts;
     public DbSet<RoleEntity> Roles => this._roles;
+    public DbSet<UserDeviceEntity> UserDevices => this._userDevices;
     public DbSet<UserFollowingEntity> UserFollowings => this._userFollowings;
 
     public DbSet<UserRefreshTokenEntity> UserRefreshTokens =>
@@ -40,6 +42,9 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
 
     IDataSet<RoleEntity> IDataSource.Roles =>
         new DataSet<RoleEntity>(this._roles);
+
+    IDataSet<UserDeviceEntity> IDataSource.UserDevices =>
+        new DataSet<UserDeviceEntity>(this._userDevices);
 
     IDataSet<UserFollowingEntity> IDataSource.UserFollowings =>
         new DataSet<UserFollowingEntity>(this._userFollowings);
@@ -62,6 +67,7 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
         this._encryption = encryption;
         this._posts = this.Set<PostEntity>();
         this._roles = this.Set<RoleEntity>();
+        this._userDevices = this.Set<UserDeviceEntity>();
         this._userFollowings = this.Set<UserFollowingEntity>();
         this._userRefreshTokens = this.Set<UserRefreshTokenEntity>();
         this._userRoles = this.Set<UserRoleEntity>();

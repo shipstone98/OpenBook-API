@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
@@ -29,5 +31,24 @@ internal sealed class UserFollowingRepository : IUserFollowingRepository
             DataEntityState.Created,
             cancellationToken
         );
+    }
+
+#warning Not tested
+    Task<UserFollowingEntity[]> IUserFollowingRepository.ListForFolloweeAsync(
+        Guid followeeId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (Guid.Equals(followeeId, Guid.Empty))
+        {
+            throw new ArgumentException(
+                $"{nameof (followeeId)} is equal to Guid.Empty.",
+                nameof (followeeId)
+            );
+        }
+
+        return this._dataSource.UserFollowings
+            .Where(uf => Guid.Equals(followeeId, uf.FolloweeId))
+            .ToArrayAsync(cancellationToken);
     }
 }

@@ -55,6 +55,7 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
             following =
                 await handler.HandleAsync(
                     request._userName,
+                    request._isSubscribed,
                     cancellationToken
                 );
         }

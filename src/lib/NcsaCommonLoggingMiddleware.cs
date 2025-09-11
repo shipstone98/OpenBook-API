@@ -18,40 +18,20 @@ internal sealed class NcsaCommonLoggingMiddleware
 
     private async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        IPAddress? host = context.Connection.RemoteIpAddress;
-        DateTime received = DateTime.Now;
-        HttpRequest request = context.Request;
-
-        String requestLine =
-            $"{request.Method} {request.Path} {request.Protocol}";
-
-        await next(context);
-        String? authenticatedUser = context.User.Identity?.Name;
         HttpResponse response = context.Response;
-        HttpStatusCode statusCode = (HttpStatusCode) response.StatusCode;
-        Nullable<long> contentLength = response.ContentLength;
-
-        if (!contentLength.HasValue)
-        {
-            try
-            {
-                contentLength = response.Body.Length;
-            }
-
-            catch (NotSupportedException)
-            {
-                contentLength = 0;
-            }
-        }
+        LengthStream body = new(response.Body);
+        response.Body = body;
+        await next(context);
+        HttpRequest request = context.Request;
 
         INcsaCommonLog log =
             new NcsaCommonLog(
-                host,
-                authenticatedUser,
-                received,
-                requestLine,
-                statusCode,
-                contentLength.Value
+                context.Connection.RemoteIpAddress,
+                context.User.Identity?.Name,
+                DateTime.Now,
+                $"{request.Method} {request.Path} {request.Protocol}",
+                (HttpStatusCode) response.StatusCode,
+                body._length
             );
 
         ReadOnlyMemory<char> chars =

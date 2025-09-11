@@ -9,6 +9,8 @@ using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Posts;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
+using Shipstone.OpenBook.Api.Infrastructure.Entities;
+using Shipstone.OpenBook.Api.Infrastructure.Notifications;
 
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
 using Shipstone.OpenBook.Api.Test.Mocks;
@@ -20,6 +22,7 @@ public sealed class PostCreateHandlerTest
 {
     private readonly MockClaimsService _claims;
     private readonly IPostCreateHandler _handler;
+    private readonly MockNotificationService _notification;
     private readonly MockRepository _repository;
 
     public PostCreateHandlerTest()
@@ -33,11 +36,14 @@ public sealed class PostCreateHandlerTest
         services.AddOpenBookCore();
         MockClaimsService claims = new();
         services.AddSingleton<IClaimsService>(claims);
+        MockNotificationService notification = new();
+        services.AddSingleton<INotificationService>(notification);
         MockRepository repository = new();
         services.AddSingleton<IRepository>(repository);
         IServiceProvider provider = new MockServiceProvider(services);
         this._claims = claims;
         this._handler = provider.GetRequiredService<IPostCreateHandler>();
+        this._notification = notification;
         this._repository = repository;
     }
 
@@ -112,12 +118,15 @@ public sealed class PostCreateHandlerTest
     [Fact]
     public async Task TestHandleAsync_Valid_Success()
     {
+#region Arrange
         // Arrange
         const long ID = 12345;
         const String CREATOR_EMAIL_ADDRESS = "john.doe@lampada.co";
         const String CREATOR_USER_NAME = "johndoe2025";
         const long PARENT_ID = 67890;
         const String BODY = "My post body.";
+        Guid followee1Id = Guid.NewGuid();
+        Guid followee2Id = Guid.NewGuid();
         this._claims._idFunc = Guid.NewGuid;
 
         this._repository._postsFunc = () =>
@@ -130,7 +139,62 @@ public sealed class PostCreateHandlerTest
         this._repository._saveAction = () => { };
         this._claims._emailAddressFunc = () => CREATOR_EMAIL_ADDRESS;
         this._claims._userNameFunc = () => CREATOR_USER_NAME;
+
+        this._repository._userFollowingsFunc = () =>
+        {
+            MockUserFollowingRepository userFollowings = new();
+
+            userFollowings._listForFolloweeFunc = _ =>
+                new UserFollowingEntity[]
+                {
+                    new UserFollowingEntity
+                    {
+                        FolloweeId = followee1Id,
+                        IsSubscribed = true
+                    },
+                    new UserFollowingEntity
+                    {
+                        FolloweeId = followee2Id,
+                        IsSubscribed = true
+                    },
+                    new UserFollowingEntity { }
+                };
+
+            return userFollowings;
+        };
+
+        this._repository._userDevicesFunc = () =>
+        {
+            MockUserDeviceRepository userDevices = new();
+
+            userDevices._listForUserFunc = id =>
+            {
+                if (Guid.Equals(followee1Id, id))
+                {
+                    return new UserDeviceEntity[]
+                    {
+                        new UserDeviceEntity { }
+                    };
+                }
+
+                if (Guid.Equals(followee2Id, id))
+                {
+                    return new UserDeviceEntity[]
+                    {
+                        new UserDeviceEntity { },
+                        new UserDeviceEntity { }
+                    };
+                }
+
+                return Array.Empty<UserDeviceEntity>();
+            };
+
+            return userDevices;
+        };
+
+        this._notification._sendPostCreatedAction = (_, _, _) => { };
         DateTime notBefore = DateTime.UtcNow;
+#endregion
 
         // Act
         IPost post =

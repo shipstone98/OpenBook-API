@@ -49,7 +49,11 @@ public sealed class FollowingCreateHandlerTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._handler.HandleAsync(null!, CancellationToken.None));
+                this._handler.HandleAsync(
+                    null!,
+                    false,
+                    CancellationToken.None
+                ));
 
         // Assert
         Assert.Equal("userName", ex.ParamName);
@@ -90,6 +94,7 @@ public sealed class FollowingCreateHandlerTest
             await Assert.ThrowsAsync<ConflictException>(() =>
                 this._handler.HandleAsync(
                     String.Empty,
+                    false,
                     CancellationToken.None
                 ));
 
@@ -123,6 +128,7 @@ public sealed class FollowingCreateHandlerTest
         return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
+                false,
                 CancellationToken.None
             ));
     }
@@ -142,6 +148,7 @@ public sealed class FollowingCreateHandlerTest
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
+                false,
                 CancellationToken.None
             ));
     }
@@ -161,13 +168,16 @@ public sealed class FollowingCreateHandlerTest
         return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(
                 String.Empty,
+                false,
                 CancellationToken.None
             ));
     }
 #endregion
 
-    [Fact]
-    public async Task TestHandleAsync_Valid_Success()
+    [InlineData(false)]
+    [InlineData(true)]
+    [Theory]
+    public async Task TestHandleAsync_Valid_Success(bool isSubscribed)
     {
         // Arrange
         const String FOLLOWER_EMAIL_ADDRESS = "john.doe@contoso.com";
@@ -204,6 +214,7 @@ public sealed class FollowingCreateHandlerTest
         IFollowing following =
             await this._handler.HandleAsync(
                 FOLLOWEE_NAME,
+                isSubscribed,
                 CancellationToken.None
             );
 

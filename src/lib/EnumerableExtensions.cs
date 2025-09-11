@@ -24,8 +24,8 @@ public static class EnumerableExtensions
         );
     }
 
-    private static async IAsyncEnumerable<TResult> SelectAsyncCore<TSource, TResult>(
-        this IEnumerable<TSource> source,
+    internal static async IAsyncEnumerable<TResult> SelectAsyncCore<TSource, TResult>(
+        IEnumerable<TSource> source,
         Func<TSource, CancellationToken, Task<TResult>> selector,
         [EnumeratorCancellation] CancellationToken cancellationToken
     )
@@ -33,6 +33,37 @@ public static class EnumerableExtensions
         foreach (TSource item in source)
         {
             yield return await selector(item, cancellationToken);
+        }
+    }
+
+    public static IAsyncEnumerable<TResult> SelectManyAsync<TSource, TResult>(
+        this IEnumerable<TSource> source,
+        Func<TSource, CancellationToken, Task<IEnumerable<TResult>>> selector,
+        CancellationToken cancellationToken = default
+    )
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(selector);
+
+        return EnumerableExtensions.SelectManyAsyncCore(
+            source,
+            selector,
+            cancellationToken
+        );
+    }
+
+    private static async IAsyncEnumerable<TResult> SelectManyAsyncCore<TSource, TResult>(
+        IEnumerable<TSource> source,
+        Func<TSource, CancellationToken, Task<IEnumerable<TResult>>> selector,
+        [EnumeratorCancellation] CancellationToken cancellationToken
+    )
+    {
+        foreach (TSource item in source)
+        {
+            foreach (TResult resultItem in await selector(item, cancellationToken))
+            {
+                yield return resultItem;
+            }
         }
     }
 }

@@ -5,19 +5,27 @@ using System.Threading.Tasks;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
+using Shipstone.OpenBook.Api.Infrastructure.Notifications;
 
 namespace Shipstone.OpenBook.Api.Core.Posts;
 
 internal sealed class PostCreateHandler : IPostCreateHandler
 {
     private readonly IClaimsService _claims;
+    private readonly INotificationService _notification;
     private readonly IRepository _repository;
 
-    public PostCreateHandler(IRepository repository, IClaimsService claims)
+    public PostCreateHandler(
+        IRepository repository,
+        IClaimsService claims,
+        INotificationService notification
+    )
     {
         ArgumentNullException.ThrowIfNull(repository);
         ArgumentNullException.ThrowIfNull(claims);
+        ArgumentNullException.ThrowIfNull(notification);
         this._claims = claims;
+        this._notification = notification;
         this._repository = repository;
     }
 
@@ -28,12 +36,13 @@ internal sealed class PostCreateHandler : IPostCreateHandler
     {
         DateTime now = DateTime.UtcNow;
         Nullable<long> parentId = builder.ParentId;
+        Guid creatorId = this._claims.Id;
 
         PostEntity post = new PostEntity
         {
             Body = builder.Body,
             Created = now,
-            CreatorId = this._claims.Id,
+            CreatorId = creatorId,
             ParentId = parentId,
             Updated = now
         };
@@ -54,11 +63,17 @@ internal sealed class PostCreateHandler : IPostCreateHandler
             throw;
         }
 
-        return new Post(
-            post,
-            this._claims.EmailAddress,
-            this._claims.UserName
+        String creatorName = this._claims.UserName;
+
+        await this._notification.NotifyAllSubscribedFollowersAsync(
+            this._repository,
+            creatorId,
+            creatorName,
+            post.Id,
+            cancellationToken
         );
+
+        return new Post(post, this._claims.EmailAddress, creatorName);
     }
 
     Task<IPost> IPostCreateHandler.HandleAsync(

@@ -19,6 +19,9 @@ internal sealed class MockDataSource : IDataSource
     IDataSet<PostEntity> IDataSource.Posts => this._postsFunc();
     IDataSet<RoleEntity> IDataSource.Roles => this._rolesFunc();
 
+    IDataSet<UserDeviceEntity> IDataSource.UserDevices =>
+        throw new NotImplementedException();
+
     IDataSet<UserFollowingEntity> IDataSource.UserFollowings =>
         this._userFollowingsFunc();
 

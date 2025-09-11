@@ -26,6 +26,7 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
 
     private async Task<IFollowing> HandleAsync(
         String userName,
+        bool isSubscribed,
         CancellationToken cancellationToken
     )
     {
@@ -62,7 +63,8 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
                 {
                     Followed = followed,
                     FolloweeId = followeeId,
-                    FollowerId = followerId
+                    FollowerId = followerId,
+                    IsSubscribed = isSubscribed
                 },
                 cancellationToken
             );
@@ -87,10 +89,11 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
 
     Task<IFollowing> IFollowingCreateHandler.HandleAsync(
         String userName,
+        bool isSubscribed,
         CancellationToken cancellationToken
     )
     {
         ArgumentNullException.ThrowIfNull(userName);
-        return this.HandleAsync(userName, cancellationToken);
+        return this.HandleAsync(userName, isSubscribed, cancellationToken);
     }
 }

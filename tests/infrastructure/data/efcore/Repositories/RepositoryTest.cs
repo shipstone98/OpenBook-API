@@ -58,6 +58,13 @@ public sealed class RepositoryTest
     }
 
     [Fact]
+    public void TestUserDevices_Get()
+    {
+        // Act and assert
+        Assert.NotNull(this._repository.UserDevices);
+    }
+
+    [Fact]
     public void TestUserFollowings_Get()
     {
         // Act and assert

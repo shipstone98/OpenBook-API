@@ -26,6 +26,12 @@ public class UserFollowingEntity
     public Guid FollowerId { get; init; }
 
     /// <summary>
+    /// Gets or initializes a value indicating whether the associated follower is subscribed to the associated followee.
+    /// </summary>
+    /// <value><c>true</c> if the associated follower is subscribed to the associated followee; otherwise, <c>false</c>.</value>
+    public bool IsSubscribed { get; init; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="UserFollowingEntity" /> class.
     /// </summary>
     public UserFollowingEntity() { }
