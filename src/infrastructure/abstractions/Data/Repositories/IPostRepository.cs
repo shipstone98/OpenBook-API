@@ -41,7 +41,7 @@ public interface IPostRepository
     /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous list operation. The value of <see cref="Task{TResult}.Result" /> contains the listed posts.</returns>
     /// <exception cref="ArgumentException"><c><paramref name="creatorId" /></c> is equal to <see cref="Guid.Empty" />.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
-    Task<IReadOnlyPaginatedList<PostEntity>> ListAsync(
+    Task<IReadOnlyPaginatedList<PostEntity>> ListForCreatorAsync(
         Guid creatorId,
         CancellationToken cancellationToken
     );

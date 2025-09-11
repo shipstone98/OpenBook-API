@@ -32,7 +32,10 @@ internal sealed class PostListHandler : IPostListHandler
     )
     {
         IReadOnlyPaginatedList<PostEntity> posts =
-            await this._repository.Posts.ListAsync(userId, cancellationToken);
+            await this._repository.Posts.ListForCreatorAsync(
+                userId,
+                cancellationToken
+            );
 
         return posts.Select(p => new Post(p, userEmailAddress, userName));
     }

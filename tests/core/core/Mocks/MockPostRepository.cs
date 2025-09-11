@@ -14,14 +14,14 @@ internal sealed class MockPostRepository : IPostRepository
     internal Action<PostEntity> _createAction;
     internal Action<PostEntity> _deleteAction;
 
-    internal Func<Guid, IReadOnlyPaginatedList<PostEntity>> _listFunc;
+    internal Func<Guid, IReadOnlyPaginatedList<PostEntity>> _listForCreatorFunc;
     internal Func<long, PostEntity?> _retrieveFunc;
 
     internal MockPostRepository()
     {
         this._createAction = _ => throw new NotImplementedException();
         this._deleteAction = _ => throw new NotImplementedException();
-        this._listFunc = _ => throw new NotImplementedException();
+        this._listForCreatorFunc = _ => throw new NotImplementedException();
         this._retrieveFunc = _ => throw new NotImplementedException();
     }
 
@@ -43,12 +43,14 @@ internal sealed class MockPostRepository : IPostRepository
         return Task.CompletedTask;
     }
 
-    Task<IReadOnlyPaginatedList<PostEntity>> IPostRepository.ListAsync(
+    Task<IReadOnlyPaginatedList<PostEntity>> IPostRepository.ListForCreatorAsync(
         Guid creatorId,
         CancellationToken cancellationToken
     )
     {
-        IReadOnlyPaginatedList<PostEntity> result = this._listFunc(creatorId);
+        IReadOnlyPaginatedList<PostEntity> result =
+            this._listForCreatorFunc(creatorId);
+
         return Task.FromResult(result);
     }
 

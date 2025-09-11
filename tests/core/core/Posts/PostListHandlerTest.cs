@@ -60,7 +60,7 @@ public sealed class PostListHandlerTest
         {
             MockPostRepository posts = new();
 
-            posts._listFunc = _ =>
+            posts._listForCreatorFunc = _ =>
             {
                 MockReadOnlyPaginatedList<PostEntity> posts = new();
 
@@ -117,7 +117,7 @@ public sealed class PostListHandlerTest
         {
             MockPostRepository posts = new();
 
-            posts._listFunc = _ =>
+            posts._listForCreatorFunc = _ =>
             {
                 MockReadOnlyPaginatedList<PostEntity> posts = new();
 
@@ -232,7 +232,7 @@ public sealed class PostListHandlerTest
         {
             MockPostRepository posts = new();
 
-            posts._listFunc = _ =>
+            posts._listForCreatorFunc = _ =>
             {
                 MockReadOnlyPaginatedList<PostEntity> posts = new();
 
@@ -303,7 +303,7 @@ public sealed class PostListHandlerTest
         {
             MockPostRepository posts = new();
 
-            posts._listFunc = _ =>
+            posts._listForCreatorFunc = _ =>
             {
                 MockReadOnlyPaginatedList<PostEntity> posts = new();
 

@@ -55,7 +55,7 @@ internal sealed class PostRepository : IPostRepository
     ) =>
         this.ModifyAsync(post, DataEntityState.Deleted, cancellationToken);
 
-    Task<IReadOnlyPaginatedList<PostEntity>> IPostRepository.ListAsync(
+    Task<IReadOnlyPaginatedList<PostEntity>> IPostRepository.ListForCreatorAsync(
         Guid creatorId,
         CancellationToken cancellationToken
     )
