@@ -19,12 +19,11 @@ internal sealed class PaginationService : IPaginationService
         this._options = options?.Value ?? new();
 
     async Task<IReadOnlyPaginatedList<T>> IPaginationService.GetPageOrFirstAsync<T>(
-        IDataSet<T> dataSet,
         IQueryable<T> query,
         CancellationToken cancellationToken
     )
     {
-        int totalCount = await dataSet.CountAsync(cancellationToken);
+        int totalCount = await query.CountAsync(cancellationToken);
 
         if (totalCount == 0)
         {

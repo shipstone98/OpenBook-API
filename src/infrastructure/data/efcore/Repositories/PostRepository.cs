@@ -75,11 +75,7 @@ internal sealed class PostRepository : IPostRepository
                 .Where(p => Guid.Equals(creatorId, p.CreatorId))
                 .OrderByDescending(p => p.Created);
 
-        return this._pagination.GetPageOrFirstAsync(
-            dataSet,
-            query,
-            cancellationToken
-        );
+        return this._pagination.GetPageOrFirstAsync(query, cancellationToken);
     }
 
     Task<PostEntity?> IPostRepository.RetrieveAsync(

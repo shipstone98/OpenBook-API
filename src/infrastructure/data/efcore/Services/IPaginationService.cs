@@ -9,7 +9,6 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Service
 internal interface IPaginationService
 {
     Task<IReadOnlyPaginatedList<T>> GetPageOrFirstAsync<T>(
-        IDataSet<T> dataSet,
         IQueryable<T> query,
         CancellationToken cancellationToken
     );
