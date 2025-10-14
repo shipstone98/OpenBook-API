@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,6 +44,20 @@ public interface IPostRepository
     /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     Task<IReadOnlyPaginatedList<PostEntity>> ListForCreatorAsync(
         Guid creatorId,
+        CancellationToken cancellationToken
+    );
+
+    /// <summary>
+    /// Asynchronously lists posts for the specified users.
+    /// </summary>
+    /// <param name="creatorIds">A collection containing the IDs of the creators of posts to list.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous list operation. The value of <see cref="Task{TResult}.Result" /> contains the listed posts.</returns>
+    /// <exception cref="ArgumentException"><c><paramref name="creatorIds" /></c> contains one or more elements that are equal to <see cref="Guid.Empty" />.</exception>
+    /// <exception cref="ArgumentNullException"><c><paramref name="creatorIds" /></c> is <c>null</c>.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task<IReadOnlyPaginatedList<PostEntity>> ListForCreatorsAsync(
+        IEnumerable<Guid> creatorIds,
         CancellationToken cancellationToken
     );
 

@@ -10,6 +10,7 @@ using Shipstone.Extensions.Identity;
 
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
+using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Web.Models.Account;
 
 namespace Shipstone.OpenBook.Api.Web.Controllers;
@@ -198,5 +199,63 @@ internal sealed class AccountController(ILogger<AccountController> logger)
 
         Object? response = new OtpAuthenticateResponse(result);
         return this.Ok(response);
+    }
+
+    [ActionName("Register")]
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> RegisterAsync(
+        [FromServices] IRegisterHandler handler,
+        [FromBody] RegisterRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(request);
+        return this.RegisterAsyncCore(handler, request, cancellationToken);
+    }
+
+    private async Task<IActionResult> RegisterAsyncCore(
+        IRegisterHandler handler,
+        RegisterRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        IUser user;
+
+        try
+        {
+            user =
+                await handler.HandleAsync(
+                    request._emailAddress,
+                    request._userName,
+                    request._forename,
+                    request._surname,
+                    request._born,
+                    cancellationToken
+                );
+        }
+
+        catch (ConflictException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: Failed account creation for user {EmailAddress} - email address and/or user name taken",
+                DateTime.UtcNow,
+                request._emailAddress
+            );
+
+            throw;
+        }
+
+        this._logger.LogInformation(
+            "{TimeStamp}: Account created for user {EmailAddress}",
+            user.Created,
+            user.EmailAddress
+        );
+
+        return this.NoContent();
     }
 }

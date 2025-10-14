@@ -19,6 +19,20 @@ internal sealed class UserRoleRepository : IUserRoleRepository
         this._dataSource = dataSource;
     }
 
+    Task IUserRoleRepository.CreateAsync(
+        UserRoleEntity userRole,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(userRole);
+
+        return this._dataSource.UserRoles.SetStateAsync(
+            userRole,
+            DataEntityState.Created,
+            cancellationToken
+        );
+    }
+
 #warning Not tested
     Task<UserRoleEntity[]> IUserRoleRepository.ListForUserAsync(
         Guid userId,

@@ -9,6 +9,12 @@ namespace Shipstone.OpenBook.Api.Core.Users;
 public interface IUser
 {
     /// <summary>
+    /// Gets the date the <see cref="IUser" /> was born.
+    /// </summary>
+    /// <value>The date the <see cref="IUser" /> was born.</value>
+    DateOnly Born { get; }
+
+    /// <summary>
     /// Gets the date and time the <see cref="IUser" /> last consented to policy.
     /// </summary>
     /// <value>The date and time the <see cref="IUser" /> last consented to policy.</value>

@@ -50,10 +50,12 @@ public sealed class CoreServiceCollectionExtensionsTest
             typeof (IAuthenticateHandler),
             typeof (IFollowingCreateHandler),
             typeof (IOtpAuthenticateHandler),
+            typeof (IPostAggregateHandler),
             typeof (IPostCreateHandler),
             typeof (IPostDeleteHandler),
             typeof (IPostListHandler),
             typeof (IPostRetrieveHandler),
+            typeof (IRegisterHandler),
             typeof (IUserRetrieveHandler)
         };
 

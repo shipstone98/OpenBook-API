@@ -11,11 +11,13 @@ internal sealed class MockUserFollowingRepository : IUserFollowingRepository
 {
     internal Action<UserFollowingEntity> _createAction;
     internal Func<Guid, UserFollowingEntity[]> _listForFolloweeFunc;
+    internal Func<Guid, UserFollowingEntity[]> _listForFollowerFunc;
 
     internal MockUserFollowingRepository()
     {
         this._createAction = _ => throw new NotImplementedException();
         this._listForFolloweeFunc = _ => throw new NotImplementedException();
+        this._listForFollowerFunc = _ => throw new NotImplementedException();
     }
 
     Task IUserFollowingRepository.CreateAsync(
@@ -33,6 +35,15 @@ internal sealed class MockUserFollowingRepository : IUserFollowingRepository
     )
     {
         UserFollowingEntity[] result = this._listForFolloweeFunc(followeeId);
+        return Task.FromResult(result);
+    }
+
+    Task<UserFollowingEntity[]> IUserFollowingRepository.ListForFollowerAsync(
+        Guid followerId,
+        CancellationToken cancellationToken
+    )
+    {
+        UserFollowingEntity[] result = this._listForFollowerFunc(followerId);
         return Task.FromResult(result);
     }
 }

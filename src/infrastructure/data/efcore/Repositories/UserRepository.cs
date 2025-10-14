@@ -27,6 +27,20 @@ internal sealed class UserRepository : IUserRepository
         this._normalization = normalization;
     }
 
+    Task IUserRepository.CreateAsync(
+        UserEntity user,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return this._dataSource.Users.SetStateAsync(
+            user,
+            DataEntityState.Created,
+            cancellationToken
+        );
+    }
+
     private async Task<UserEntity?> RetrieveAsync(
         String emailAddress,
         CancellationToken cancellationToken

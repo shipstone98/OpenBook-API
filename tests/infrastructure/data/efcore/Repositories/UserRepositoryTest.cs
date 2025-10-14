@@ -41,6 +41,42 @@ public sealed class UserRepositoryTest
         this._repository = provider.GetRequiredService<IUserRepository>();
     }
 
+    [Fact]
+    public async Task TestCreateAsync_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._repository.CreateAsync(null!, CancellationToken.None));
+
+        // Assert
+        Assert.Equal("user", ex.ParamName);
+    }
+
+    [Fact]
+    public Task TestCreateAsync_Valid()
+    {
+        // Arrange
+        UserEntity user = new();
+
+        this._dataSource._usersFunc = () =>
+        {
+            IQueryable<UserEntity> query =
+                Array
+                    .Empty<UserEntity>()
+                    .AsQueryable();
+
+            MockDataSet<UserEntity> dataSet = new(query);
+            dataSet._setStateAction = (_, _) => { };
+            return dataSet;
+        };
+
+        // Act
+        return this._repository.CreateAsync(user, CancellationToken.None);
+
+        // Nothing to assert
+    }
+
 #region RetrieveAsync methods
 #region Guid parameter
     [Fact]

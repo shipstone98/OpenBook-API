@@ -12,7 +12,6 @@ internal sealed class MockReadOnlyPaginatedList<T> : IReadOnlyPaginatedList<T>
     internal Func<int> _totalCountFunc;
 
     int IReadOnlyCollection<T>.Count => throw new NotImplementedException();
-
     int IReadOnlyPaginatedList<T>.PageCount => this._pageCountFunc();
     int IReadOnlyPaginatedList<T>.PageIndex => this._pageIndexFunc();
     int IReadOnlyPaginatedList<T>.TotalCount => this._totalCountFunc();

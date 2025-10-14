@@ -9,6 +9,7 @@ internal sealed class RetrieveResponse
 {
     private readonly IUser _user;
 
+    public DateOnly Born => this._user.Born;
     public DateTime Consented => this._user.Consented;
     public DateTime Created => this._user.Created;
     public String EmailAddress => this._user.EmailAddress;

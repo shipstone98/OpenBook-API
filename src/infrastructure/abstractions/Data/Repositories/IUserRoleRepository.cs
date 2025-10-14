@@ -12,6 +12,19 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 public interface IUserRoleRepository
 {
     /// <summary>
+    /// Asynchronously creates a user-role assocation with the specified properties.
+    /// </summary>
+    /// <param name="userRole">The user-role association to create.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task" /> that represents the asynchronous create operation.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="userRole" /></c> is <c>null</c>.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task CreateAsync(
+        UserRoleEntity userRole,
+        CancellationToken cancellationToken
+    );
+
+    /// <summary>
     /// Asynchronously lists all user-role associations with the specified user ID.
     /// </summary>
     /// <param name="userId">A <see cref="Guid" /> containing the ID of the user to list associated roles for.</param>

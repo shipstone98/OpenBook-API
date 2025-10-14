@@ -9,10 +9,23 @@ namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 
 internal sealed class MockUserRoleRepository : IUserRoleRepository
 {
+    internal Action<UserRoleEntity> _createAction;
     internal Func<Guid, UserRoleEntity[]> _listForUserFunc;
 
-    internal MockUserRoleRepository() =>
+    internal MockUserRoleRepository()
+    {
+        this._createAction = _ => { };
         this._listForUserFunc = _ => throw new NotImplementedException();
+    }
+
+    Task IUserRoleRepository.CreateAsync(
+        UserRoleEntity userRole,
+        CancellationToken cancellationToken
+    )
+    {
+        this._createAction(userRole);
+        return Task.CompletedTask;
+    }
 
     Task<UserRoleEntity[]> IUserRoleRepository.ListForUserAsync(
         Guid userId,

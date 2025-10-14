@@ -51,4 +51,23 @@ internal sealed class UserFollowingRepository : IUserFollowingRepository
             .Where(uf => Guid.Equals(followeeId, uf.FolloweeId))
             .ToArrayAsync(cancellationToken);
     }
+
+#warning Not tested
+    Task<UserFollowingEntity[]> IUserFollowingRepository.ListForFollowerAsync(
+        Guid followerId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (Guid.Equals(followerId, Guid.Empty))
+        {
+            throw new ArgumentException(
+                $"{nameof (followerId)} is equal to Guid.Empty.",
+                nameof (followerId)
+            );
+        }
+
+        return this._dataSource.UserFollowings
+            .Where(uf => Guid.Equals(followerId, uf.FollowerId))
+            .ToArrayAsync(cancellationToken);
+    }
 }

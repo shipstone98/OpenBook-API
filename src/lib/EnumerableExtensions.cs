@@ -25,7 +25,7 @@ public static class EnumerableExtensions
     }
 
     internal static async IAsyncEnumerable<TResult> SelectAsyncCore<TSource, TResult>(
-        IEnumerable<TSource> source,
+        this IEnumerable<TSource> source,
         Func<TSource, CancellationToken, Task<TResult>> selector,
         [EnumeratorCancellation] CancellationToken cancellationToken
     )

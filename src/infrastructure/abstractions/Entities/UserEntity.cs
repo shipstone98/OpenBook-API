@@ -18,6 +18,12 @@ public class UserEntity : Entity<Guid>
     private String _userNameNormalized;
 
     /// <summary>
+    /// Gets or initializes the date the user was born.
+    /// </summary>
+    /// <value>The date the user was born.</value>
+    public DateOnly Born { get; init; }
+
+    /// <summary>
     /// Gets or initializes the date and time the user last consented to policy.
     /// </summary>
     /// <value>The date and time the user last consented to policy.</value>

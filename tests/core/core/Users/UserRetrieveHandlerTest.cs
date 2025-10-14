@@ -104,13 +104,20 @@ public sealed class UserRetrieveHandlerTest
 #region Arrange
         // Arrange
         Guid id = Guid.NewGuid();
-        DateTime created = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
+        DateTime created = now;
         DateTime updated = created.AddDays(12345);
         const String EMAIL_ADDRESS = "john.doe@contoso.com";
         const String USER_NAME = "johndoe2025";
         const String FORENAME = "John";
         const String SURNAME = "Doe";
         DateTime consented = created.AddDays(1);
+
+        DateOnly born =
+            DateOnly
+                .FromDateTime(now)
+                .AddYears(-18);
+
         this._claims._idFunc = () => id;
 
         this._repository._usersFunc = () =>
@@ -120,6 +127,7 @@ public sealed class UserRetrieveHandlerTest
             users._retrieve_GuidFunc = id =>
                 new UserEntity
                 {
+                    Born = born,
                     Consented = consented,
                     Created = created,
                     EmailAddress = EMAIL_ADDRESS,
@@ -204,17 +212,18 @@ public sealed class UserRetrieveHandlerTest
             Roles.User
         };
 
-        Assert.Equal(consented, user.Consented);
-        Assert.Equal(DateTimeKind.Utc, user.Consented.Kind);
-        Assert.Equal(created, user.Created);
-        Assert.Equal(DateTimeKind.Utc, user.Created.Kind);
-        Assert.Equal(EMAIL_ADDRESS, user.EmailAddress);
-        Assert.Equal(FORENAME, user.Forename);
-        Assert.Equal(id, user.Id);
-        Assert.True(roles.SequenceEqual(user.Roles));
-        Assert.Equal(SURNAME, user.Surname);
-        Assert.Equal(updated, user.Updated);
-        Assert.Equal(USER_NAME, user.UserName);
+        user.AssertEqual(
+            id,
+            created,
+            updated,
+            EMAIL_ADDRESS,
+            USER_NAME,
+            FORENAME,
+            SURNAME,
+            born,
+            consented,
+            roles
+        );
     }
 
     [Fact]
@@ -223,13 +232,20 @@ public sealed class UserRetrieveHandlerTest
 #region Arrange
         // Arrange
         Guid id = Guid.NewGuid();
-        DateTime created = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
+        DateTime created = now;
         DateTime updated = created.AddDays(12345);
         const String EMAIL_ADDRESS = "john.doe@contoso.com";
         const String USER_NAME = "johndoe2025";
         const String FORENAME = "John";
         const String SURNAME = "Doe";
         DateTime consented = created.AddDays(1);
+
+        DateOnly born =
+            DateOnly
+                .FromDateTime(now)
+                .AddYears(-18);
+
         this._claims._idFunc = () => id;
 
         this._repository._usersFunc = () =>
@@ -239,6 +255,7 @@ public sealed class UserRetrieveHandlerTest
             users._retrieve_GuidFunc = id =>
                 new UserEntity
                 {
+                    Born = born,
                     Consented = consented,
                     Created = created,
                     EmailAddress = EMAIL_ADDRESS,
@@ -265,17 +282,20 @@ public sealed class UserRetrieveHandlerTest
         IUser user = await this._handler.HandleAsync(CancellationToken.None);
 
         // Assert
-        Assert.Equal(consented, user.Consented);
-        Assert.Equal(DateTimeKind.Utc, user.Consented.Kind);
-        Assert.Equal(created, user.Created);
-        Assert.Equal(DateTimeKind.Utc, user.Created.Kind);
-        Assert.Equal(EMAIL_ADDRESS, user.EmailAddress);
-        Assert.Equal(FORENAME, user.Forename);
-        Assert.Equal(id, user.Id);
-        Assert.Empty(user.Roles);
-        Assert.Equal(SURNAME, user.Surname);
-        Assert.Equal(updated, user.Updated);
-        Assert.Equal(USER_NAME, user.UserName);
+        IEnumerable<String> roles = Array.Empty<String>();
+
+        user.AssertEqual(
+            id,
+            created,
+            updated,
+            EMAIL_ADDRESS,
+            USER_NAME,
+            FORENAME,
+            SURNAME,
+            born,
+            consented,
+            roles
+        );
     }
 #endregion
 }

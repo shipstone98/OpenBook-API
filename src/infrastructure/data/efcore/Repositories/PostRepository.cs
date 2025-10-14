@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,6 +74,32 @@ internal sealed class PostRepository : IPostRepository
         IQueryable<PostEntity> query =
             dataSet
                 .Where(p => Guid.Equals(creatorId, p.CreatorId))
+                .OrderByDescending(p => p.Created);
+
+        return this._pagination.GetPageOrFirstAsync(query, cancellationToken);
+    }
+
+#warning Not tested
+    Task<IReadOnlyPaginatedList<PostEntity>> IPostRepository.ListForCreatorsAsync(
+        IEnumerable<Guid> creatorIds,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(creatorIds);
+
+        if (creatorIds.Any(id => Guid.Equals(id, Guid.Empty)))
+        {
+            throw new ArgumentException(
+                $"{nameof (creatorIds)} contains one or more elements that are equal to Guid.Empty.",
+                nameof (creatorIds)
+            );
+        }
+
+        IDataSet<PostEntity> dataSet = this._dataSource.Posts;
+
+        IQueryable<PostEntity> query =
+            dataSet
+                .Where(p => creatorIds.Contains(p.CreatorId))
                 .OrderByDescending(p => p.Created);
 
         return this._pagination.GetPageOrFirstAsync(query, cancellationToken);

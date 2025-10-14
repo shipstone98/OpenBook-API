@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+
+using Shipstone.Utilities.Security.Cryptography;
 
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
@@ -72,20 +73,6 @@ internal sealed class AuthenticationService : IAuthenticationService
             });
 
         return this._tokenHandler.WriteToken(token);
-    }
-
-    private String GenerateOtp()
-    {
-        const int BYTE_COUNT = Constants.UserOtpMaxLength;
-        Span<byte> bytes = stackalloc byte[6];
-        this._rng.GetNonZeroBytes(bytes);
-
-        for (int i = 0; i < BYTE_COUNT; i ++)
-        {
-            bytes[i] = (byte) ((bytes[i] % 9) + '1');
-        }
-
-        return Encoding.ASCII.GetString(bytes);
     }
 
     private (String Value, DateTime Expires) GenerateRefreshToken(UserEntity user, DateTime now)
@@ -153,7 +140,7 @@ internal sealed class AuthenticationService : IAuthenticationService
     )
     {
         ArgumentNullException.ThrowIfNull(user);
-        String otp = this.GenerateOtp();
+        String otp = this._rng.GenerateOtp(Constants.UserOtpMaxLength);
         DateTime otpExpires = now.Add(this._options._otpExpiry);
         user.Otp = otp;
         user.OtpExpires = otpExpires;

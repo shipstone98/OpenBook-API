@@ -10,9 +10,15 @@ namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 internal sealed class MockMailService : IMailService
 {
     internal Action<UserEntity, int> _sendOtpAction;
+    internal Action<UserEntity, int> _sendRegistrationAction;
 
-    public MockMailService() =>
+    public MockMailService()
+    {
         this._sendOtpAction = (_, _) => throw new NotImplementedException();
+
+        this._sendRegistrationAction = (_, _) =>
+            throw new NotImplementedException();
+    }
 
     Task IMailService.SendOtpAsync(
         UserEntity user,
@@ -21,6 +27,16 @@ internal sealed class MockMailService : IMailService
     )
     {
         this._sendOtpAction(user, expiryMinutes);
+        return Task.CompletedTask;
+    }
+
+    Task IMailService.SendRegistrationAsync(
+        UserEntity user,
+        int expiryMinutes,
+        CancellationToken cancellationToken
+    )
+    {
+        this._sendRegistrationAction(user, expiryMinutes);
         return Task.CompletedTask;
     }
 }

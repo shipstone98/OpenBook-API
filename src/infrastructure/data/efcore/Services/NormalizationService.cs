@@ -18,6 +18,7 @@ internal sealed class NormalizationService : INormalizationService
 
     String INormalizationService.Normalize(String s)
     {
+        ArgumentNullException.ThrowIfNull(s);
         s = s.ToUpperInvariant();
         byte[] bytes = this._encoding.GetBytes(s);
         ReadOnlySpan<byte> hash = this._hmac.ComputeHash(bytes);

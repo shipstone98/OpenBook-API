@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Followings;
 using Shipstone.OpenBook.Api.Core.Posts;
+using Shipstone.OpenBook.Api.Core.Services;
 using Shipstone.OpenBook.Api.Core.Users;
 
 namespace Shipstone.OpenBook.Api.Core;
@@ -24,13 +25,16 @@ public static class CoreServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
 
         return services
+            .AddSingleton<IValidationService, ValidationService>()
             .AddScoped<IAuthenticateHandler, AuthenticateHandler>()
             .AddScoped<IFollowingCreateHandler, FollowingCreateHandler>()
             .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>()
+            .AddScoped<IPostAggregateHandler, PostAggregateHandler>()
             .AddScoped<IPostCreateHandler, PostCreateHandler>()
             .AddScoped<IPostDeleteHandler, PostDeleteHandler>()
             .AddScoped<IPostListHandler, PostListHandler>()
             .AddScoped<IPostRetrieveHandler, PostRetrieveHandler>()
+            .AddScoped<IRegisterHandler, RegisterHandler>()
             .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>();
     }
 }

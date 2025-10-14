@@ -14,4 +14,11 @@ internal sealed class StubMailService : IMailService
         CancellationToken cancellationToken
     ) =>
         Task.CompletedTask;
+
+    Task IMailService.SendRegistrationAsync(
+        UserEntity user,
+        int expiryMinutes,
+        CancellationToken cancellationToken
+    ) =>
+        Task.CompletedTask;
 }

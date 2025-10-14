@@ -12,6 +12,16 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 public interface IUserRepository
 {
     /// <summary>
+    /// Asynchronously creates a user with the specified properties.
+    /// </summary>
+    /// <param name="user">The user to create.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task" /> that represents the asynchronous create operation.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="user" /></c> is <c>null</c>.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task CreateAsync(UserEntity user, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Asynchronously retrieves a user with the specified email address.
     /// </summary>
     /// <param name="emailAddress">The email address of the user to retrieve.</param>

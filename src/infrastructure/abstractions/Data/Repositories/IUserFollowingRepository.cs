@@ -36,4 +36,17 @@ public interface IUserFollowingRepository
         Guid followeeId,
         CancellationToken cancellationToken
     );
+
+    /// <summary>
+    /// Asynchronously lists all follower-followee associations with the specified follower ID.
+    /// </summary>
+    /// <param name="followerId">A <see cref="Guid" /> containing the ID of the follower to list associated followees for.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous list operation. The value of <see cref="Task{TResult}.Result" /> contains the listed follower-followee associations.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><c><paramref name="followerId" /></c> is equal to <see cref="Guid.Empty" />.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task<UserFollowingEntity[]> ListForFollowerAsync(
+        Guid followerId,
+        CancellationToken cancellationToken
+    );
 }

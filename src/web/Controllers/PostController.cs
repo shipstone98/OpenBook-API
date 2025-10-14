@@ -21,6 +21,32 @@ namespace Shipstone.OpenBook.Api.Web.Controllers;
 internal sealed class PostController(ILogger<PostController> logger)
     : ControllerBase<PostController>(logger)
 {
+    [ActionName("Aggregate")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [Route("/api/[controller]/[action]")]
+    public Task<IActionResult> AggregateAsync(
+        [FromServices] IPostAggregateHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        return this.AggregateAsyncCore(handler, cancellationToken);
+    }
+
+    private async Task<IActionResult> AggregateAsyncCore(
+        IPostAggregateHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        IReadOnlyPaginatedList<IPost> posts =
+            await handler.HandleAsync(cancellationToken);
+
+        Object? response = posts.Select(p => new RetrieveResponse(p));
+        return this.Ok(response);
+    }
+
     [ActionName("Create")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
