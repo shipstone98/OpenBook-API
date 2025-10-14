@@ -201,6 +201,57 @@ internal sealed class AccountController(ILogger<AccountController> logger)
         return this.Ok(response);
     }
 
+    [ActionName("OtpGenerate")]
+    [AllowAnonymous]
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> OtpGenerateAsync(
+        [FromServices] IOtpGenerateHandler handler,
+        [FromBody] OtpGenerateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(request);
+        return this.OtpGenerateAsyncCore(handler, request, cancellationToken);
+    }
+
+    private async Task<IActionResult> OtpGenerateAsyncCore(
+        IOtpGenerateHandler handler,
+        OtpGenerateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        try
+        {
+            await handler.HandleAsync(
+                request._emailAddress,
+                cancellationToken
+            );
+        }
+
+        catch (NotFoundException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: Failed OTP generation for user {EmailAddress} - email address not found",
+                DateTime.UtcNow,
+                request._emailAddress
+            );
+
+            return this.NoContent();
+        }
+
+        this._logger.LogInformation(
+            "{TimeStamp}: User {EmailAddress} generated OTP",
+            DateTime.UtcNow,
+            request._emailAddress
+        );
+
+        return this.NoContent();
+    }
+
     [ActionName("Register")]
     [AllowAnonymous]
     [HttpPost]
