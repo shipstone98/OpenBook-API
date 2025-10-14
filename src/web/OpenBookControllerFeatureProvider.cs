@@ -17,6 +17,7 @@ internal sealed class OpenBookControllerFeatureProvider
         {
             typeof (AccountController),
             typeof (FollowingController),
+            typeof (PasswordController),
             typeof (PostController),
             typeof (UserController)
         };
