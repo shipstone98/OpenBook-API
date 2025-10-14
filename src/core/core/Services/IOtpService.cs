@@ -8,7 +8,7 @@ namespace Shipstone.OpenBook.Api.Core.Services;
 
 internal interface IOtpService
 {
-    Task ValidateOtpAsync(
+    Task ValidateAsync(
         UserEntity user,
         String otp,
         DateTime now,

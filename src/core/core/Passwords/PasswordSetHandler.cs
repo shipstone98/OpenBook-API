@@ -42,14 +42,14 @@ internal sealed class PasswordSetHandler : IPasswordSetHandler
         ArgumentNullException.ThrowIfNull(otp);
         this._password.Validate(password);
 
-        UserEntity? user =
+        UserEntity user =
             await this._repository.RetrieveActiveUserAsync(
                 emailAddress,
                 cancellationToken
             );
 
         DateTime now = DateTime.UtcNow;
-        await this._otp.ValidateOtpAsync(user, otp, now, cancellationToken);
+        await this._otp.ValidateAsync(user, otp, now, cancellationToken);
         user.PasswordHash = this._password.Hash(password);
         user.Updated = now;
         await this._repository.Users.UpdateAsync(user, cancellationToken);

@@ -18,7 +18,7 @@ internal sealed class OtpService : IOtpService
         this._repository = repository;
     }
 
-    async Task IOtpService.ValidateOtpAsync(
+    async Task IOtpService.ValidateAsync(
         UserEntity user,
         String otp,
         DateTime now,

@@ -45,7 +45,7 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
             );
 
         DateTime now = DateTime.UtcNow;
-        await this._otp.ValidateOtpAsync(user, otp, now, cancellationToken);
+        await this._otp.ValidateAsync(user, otp, now, cancellationToken);
         Guid userId = user.Id;
 
         IAsyncEnumerable<String> roles =
