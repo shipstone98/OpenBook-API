@@ -153,7 +153,7 @@ public sealed class NotificationServiceTest
     [InlineData(1)]
     [InlineData(Int64.MaxValue)]
     [Theory]
-    public async Task TestSendPostCreatedAsync_Valid_Success(long id)
+    public Task TestSendPostCreatedAsync_Valid_Success(long id)
     {
         // Arrange
         IEnumerable<UserDeviceEntity> userDevices =
@@ -162,7 +162,7 @@ public sealed class NotificationServiceTest
         this._mockNotification._sendAction = (_, _) => { };
 
         // Act
-        await this._notification.SendPostCreatedAsync(
+        return this._notification.SendPostCreatedAsync(
             String.Empty,
             id,
             userDevices,
