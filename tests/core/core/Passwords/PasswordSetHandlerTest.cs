@@ -19,13 +19,13 @@ using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.CoreTest.Passwords;
 
-public sealed class SetPasswordHandlerTest
+public sealed class PasswordSetHandlerTest
 {
-    private readonly ISetPasswordHandler _handler;
+    private readonly IPasswordSetHandler _handler;
     private readonly MockPasswordService _password;
     private readonly MockRepository _repository;
 
-    public SetPasswordHandlerTest()
+    public PasswordSetHandlerTest()
     {
         ICollection<ServiceDescriptor> collection =
             new List<ServiceDescriptor>();
@@ -39,7 +39,7 @@ public sealed class SetPasswordHandlerTest
         MockRepository repository = new();
         services.AddSingleton<IRepository>(repository);
         IServiceProvider provider = new MockServiceProvider(services);
-        this._handler = provider.GetRequiredService<ISetPasswordHandler>();
+        this._handler = provider.GetRequiredService<IPasswordSetHandler>();
         this._password = password;
         this._repository = repository;
     }

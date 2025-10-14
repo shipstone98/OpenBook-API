@@ -31,13 +31,13 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IFollowingCreateHandler, FollowingCreateHandler>()
             .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>()
             .AddScoped<IOtpService, OtpService>()
+            .AddScoped<IPasswordSetHandler, PasswordSetHandler>()
             .AddScoped<IPostAggregateHandler, PostAggregateHandler>()
             .AddScoped<IPostCreateHandler, PostCreateHandler>()
             .AddScoped<IPostDeleteHandler, PostDeleteHandler>()
             .AddScoped<IPostListHandler, PostListHandler>()
             .AddScoped<IPostRetrieveHandler, PostRetrieveHandler>()
             .AddScoped<IRegisterHandler, RegisterHandler>()
-            .AddScoped<ISetPasswordHandler, SetPasswordHandler>()
             .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>();
     }
 }

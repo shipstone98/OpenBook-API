@@ -12,7 +12,7 @@ namespace Shipstone.OpenBook.Api.Core.Passwords;
 /// <summary>
 /// Defines a method to handle password setting.
 /// </summary>
-public interface ISetPasswordHandler
+public interface IPasswordSetHandler
 {
     /// <summary>
     /// Asynchronously sets the password of the specified user.

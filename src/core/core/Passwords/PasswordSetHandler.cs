@@ -11,13 +11,13 @@ using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 namespace Shipstone.OpenBook.Api.Core.Passwords;
 
-internal sealed class SetPasswordHandler : ISetPasswordHandler
+internal sealed class PasswordSetHandler : IPasswordSetHandler
 {
     private readonly IOtpService _otp;
     private readonly IPasswordService _password;
     private readonly IRepository _repository;
 
-    public SetPasswordHandler(
+    public PasswordSetHandler(
         IRepository repository,
         IOtpService otp,
         IPasswordService password
@@ -31,7 +31,7 @@ internal sealed class SetPasswordHandler : ISetPasswordHandler
         this._repository = repository;
     }
 
-    async Task<IUser> ISetPasswordHandler.HandleAsync(
+    async Task<IUser> IPasswordSetHandler.HandleAsync(
         String emailAddress,
         String otp,
         String password,
