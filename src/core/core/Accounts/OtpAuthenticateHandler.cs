@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Shipstone.Utilities.Linq;
 
+using Shipstone.OpenBook.Api.Core.Services;
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
@@ -14,16 +15,20 @@ namespace Shipstone.OpenBook.Api.Core.Accounts;
 internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
 {
     private readonly IAuthenticationService _authentication;
+    private readonly IOtpService _otp;
     private readonly IRepository _repository;
 
     public OtpAuthenticateHandler(
         IRepository repository,
-        IAuthenticationService authentication
+        IAuthenticationService authentication,
+        IOtpService otp
     )
     {
         ArgumentNullException.ThrowIfNull(repository);
         ArgumentNullException.ThrowIfNull(authentication);
+        ArgumentNullException.ThrowIfNull(otp);
         this._authentication = authentication;
+        this._otp = otp;
         this._repository = repository;
     }
 
@@ -39,29 +44,8 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
                 cancellationToken
             );
 
-        String? userOtp = user.Otp;
-        Nullable<DateTime> userOtpExpires = user.OtpExpires;
         DateTime now = DateTime.UtcNow;
-
-        if (userOtp is null || !String.Equals(userOtp, otp))
-        {
-            throw new ForbiddenException("The provided OTP does not match the OTP for the user whose email address matches the provided email address.");
-        }
-
-        Nullable<DateTime> otpExpires = userOtpExpires;
-        user.Otp = null;
-        user.OtpExpires = null;
-        await this._repository.Users.UpdateAsync(user, cancellationToken);
-        await this._repository.SaveAsync(cancellationToken);
-
-        if (
-            !otpExpires.HasValue
-            || DateTime.Compare(now, otpExpires.Value) > 0
-        )
-        {
-            throw new ForbiddenException("The provided OTP has expired.");
-        }
-
+        await this._otp.ValidateOtpAsync(user, otp, now, cancellationToken);
         Guid userId = user.Id;
 
         IAsyncEnumerable<String> roles =

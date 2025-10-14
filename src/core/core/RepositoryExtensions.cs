@@ -7,6 +7,7 @@ using Shipstone.Utilities.Linq;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Posts;
+using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
@@ -101,5 +102,20 @@ internal static class RepositoryExtensions
                 cancellationToken
             )
             .WithoutNullAsync(cancellationToken);
+    }
+
+    internal static async Task<IUser> RetrieveUserAsync(
+        this IRepository repository,
+        UserEntity user,
+        CancellationToken cancellationToken
+    )
+    {
+        IAsyncEnumerable<String> roles =
+            await repository.RetrieveRolesAsync(user.Id, cancellationToken);
+
+        IReadOnlySet<String> roleSet =
+            await roles.ToSortedSetAsync(null, cancellationToken);
+
+        return new User(user, roleSet);
     }
 }

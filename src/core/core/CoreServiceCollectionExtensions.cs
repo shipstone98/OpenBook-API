@@ -29,6 +29,7 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IAuthenticateHandler, AuthenticateHandler>()
             .AddScoped<IFollowingCreateHandler, FollowingCreateHandler>()
             .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>()
+            .AddScoped<IOtpService, OtpService>()
             .AddScoped<IPostAggregateHandler, PostAggregateHandler>()
             .AddScoped<IPostCreateHandler, PostCreateHandler>()
             .AddScoped<IPostDeleteHandler, PostDeleteHandler>()

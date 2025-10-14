@@ -44,15 +44,9 @@ internal sealed class UserRetrieveHandler : IUserRetrieveHandler
             throw new UserNotActiveException("The current user is not active.");
         }
 
-        IAsyncEnumerable<String> roles =
-            await this._repository.RetrieveRolesAsync(
-                userId,
-                cancellationToken
-            );
-
-        IReadOnlySet<String> roleSet =
-            await roles.ToSortedSetAsync(null, cancellationToken);
-
-        return new User(user, roleSet);
+        return await this._repository.RetrieveUserAsync(
+            user,
+            cancellationToken
+        );
     }
 }
