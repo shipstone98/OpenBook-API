@@ -11,8 +11,10 @@ using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Passwords;
 using Shipstone.OpenBook.Api.Core.Users;
+using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
+using Shipstone.OpenBook.Api.Infrastructure.Mail;
 
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
 using Shipstone.Test.Mocks;
@@ -34,6 +36,10 @@ public sealed class PasswordSetHandlerTest
         services._addAction = collection.Add;
         services._getEnumeratorFunc = collection.GetEnumerator;
         services.AddOpenBookCore();
+        MockAuthenticationService authentication = new();
+        services.AddSingleton<IAuthenticationService>(authentication);
+        MockMailService mail = new();
+        services.AddSingleton<IMailService>(mail);
         MockPasswordService password = new();
         services.AddSingleton<IPasswordService>(password);
         MockRepository repository = new();

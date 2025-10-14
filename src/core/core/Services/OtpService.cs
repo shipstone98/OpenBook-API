@@ -3,19 +3,56 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
+using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
+using Shipstone.OpenBook.Api.Infrastructure.Mail;
 
 namespace Shipstone.OpenBook.Api.Core.Services;
 
 internal sealed class OtpService : IOtpService
 {
+    private readonly IAuthenticationService _authentication;
+    private readonly IMailService _mail;
     private readonly IRepository _repository;
 
-    public OtpService(IRepository repository)
+    public OtpService(
+        IRepository repository,
+        IAuthenticationService authentication,
+        IMailService mail
+    )
     {
         ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(authentication);
+        ArgumentNullException.ThrowIfNull(mail);
+        this._authentication = authentication;
+        this._mail = mail;
         this._repository = repository;
+    }
+
+    async Task IOtpService.GenerateAsync(
+        UserEntity user,
+        CancellationToken cancellationToken
+    )
+    {
+        DateTime now = DateTime.UtcNow;
+
+        await this._authentication.GenerateOtpAsync(
+            user,
+            now,
+            cancellationToken
+        );
+
+        user.Updated = now;
+        await this._repository.Users.UpdateAsync(user, cancellationToken);
+        await this._repository.SaveAsync(cancellationToken);
+        TimeSpan difference = user.OtpExpires!.Value.Subtract(now);
+
+        await this._mail.SendOtpAsync(
+            user,
+            (int) difference.TotalMinutes,
+            cancellationToken
+        );
     }
 
     async Task IOtpService.ValidateAsync(

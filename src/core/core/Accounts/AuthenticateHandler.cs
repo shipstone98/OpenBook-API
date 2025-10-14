@@ -4,33 +4,28 @@ using System.Threading.Tasks;
 
 using Shipstone.Extensions.Identity;
 
-using Shipstone.OpenBook.Api.Infrastructure.Authentication;
+using Shipstone.OpenBook.Api.Core.Services;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
-using Shipstone.OpenBook.Api.Infrastructure.Mail;
 
 namespace Shipstone.OpenBook.Api.Core.Accounts;
 
 internal sealed class AuthenticateHandler : IAuthenticateHandler
 {
-    private readonly IAuthenticationService _authentication;
-    private readonly IMailService _mail;
+    private readonly IOtpService _otp;
     private readonly IPasswordService _password;
     private readonly IRepository _repository;
 
     public AuthenticateHandler(
         IRepository repository,
-        IAuthenticationService authentication,
-        IMailService mail,
+        IOtpService otp,
         IPasswordService password
     )
     {
         ArgumentNullException.ThrowIfNull(repository);
-        ArgumentNullException.ThrowIfNull(authentication);
-        ArgumentNullException.ThrowIfNull(mail);
+        ArgumentNullException.ThrowIfNull(otp);
         ArgumentNullException.ThrowIfNull(password);
-        this._authentication = authentication;
-        this._mail = mail;
+        this._otp = otp;
         this._password = password;
         this._repository = repository;
     }
@@ -74,24 +69,7 @@ internal sealed class AuthenticateHandler : IAuthenticateHandler
             user.PasswordHash = this._password.Hash(password);
         }
 
-        DateTime now = DateTime.UtcNow;
-
-        await this._authentication.GenerateOtpAsync(
-            user,
-            now,
-            cancellationToken
-        );
-
-        user.Updated = now;
-        await this._repository.Users.UpdateAsync(user, cancellationToken);
-        await this._repository.SaveAsync(cancellationToken);
-        TimeSpan difference = user.OtpExpires!.Value.Subtract(now);
-
-        await this._mail.SendOtpAsync(
-            user,
-            (int) difference.TotalMinutes,
-            cancellationToken
-        );
+        await this._otp.GenerateAsync(user, cancellationToken);
     }
 
     Task IAuthenticateHandler.HandleAsync(

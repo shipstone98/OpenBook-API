@@ -10,6 +10,7 @@ using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
+using Shipstone.OpenBook.Api.Infrastructure.Mail;
 
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
 using Shipstone.Test.Mocks;
@@ -33,6 +34,8 @@ public sealed class OtpAuthenticateHandlerTest
         services.AddOpenBookCore();
         MockAuthenticationService authentication = new();
         services.AddSingleton<IAuthenticationService>(authentication);
+        MockMailService mail = new();
+        services.AddSingleton<IMailService>(mail);
         MockRepository repository = new();
         services.AddSingleton<IRepository>(repository);
         IServiceProvider provider = new MockServiceProvider(services);
