@@ -7,6 +7,7 @@ using Xunit;
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Followings;
+using Shipstone.OpenBook.Api.Core.Passwords;
 using Shipstone.OpenBook.Api.Core.Posts;
 using Shipstone.OpenBook.Api.Core.Users;
 
@@ -56,6 +57,7 @@ public sealed class CoreServiceCollectionExtensionsTest
             typeof (IPostListHandler),
             typeof (IPostRetrieveHandler),
             typeof (IRegisterHandler),
+            typeof (ISetPasswordHandler),
             typeof (IUserRetrieveHandler)
         };
 
