@@ -42,29 +42,7 @@ internal sealed class AuthenticateHandler : IAuthenticateHandler
                 cancellationToken
             );
 
-        String? passwordHash = user.PasswordHash;
-
-        if (passwordHash is null)
-        {
-            throw new ForbiddenException("The user whose email address matches the provided email address has not verified their email address.");
-        }
-
-        bool isPasswordSecure;
-
-        try
-        {
-            isPasswordSecure = this._password.Verify(passwordHash, password);
-        }
-
-        catch (IncorrectPasswordException ex)
-        {
-            throw new IncorrectPasswordException(
-                "The hashed representation of the provided password does not match the password hash of the user whose email address matches the provided email address.",
-                ex
-            );
-        }
-
-        if (!isPasswordSecure)
+        if (!this._password.Verify(user, password))
         {
             user.PasswordHash = this._password.Hash(password);
         }
