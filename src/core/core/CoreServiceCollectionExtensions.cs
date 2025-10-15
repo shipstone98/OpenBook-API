@@ -33,6 +33,7 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IOtpGenerateHandler, OtpGenerateHandler>()
             .AddScoped<IOtpService, OtpService>()
             .AddScoped<IPasswordSetHandler, PasswordSetHandler>()
+            .AddScoped<IPasswordUpdateHandler, PasswordUpdateHandler>()
             .AddScoped<IPostAggregateHandler, PostAggregateHandler>()
             .AddScoped<IPostCreateHandler, PostCreateHandler>()
             .AddScoped<IPostDeleteHandler, PostDeleteHandler>()

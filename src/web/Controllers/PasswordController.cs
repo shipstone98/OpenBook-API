@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
+using Shipstone.Extensions.Identity;
+
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Passwords;
@@ -97,6 +99,83 @@ internal sealed class PasswordController : ControllerBase<PasswordController>
         this._logger.LogInformation(
             "{TimeStamp}: User {EmailAddress} set password",
             user.Updated,
+            user.EmailAddress
+        );
+
+        return this.NoContent();
+    }
+
+    [ActionName("Update")]
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status410Gone)]
+    public Task<IActionResult> UpdateAsync(
+        [FromServices] IPasswordUpdateHandler handler,
+        [FromServices] IClaimsService claims,
+        [FromBody] UpdateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(claims);
+        ArgumentNullException.ThrowIfNull(request);
+
+        return this.UpdateAsyncCore(
+            handler,
+            claims,
+            request,
+            cancellationToken
+        );
+    }
+
+    private async Task<IActionResult> UpdateAsyncCore(
+        IPasswordUpdateHandler handler,
+        IClaimsService claims,
+        UpdateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        IUser user;
+
+        try
+        {
+            user =
+                await handler.HandleAsync(
+                    request._passwordCurrent,
+                    request._passwordNew,
+                    cancellationToken
+                );
+        }
+
+        catch (IncorrectPasswordException ex)
+        {
+            this._logger.LogWarning(
+                ex,
+                "{TimeStamp}: Failed password update for user {EmailAddress} - password not correct",
+                DateTime.UtcNow,
+                claims.EmailAddress
+            );
+
+            return this.Forbid();
+        }
+
+        catch (UserNotActiveException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: Failed password update for user {EmailAddress} - user not active",
+                DateTime.UtcNow,
+                claims.EmailAddress
+            );
+
+            return this.StatusCode(StatusCodes.Status410Gone);
+        }
+
+        this._logger.LogInformation(
+            "{TimeStamp}: User {EmailAddress} set password",
+            DateTime.UtcNow,
             user.EmailAddress
         );
 
