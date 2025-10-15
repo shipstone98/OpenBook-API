@@ -9,7 +9,6 @@
     <ProjectReference Include="..\infrastructure\authentication\Shipstone.OpenBook.Api.Infrastructure.Authentication.csproj" />
     <ProjectReference Include="..\infrastructure\authorization\Shipstone.OpenBook.Api.Infrastructure.Authorization.csproj" />
     <ProjectReference Include="..\infrastructure\data\mysql\Shipstone.OpenBook.Api.Infrastructure.Data.MySql.csproj" />
-    <ProjectReference Include="..\infrastructure\mail\Shipstone.OpenBook.Api.Infrastructure.Mail.csproj" />
     <ProjectReference Include="..\infrastructure\notifications\Shipstone.OpenBook.Api.Infrastructure.Notifications.csproj" />
     <ProjectReference Include="..\web\Shipstone.OpenBook.Api.Web.csproj" />
   </ItemGroup>
