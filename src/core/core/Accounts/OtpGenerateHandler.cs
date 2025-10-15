@@ -21,13 +21,11 @@ internal sealed class OtpGenerateHandler : IOtpGenerateHandler
         this._repository = repository;
     }
 
-    async Task IOtpGenerateHandler.HandleAsync(
+    private async Task HandleAsync(
         String emailAddress,
         CancellationToken cancellationToken
     )
     {
-        ArgumentNullException.ThrowIfNull(emailAddress);
-
         UserEntity user =
             await this._repository.RetrieveActiveUserAsync(
                 emailAddress,
@@ -35,5 +33,14 @@ internal sealed class OtpGenerateHandler : IOtpGenerateHandler
             );
 
         await this._otp.GenerateAsync(user, cancellationToken);
+    }
+
+    Task IOtpGenerateHandler.HandleAsync(
+        String emailAddress,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(emailAddress);
+        return this.HandleAsync(emailAddress, cancellationToken);
     }
 }

@@ -41,23 +41,16 @@ internal sealed class RegisterHandler : IRegisterHandler
         this._validation = validation;
     }
 
-    async Task<IUser> IRegisterHandler.HandleAsync(
+    private async Task<IUser> HandleAsync(
         String emailAddress,
         String userName,
         String forename,
         String surname,
         DateOnly born,
+        DateTime now,
         CancellationToken cancellationToken
     )
     {
-        emailAddress = this._validation.ValidateEmailAddress(emailAddress);
-        userName = this._validation.ValidateUserName(userName);
-        forename = this._validation.ValidateForename(forename);
-        surname = this._validation.ValidateSurname(surname);
-        DateTime now = DateTime.UtcNow;
-        DateOnly today = DateOnly.FromDateTime(now);
-        this._validation.ValidateBorn(born, today);
-
         UserEntity user = new UserEntity
         {
             Born = born,
@@ -115,5 +108,33 @@ internal sealed class RegisterHandler : IRegisterHandler
 
         IReadOnlySet<String> roles = new SortedSet<String> { Roles.User };
         return new User(user, roles);
+    }
+
+    Task<IUser> IRegisterHandler.HandleAsync(
+        String emailAddress,
+        String userName,
+        String forename,
+        String surname,
+        DateOnly born,
+        CancellationToken cancellationToken
+    )
+    {
+        emailAddress = this._validation.ValidateEmailAddress(emailAddress);
+        userName = this._validation.ValidateUserName(userName);
+        forename = this._validation.ValidateForename(forename);
+        surname = this._validation.ValidateSurname(surname);
+        DateTime now = DateTime.UtcNow;
+        DateOnly today = DateOnly.FromDateTime(now);
+        this._validation.ValidateBorn(born, today);
+
+        return this.HandleAsync(
+            emailAddress,
+            userName,
+            forename,
+            surname,
+            born,
+            now,
+            cancellationToken
+        );
     }
 }

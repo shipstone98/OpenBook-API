@@ -31,17 +31,13 @@ internal sealed class PasswordSetHandler : IPasswordSetHandler
         this._repository = repository;
     }
 
-    async Task<IUser> IPasswordSetHandler.HandleAsync(
+    private async Task<IUser> HandleAsync(
         String emailAddress,
         String otp,
         String password,
         CancellationToken cancellationToken
     )
     {
-        ArgumentNullException.ThrowIfNull(emailAddress);
-        ArgumentNullException.ThrowIfNull(otp);
-        this._password.Validate(password);
-
         UserEntity user =
             await this._repository.RetrieveActiveUserAsync(
                 emailAddress,
@@ -57,6 +53,25 @@ internal sealed class PasswordSetHandler : IPasswordSetHandler
 
         return await this._repository.RetrieveUserAsync(
             user,
+            cancellationToken
+        );
+    }
+
+    Task<IUser> IPasswordSetHandler.HandleAsync(
+        String emailAddress,
+        String otp,
+        String password,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(emailAddress);
+        ArgumentNullException.ThrowIfNull(otp);
+        this._password.Validate(password);
+
+        return this.HandleAsync(
+            emailAddress,
+            otp,
+            password,
             cancellationToken
         );
     }
