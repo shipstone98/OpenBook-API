@@ -40,7 +40,7 @@ public sealed class AuthorizationInfrastructureServiceCollectionExtensionsTest
             AuthorizationInfrastructureServiceCollectionExtensions.AddOpenBookInfrastructureAuthorization(services);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
 
         ServiceDescriptor descriptor =
             services.First(s =>

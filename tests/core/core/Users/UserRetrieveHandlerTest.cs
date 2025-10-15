@@ -76,7 +76,7 @@ public sealed class UserRetrieveHandlerTest
                 this._handler.HandleAsync(CancellationToken.None));
 
         // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex));
+        Assert.Same(innerException, ex);
     }
 
     [Fact]

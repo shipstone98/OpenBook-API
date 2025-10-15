@@ -83,7 +83,7 @@ public sealed class PasswordUpdateHandlerTest
                 ));
 
         // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex));
+        Assert.Same(innerException, ex);
     }
 
 #region Valid arguments
@@ -122,7 +122,7 @@ public sealed class PasswordUpdateHandlerTest
                 ));
 
         // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex.InnerException));
+        Assert.Same(innerException, ex.InnerException);
     }
 
     [Fact]
@@ -168,7 +168,7 @@ public sealed class PasswordUpdateHandlerTest
                 ));
 
         // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex));
+        Assert.Same(innerException, ex);
     }
 
     [Fact]

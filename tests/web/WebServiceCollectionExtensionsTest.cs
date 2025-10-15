@@ -41,7 +41,7 @@ public sealed class WebServiceCollectionExtensionsTest
             WebServiceCollectionExtensions.AddOpenBookWebClaims(services);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
 
         ServiceDescriptor serviceDescriptor =
             collection.First(s =>
@@ -83,7 +83,7 @@ public sealed class WebServiceCollectionExtensionsTest
             WebServiceCollectionExtensions.AddOpenBookWebConflictExceptionHandling(services);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
 
         ServiceDescriptor descriptor =
             collection.First(s =>
@@ -119,7 +119,7 @@ public sealed class WebServiceCollectionExtensionsTest
             WebServiceCollectionExtensions.AddOpenBookWebForbiddenExceptionHandling(services);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
 
         ServiceDescriptor descriptor =
             collection.First(s =>
@@ -155,7 +155,7 @@ public sealed class WebServiceCollectionExtensionsTest
             WebServiceCollectionExtensions.AddOpenBookWebNotFoundExceptionHandling(services);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
 
         ServiceDescriptor descriptor =
             collection.First(s =>

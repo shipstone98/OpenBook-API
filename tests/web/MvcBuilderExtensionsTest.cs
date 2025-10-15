@@ -35,7 +35,7 @@ public sealed class MvcBuilderExtensionsTest
             MvcBuilderExtensions.AddOpenBookControllers(builder);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(builder, result));
+        Assert.Same(builder, result);
         Assert.NotEmpty(manager.FeatureProviders);
     }
 }

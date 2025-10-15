@@ -44,7 +44,7 @@ public sealed class CoreServiceCollectionExtensionsTest
             CoreServiceCollectionExtensions.AddOpenBookCore(services);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
 
         IEnumerable<Type> types = new Type[]
         {

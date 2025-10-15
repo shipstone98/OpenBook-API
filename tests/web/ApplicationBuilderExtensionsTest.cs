@@ -42,7 +42,7 @@ public sealed class ApplicationBuilderExtensionsTest
             Web.ApplicationBuilderExtensions.UseOpenBookWebClaims(app);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(app, result));
+        Assert.Same(app, result);
         Assert.NotEmpty(middleware);
     }
 
@@ -78,7 +78,7 @@ public sealed class ApplicationBuilderExtensionsTest
             Web.ApplicationBuilderExtensions.UseOpenBookWebConflictExceptionHandling(app);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(app, result));
+        Assert.Same(app, result);
         Assert.NotEmpty(middleware);
     }
 
@@ -114,7 +114,7 @@ public sealed class ApplicationBuilderExtensionsTest
             Web.ApplicationBuilderExtensions.UseOpenBookWebForbiddenExceptionHandling(app);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(app, result));
+        Assert.Same(app, result);
         Assert.NotEmpty(middleware);
     }
 
@@ -150,7 +150,7 @@ public sealed class ApplicationBuilderExtensionsTest
             Web.ApplicationBuilderExtensions.UseOpenBookWebNotFoundExceptionHandling(app);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(app, result));
+        Assert.Same(app, result);
         Assert.NotEmpty(middleware);
     }
 }

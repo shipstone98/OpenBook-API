@@ -104,7 +104,7 @@ public sealed class PasswordSetHandlerTest
                 ));
 
         // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex));
+        Assert.Same(innerException, ex);
         Assert.Equal("password", ex.ParamName);
     }
 #endregion

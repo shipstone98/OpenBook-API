@@ -40,7 +40,7 @@ public sealed class EntityFrameworkCoreDataInfrastructureServiceCollectionExtens
             EntityFrameworkCoreDataInfrastructureServiceCollectionExtensions.AddOpenBookInfrastructureDataEntityFrameworkCore(services);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
 
         IEnumerable<Type> serviceTypes = new Type[]
         {

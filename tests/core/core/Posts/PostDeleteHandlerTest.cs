@@ -161,7 +161,7 @@ public sealed class PostDeleteHandlerTest
                 ));
 
         // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex.InnerException));
+        Assert.Same(innerException, ex.InnerException);
     }
 #endregion
 

@@ -112,7 +112,7 @@ public sealed class PostCreateHandlerTest
                 ));
 
         // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex));
+        Assert.Same(innerException, ex);
     }
 
     [Fact]

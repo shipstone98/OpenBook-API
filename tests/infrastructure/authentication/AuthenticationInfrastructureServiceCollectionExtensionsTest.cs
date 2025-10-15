@@ -42,7 +42,7 @@ public sealed class AuthenticationInfrastructureServiceCollectionExtensionsTest
             AuthenticationInfrastructureServiceCollectionExtensions.AddOpenBookInfrastructureAuthentication(services);
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
         AuthenticationInfrastructureServiceCollectionExtensionsTest.AssertValid(services);
     }
 
@@ -66,7 +66,7 @@ public sealed class AuthenticationInfrastructureServiceCollectionExtensionsTest
             );
 
         // Assert
-        Assert.True(Object.ReferenceEquals(services, result));
+        Assert.Same(services, result);
         AuthenticationInfrastructureServiceCollectionExtensionsTest.AssertValid(services);
         IServiceProvider provider = new MockServiceProvider(services);
 

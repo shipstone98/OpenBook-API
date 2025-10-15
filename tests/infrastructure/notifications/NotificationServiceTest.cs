@@ -147,7 +147,7 @@ public sealed class NotificationServiceTest
                 ));
 
         // Assert
-        Assert.True(Object.ReferenceEquals(innerException, ex.InnerException));
+        Assert.Same(innerException, ex.InnerException);
     }
 
     [InlineData(1)]
