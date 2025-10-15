@@ -52,10 +52,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{074EC660-4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest", "tests\infrastructure\data\efcore\Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.csproj", "{CA759A51-7424-420E-9DF3-4BAFF256F6E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipstone.OpenBook.Api.Infrastructure.Data.MySqlTest", "tests\infrastructure\data\mysql\Shipstone.OpenBook.Api.Infrastructure.Data.MySqlTest.csproj", "{FF118A35-B1A4-48D4-AD8F-E5A95F479BE1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipstone.OpenBook.Api.Infrastructure.MailTest", "tests\infrastructure\mail\Shipstone.OpenBook.Api.Infrastructure.MailTest.csproj", "{C8154907-A3AE-4CB2-A3E4-F05B52D2BD5B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipstone.OpenBook.Api.Infrastructure.NotificationsTest", "tests\infrastructure\notifications\Shipstone.OpenBook.Api.Infrastructure.NotificationsTest.csproj", "{4532BD7C-8335-4780-921A-C3E3672D8DB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipstone.OpenBook.Api.WebTest", "tests\web\Shipstone.OpenBook.Api.WebTest.csproj", "{2BEEB633-55FC-4332-9CA5-27E782276673}"
@@ -69,10 +65,6 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
@@ -144,14 +136,6 @@ Global
 		{CA759A51-7424-420E-9DF3-4BAFF256F6E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA759A51-7424-420E-9DF3-4BAFF256F6E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA759A51-7424-420E-9DF3-4BAFF256F6E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF118A35-B1A4-48D4-AD8F-E5A95F479BE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF118A35-B1A4-48D4-AD8F-E5A95F479BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF118A35-B1A4-48D4-AD8F-E5A95F479BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF118A35-B1A4-48D4-AD8F-E5A95F479BE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8154907-A3AE-4CB2-A3E4-F05B52D2BD5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8154907-A3AE-4CB2-A3E4-F05B52D2BD5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8154907-A3AE-4CB2-A3E4-F05B52D2BD5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8154907-A3AE-4CB2-A3E4-F05B52D2BD5B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4532BD7C-8335-4780-921A-C3E3672D8DB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4532BD7C-8335-4780-921A-C3E3672D8DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4532BD7C-8335-4780-921A-C3E3672D8DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -168,6 +152,10 @@ Global
 		{67CF6DCC-B03D-4F18-8781-F50BD0B1F8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67CF6DCC-B03D-4F18-8781-F50BD0B1F8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67CF6DCC-B03D-4F18-8781-F50BD0B1F8F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 
 	GlobalSection(NestedProjects) = preSolution
@@ -194,8 +182,6 @@ Global
 		{52682E08-4CB4-4E57-87FB-C105823F9553} = {791C65E2-A06D-4A71-A991-E2378192C578}
 		{074EC660-4EB7-43B7-887B-D9A2D1B177F3} = {791C65E2-A06D-4A71-A991-E2378192C578}
 		{CA759A51-7424-420E-9DF3-4BAFF256F6E8} = {074EC660-4EB7-43B7-887B-D9A2D1B177F3}
-		{FF118A35-B1A4-48D4-AD8F-E5A95F479BE1} = {074EC660-4EB7-43B7-887B-D9A2D1B177F3}
-		{C8154907-A3AE-4CB2-A3E4-F05B52D2BD5B} = {791C65E2-A06D-4A71-A991-E2378192C578}
 		{4532BD7C-8335-4780-921A-C3E3672D8DB4} = {791C65E2-A06D-4A71-A991-E2378192C578}
 		{2BEEB633-55FC-4332-9CA5-27E782276673} = {5F1E0489-0E16-4DAB-8786-0F7D732A7577}
 		{2511797B-C252-41A4-A4A6-D49B33EB00CB} = {19247609-F6B5-4919-84BA-EACE0E0556C7}
