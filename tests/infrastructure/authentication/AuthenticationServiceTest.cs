@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Xunit;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
@@ -22,7 +23,7 @@ public sealed class AuthenticationServiceTest
 
     private readonly IAuthenticationService _authentication;
     private readonly MockRandomNumberGenerator _rng;
-    private readonly MockSecurityTokenHandler _tokenHandler;
+    private readonly MockJwtSecurityTokenHandler _tokenHandler;
 
     public AuthenticationServiceTest()
     {
@@ -38,8 +39,8 @@ public sealed class AuthenticationServiceTest
 
         MockRandomNumberGenerator rng = new();
         services.AddSingleton<RandomNumberGenerator>(rng);
-        MockSecurityTokenHandler tokenHandler = new();
-        services.AddSingleton<SecurityTokenHandler>(tokenHandler);
+        MockJwtSecurityTokenHandler tokenHandler = new();
+        services.AddSingleton<JwtSecurityTokenHandler>(tokenHandler);
         IServiceProvider provider = new MockServiceProvider(services);
 
         this._authentication =
@@ -181,4 +182,84 @@ public sealed class AuthenticationServiceTest
         Assert.Equal(now, user.Updated);
         Assert.Equal(DateTimeKind.Utc, user.Updated.Kind);
     }
+
+#region GetId method
+#region Invalid arguments
+    [Fact]
+    public void TestGetId_Invalid_IdInvalid()
+    {
+        // Arrange
+        this._tokenHandler._validateTokenFunc = (_, _) =>
+        {
+            ClaimsIdentity identity = new();
+            Claim claim = new(ClaimTypes.NameIdentifier, "My ID");
+            identity.AddClaim(claim);
+            ClaimsPrincipal principal = new(identity);
+            return (principal, null!);
+        };
+
+        // Act
+        ArgumentException ex =
+            Assert.Throws<ArgumentException>(() =>
+                this._authentication.GetId(String.Empty));
+
+        // Assert
+        Assert.Equal("token", ex.ParamName);
+    }
+
+    [Fact]
+    public void TestGetId_Invalid_NotContainsId()
+    {
+        // Arrange
+        this._tokenHandler._validateTokenFunc = (_, _) =>
+        {
+            ClaimsPrincipal principal = new();
+            return (principal, null!);
+        };
+
+        // Act
+        ArgumentException ex =
+            Assert.Throws<ArgumentException>(() =>
+                this._authentication.GetId(String.Empty));
+
+        // Assert
+        Assert.Equal("token", ex.ParamName);
+    }
+
+    [Fact]
+    public void TestGetId_Invalid_Null()
+    {
+        // Act
+        ArgumentException ex =
+            Assert.Throws<ArgumentNullException>(() =>
+                this._authentication.GetId(null!));
+
+        // Assert
+        Assert.Equal("token", ex.ParamName);
+    }
+#endregion
+
+    [Fact]
+    public void TestGetId_Valid()
+    {
+        // Arrange
+        Guid id = Guid.NewGuid();
+
+        this._tokenHandler._validateTokenFunc = (_, _) =>
+        {
+            ClaimsIdentity identity = new();
+            String idString = id.ToString();
+            Claim claim = new(ClaimTypes.NameIdentifier, idString);
+            identity.AddClaim(claim);
+            ClaimsPrincipal principal = new(identity);
+            return (principal, null!);
+        };
+
+        // Act
+        Guid result = this._authentication.GetId(String.Empty);
+
+        // Assert
+        Assert.Equal(id, result);
+    }
+#endregion
 }

@@ -13,6 +13,7 @@ internal sealed class MockAuthenticationService : IAuthenticationService
 {
     internal Func<UserEntity, IEnumerable<String>, DateTime, IAuthenticateResult> _authenticateAction;
     internal Action<UserEntity, DateTime> _generateOtpAction;
+    internal Func<String, Guid> _getIdFunc;
 
     public MockAuthenticationService()
     {
@@ -21,6 +22,8 @@ internal sealed class MockAuthenticationService : IAuthenticationService
 
         this._generateOtpAction = (_, _) =>
             throw new NotImplementedException();
+
+        this._getIdFunc = _ => throw new NotImplementedException();
     }
 
     Task<IAuthenticateResult> IAuthenticationService.AuthenticateAsync(
@@ -45,4 +48,6 @@ internal sealed class MockAuthenticationService : IAuthenticationService
         this._generateOtpAction(user, now);
         return Task.CompletedTask;
     }
+
+    Guid IAuthenticationService.GetId(String token) => this._getIdFunc(token);
 }

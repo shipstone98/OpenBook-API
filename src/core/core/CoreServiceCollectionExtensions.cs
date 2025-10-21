@@ -40,6 +40,7 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IPostDeleteHandler, PostDeleteHandler>()
             .AddScoped<IPostListHandler, PostListHandler>()
             .AddScoped<IPostRetrieveHandler, PostRetrieveHandler>()
+            .AddScoped<IRefreshAuthenticateHandler, RefreshAuthenticateHandler>()
             .AddScoped<IRegisterHandler, RegisterHandler>()
             .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>();
     }

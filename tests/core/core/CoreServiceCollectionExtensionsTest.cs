@@ -59,6 +59,7 @@ public sealed class CoreServiceCollectionExtensionsTest
             typeof (IPostDeleteHandler),
             typeof (IPostListHandler),
             typeof (IPostRetrieveHandler),
+            typeof (IRefreshAuthenticateHandler),
             typeof (IRegisterHandler),
             typeof (IUserRetrieveHandler)
         };

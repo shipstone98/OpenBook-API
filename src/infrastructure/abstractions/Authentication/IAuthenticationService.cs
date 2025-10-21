@@ -46,4 +46,13 @@ public interface IAuthenticationService
         DateTime now,
         CancellationToken cancellationToken
     );
+
+    /// <summary>
+    /// Returns the ID claimed by the specified token.
+    /// </summary>
+    /// <param name="token">The token to retrieve the claimed ID of.</param>
+    /// <returns>The ID claimed by <c><paramref name="token" /></c>.</returns>
+    /// <exception cref="ArgumentException"><c><paramref name="token" /></c> is not a valid token.</exception>
+    /// <exception cref="ArgumentNullException"><c><paramref name="token" /></c> is <c>null</c>.</exception>
+    Guid GetId(String token);
 }

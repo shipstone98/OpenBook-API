@@ -113,7 +113,7 @@ builder.Services
         RandomNumberGenerator rng = RandomNumberGenerator.Create();
         return new ConcurrentRandomNumberGenerator(rng);
     })
-    .AddSingleton<SecurityTokenHandler, JwtSecurityTokenHandler>();
+    .AddSingleton<JwtSecurityTokenHandler>();
 
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();

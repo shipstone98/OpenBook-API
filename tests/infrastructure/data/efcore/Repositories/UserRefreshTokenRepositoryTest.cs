@@ -76,4 +76,117 @@ public sealed class UserRefreshTokenRepositoryTest
 
         // Nothing to assert
     }
+
+    [Fact]
+    public async Task TestDeleteAsync_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._repository.DeleteAsync(null!, CancellationToken.None));
+
+        // Assert
+        Assert.Equal("userRefreshToken", ex.ParamName);
+    }
+
+    [Fact]
+    public Task TestDeleteAsync_Valid()
+    {
+        // Arrange
+        UserRefreshTokenEntity userRefreshToken = new();
+
+        this._dataSource._userRefreshTokensFunc = () =>
+        {
+            IQueryable<UserRefreshTokenEntity> query =
+                Array
+                    .Empty<UserRefreshTokenEntity>()
+                    .AsQueryable();
+
+            MockDataSet<UserRefreshTokenEntity> dataSet = new(query);
+            dataSet._setStateAction = (_, _) => { };
+            return dataSet;
+        };
+
+        // Act
+        return this._repository.DeleteAsync(
+            userRefreshToken,
+            CancellationToken.None
+        );
+
+        // Nothing to assert
+    }
+
+#region RetrieveAsync method
+    [Fact]
+    public async Task TestRetrieveAsync_Invalid()
+    {
+        // Arrange
+        Guid userId = Guid.NewGuid();
+
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._repository.RetrieveAsync(null!, CancellationToken.None));
+
+        // Assert
+        Assert.Equal("val", ex.ParamName);
+    }
+
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("My refresh token")]
+    [Theory]
+    public async Task TestRetrieveAsync_Valid_Contains(String val)
+    {
+        // Arrange
+        this._dataSource._userRefreshTokensFunc = () =>
+        {
+            IEnumerable<UserRefreshTokenEntity> userRefreshTokens =
+                new UserRefreshTokenEntity[]
+            {
+                new UserRefreshTokenEntity
+                {
+                    Value = val
+                }
+            };
+
+            IQueryable<UserRefreshTokenEntity> query =
+                userRefreshTokens.AsQueryable();
+
+            return new MockDataSet<UserRefreshTokenEntity>(query);
+        };
+
+        // Act
+        UserRefreshTokenEntity? userRefreshToken =
+            await this._repository.RetrieveAsync(val, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(userRefreshToken);
+        Assert.Equal(val, userRefreshToken.Value);
+    }
+
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("My refresh token")]
+    [Theory]
+    public async Task TestRetrieveAsync_Valid_NotContains(String val)
+    {
+        // Arrange
+        this._dataSource._userRefreshTokensFunc = () =>
+        {
+            IQueryable<UserRefreshTokenEntity> query =
+                Array
+                    .Empty<UserRefreshTokenEntity>().AsQueryable();
+
+            return new MockDataSet<UserRefreshTokenEntity>(query);
+        };
+
+        // Act
+        UserRefreshTokenEntity? userRefreshToken =
+            await this._repository.RetrieveAsync(val, CancellationToken.None);
+
+        // Assert
+        Assert.Null(userRefreshToken);
+    }
+#endregion
 }

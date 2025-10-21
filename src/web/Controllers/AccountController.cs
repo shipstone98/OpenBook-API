@@ -252,6 +252,88 @@ internal sealed class AccountController(ILogger<AccountController> logger)
         return this.NoContent();
     }
 
+    [ActionName("RefreshAuthenticate")]
+    [AllowAnonymous]
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status410Gone)]
+    public Task<IActionResult> RefreshAuthenticateAsync(
+        [FromServices] IRefreshAuthenticateHandler handler,
+        [FromBody] RefreshAuthenticateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(request);
+
+        return this.RefreshAuthenticateAsyncCore(
+            handler,
+            request,
+            cancellationToken
+        );
+    }
+
+    private async Task<IActionResult> RefreshAuthenticateAsyncCore(
+        IRefreshAuthenticateHandler handler,
+        RefreshAuthenticateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        IAuthenticateResult result;
+
+        try
+        {
+            result =
+                await handler.HandleAsync(
+                    request._refreshToken,
+                    cancellationToken
+                );
+        }
+
+        catch (ForbiddenException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: Failed refresh authentication - refresh token not valid",
+                DateTime.UtcNow
+            );
+
+            return this.Forbid();
+        }
+
+        catch (NotFoundException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: Failed refresh authentication - refresh token not found",
+                DateTime.UtcNow
+            );
+
+            return this.Forbid();
+        }
+
+        catch (UserNotActiveException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: Failed refresh authentication - user not active",
+                DateTime.UtcNow
+            );
+
+            return this.StatusCode(StatusCodes.Status410Gone);
+        }
+
+        this._logger.LogInformation(
+            "{TimeStamp}: Authentication refreshed",
+            DateTime.UtcNow
+        );
+
+        Object? response = new RefreshAuthenticateResponse(result);
+        return this.Ok(response);
+    }
+
     [ActionName("Register")]
     [AllowAnonymous]
     [HttpPost]
