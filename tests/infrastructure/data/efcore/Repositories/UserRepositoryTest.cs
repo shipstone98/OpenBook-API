@@ -102,7 +102,7 @@ public sealed class UserRepositoryTest
 
         this._dataSource._usersFunc = () =>
         {
-            IEnumerable<UserEntity> users = new List<UserEntity>
+            IEnumerable<UserEntity> users = new UserEntity[]
             {
                 new UserEntity
                 {
@@ -172,7 +172,7 @@ public sealed class UserRepositoryTest
 
         this._dataSource._usersFunc = () =>
         {
-            IEnumerable<UserEntity> users = new List<UserEntity>
+            IEnumerable<UserEntity> users = new UserEntity[]
             {
                 new UserEntity
                 {
@@ -254,7 +254,7 @@ public sealed class UserRepositoryTest
 
         this._dataSource._usersFunc = () =>
         {
-            IEnumerable<UserEntity> users = new List<UserEntity>
+            IEnumerable<UserEntity> users = new UserEntity[]
             {
                 new UserEntity
                 {

@@ -136,6 +136,7 @@ public sealed class PostRepositoryTest
                 this._repository.RetrieveAsync(id, CancellationToken.None));
 
         // Assert
+        Assert.Equal(id, ex.ActualValue);
         Assert.Equal("id", ex.ParamName);
     }
 
@@ -147,7 +148,7 @@ public sealed class PostRepositoryTest
         // Arrange
         this._dataSource._postsFunc = () =>
         {
-            IEnumerable<PostEntity> posts = new List<PostEntity>
+            IEnumerable<PostEntity> posts = new PostEntity[]
             {
                 new PostEntity
                 {

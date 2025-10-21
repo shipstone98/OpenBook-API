@@ -60,7 +60,7 @@ public sealed class RoleRepositoryTest
         // Arrange
         this._dataSource._rolesFunc = () =>
         {
-            IEnumerable<RoleEntity> roles = new List<RoleEntity>
+            IEnumerable<RoleEntity> roles = new RoleEntity[]
             {
                 new RoleEntity
                 {
