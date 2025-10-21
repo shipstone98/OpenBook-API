@@ -28,6 +28,7 @@ public static class CoreServiceCollectionExtensions
         return services
             .AddSingleton<IValidationService, ValidationService>()
             .AddScoped<IAuthenticateHandler, AuthenticateHandler>()
+            .AddScoped<IAuthenticateService, AuthenticateService>()
             .AddScoped<IFollowingCreateHandler, FollowingCreateHandler>()
             .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>()
             .AddScoped<IOtpGenerateHandler, OtpGenerateHandler>()

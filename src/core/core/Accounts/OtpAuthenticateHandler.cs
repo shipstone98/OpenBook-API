@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Shipstone.Utilities.Linq;
-
 using Shipstone.OpenBook.Api.Core.Services;
-using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
@@ -14,20 +10,20 @@ namespace Shipstone.OpenBook.Api.Core.Accounts;
 
 internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
 {
-    private readonly IAuthenticationService _authentication;
+    private readonly IAuthenticateService _authenticate;
     private readonly IOtpService _otp;
     private readonly IRepository _repository;
 
     public OtpAuthenticateHandler(
         IRepository repository,
-        IAuthenticationService authentication,
+        IAuthenticateService authenticate,
         IOtpService otp
     )
     {
         ArgumentNullException.ThrowIfNull(repository);
-        ArgumentNullException.ThrowIfNull(authentication);
+        ArgumentNullException.ThrowIfNull(authenticate);
         ArgumentNullException.ThrowIfNull(otp);
-        this._authentication = authentication;
+        this._authenticate = authenticate;
         this._otp = otp;
         this._repository = repository;
     }
@@ -46,39 +42,12 @@ internal sealed class OtpAuthenticateHandler : IOtpAuthenticateHandler
 
         DateTime now = DateTime.UtcNow;
         await this._otp.ValidateAsync(user, otp, now, cancellationToken);
-        Guid userId = user.Id;
 
-        IAsyncEnumerable<String> roles =
-            await this._repository.RetrieveRolesAsync(
-                userId,
-                cancellationToken
-            );
-
-        IEnumerable<String> roleCollection =
-            await roles.ToListAsync(cancellationToken);
-
-        IAuthenticateResult result =
-            await this._authentication.AuthenticateAsync(
-                user,
-                roleCollection,
-                now,
-                cancellationToken
-            );
-
-        await this._repository.UserRefreshTokens.CreateAsync(
-            new UserRefreshTokenEntity
-            {
-                Created = now,
-                Expires = result.RefreshTokenExpires,
-                Updated = now,
-                UserId = userId,
-                Value = result.RefreshToken
-            },
+        return await this._authenticate.AuthenticateAsync(
+            user,
+            now,
             cancellationToken
         );
-
-        await this._repository.SaveAsync(cancellationToken);
-        return result;
     }
 
     Task<IAuthenticateResult> IOtpAuthenticateHandler.HandleAsync(
