@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Shipstone.Extensions.Identity;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
-using Shipstone.OpenBook.Api.Core.Users;
 
 namespace Shipstone.OpenBook.Api.Core.Passwords;
 
@@ -21,14 +20,14 @@ public interface IPasswordSetHandler
     /// <param name="otp">The one-time passcode (OTP) of the user to set the password of.</param>
     /// <param name="password">The new password for the user.</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous register operation. The value of <see cref="Task{TResult}.Result" /> contains the updated <see cref="IUser" />.</returns>
+    /// <returns>A <see cref="Task" /> that represents the asynchronous register operation.</returns>
     /// <exception cref="ArgumentNullException"><c><paramref name="emailAddress" /></c> is <c>null</c> -or- <c><paramref name="otp" /></c> is <c>null</c> -or- <c><paramref name="password" /></c> is <c>null</c>.</exception>
     /// <exception cref="ForbiddenException">The provided OTP does not match the OTP of the user whose email address matches the provided email address -or- the provided OTP has expired.</exception>
     /// <exception cref="NotFoundException">A user whose email address matches the provided email address could not be found.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     /// <exception cref="PasswordNotValidException"><c><paramref name="password" /></c> is not a valid password.</exception>
     /// <exception cref="UserNotActiveException">The user whose email address matches the provided email address is not active.</exception>
-    Task<IUser> HandleAsync(
+    Task HandleAsync(
         String emailAddress,
         String otp,
         String password,

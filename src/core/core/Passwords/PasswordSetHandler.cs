@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Shipstone.Extensions.Identity;
 
 using Shipstone.OpenBook.Api.Core.Services;
-using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
@@ -31,7 +30,7 @@ internal sealed class PasswordSetHandler : IPasswordSetHandler
         this._repository = repository;
     }
 
-    private async Task<IUser> HandleAsync(
+    private async Task HandleAsync(
         String emailAddress,
         String otp,
         String password,
@@ -50,14 +49,9 @@ internal sealed class PasswordSetHandler : IPasswordSetHandler
         user.Updated = now;
         await this._repository.Users.UpdateAsync(user, cancellationToken);
         await this._repository.SaveAsync(cancellationToken);
-
-        return await this._repository.RetrieveUserAsync(
-            user,
-            cancellationToken
-        );
     }
 
-    Task<IUser> IPasswordSetHandler.HandleAsync(
+    Task IPasswordSetHandler.HandleAsync(
         String emailAddress,
         String otp,
         String password,

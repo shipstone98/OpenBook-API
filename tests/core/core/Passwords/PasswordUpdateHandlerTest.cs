@@ -227,50 +227,27 @@ public sealed class PasswordUpdateHandlerTest
 #endregion
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Success()
+    public Task TestHandleAsync_Valid_Success()
     {
-#region Arrange
         // Arrange
-        Guid id = Guid.NewGuid();
-        DateTime created = DateTime.UnixEpoch.ToUniversalTime();
-        const String EMAIL_ADDRESS = "john.doe@lampada.co";
-        const String USER_NAME = "johndoe2025";
-        const String FORENAME = "John";
-        const String SURNAME = "Doe";
-        DateTime consented = created.AddDays(1);
-
-        DateOnly born =
-            DateOnly
-                .FromDateTime(DateTime.UtcNow)
-                .AddYears(-18);
-
         this._password._validateAction = _ => { };
 
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
 
-            users._retrieve_GuidFunc = id =>
+            users._retrieve_GuidFunc = _ =>
                 new UserEntity
                 {
-                    Born = born,
-                    Consented = consented,
-                    Created = created,
-                    EmailAddress = EMAIL_ADDRESS,
-                    Forename = FORENAME,
-                    Id = id,
                     IsActive = true,
-                    PasswordHash = String.Empty,
-                    Surname = SURNAME,
-                    Updated = created,
-                    UserName = USER_NAME
+                    PasswordHash = String.Empty
                 };
 
             users._updateAction = _ => { };
             return users;
         };
 
-        this._claims._idFunc = () => id;
+        this._claims._idFunc = Guid.NewGuid;
         this._password._verifyFunc = (_, _) => false;
         this._password._hashFunc = _ => String.Empty;
         this._repository._saveAction = () => { };
@@ -278,93 +255,15 @@ public sealed class PasswordUpdateHandlerTest
         this._repository._userRolesFunc = () =>
         {
             MockUserRoleRepository userRoles = new();
-
-            userRoles._listForUserFunc = _ =>
-                new UserRoleEntity[]
-                {
-                    new UserRoleEntity
-                    {
-                        RoleId = Roles.AdministratorId
-                    },
-                    new UserRoleEntity
-                    {
-                        RoleId = Roles.SystemAdministratorId
-                    },
-                    new UserRoleEntity
-                    {
-                        RoleId = Roles.UserId
-                    }
-                };
-
+            userRoles._listForUserFunc = _ => Array.Empty<UserRoleEntity>();
             return userRoles;
         };
 
-        this._repository._rolesFunc = () =>
-        {
-            MockRoleRepository roles = new();
-
-            roles._retrieveFunc = id =>
-            {
-                switch (id)
-                {
-                    case Roles.AdministratorId:
-                        return new RoleEntity
-                        {
-                            Name = Roles.Administrator
-                        };
-
-                    case Roles.SystemAdministratorId:
-                        return new RoleEntity
-                        {
-                            Name = Roles.SystemAdministrator
-                        };
-
-                    case Roles.UserId:
-                        return new RoleEntity
-                        {
-                            Name = Roles.User
-                        };
-
-                    default:
-                        return null;
-                }
-            };
-
-            return roles;
-        };
-
-        DateTime notBefore = DateTime.UtcNow;
-#endregion
-
-        // Act
-        IUser user =
-            await this._handler.HandleAsync(
-                String.Empty,
-                String.Empty,
-                CancellationToken.None
-            );
-
-        // Assert
-        Assert.False(DateTime.Compare(notBefore, user.Updated) > 0);
-
-        IEnumerable<String> roles = new String[]
-        {
-            Roles.Administrator,
-            Roles.SystemAdministrator,
-            Roles.User
-        };
-
-        user.AssertEqual(
-            id,
-            created,
-            user.Updated,
-            EMAIL_ADDRESS,
-            USER_NAME,
-            FORENAME,
-            SURNAME,
-            born,
-            consented,
-            roles
+        // Act and assert
+        return this._handler.HandleAsync(
+            String.Empty,
+            String.Empty,
+            CancellationToken.None
         );
     }
 #endregion

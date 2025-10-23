@@ -264,41 +264,19 @@ public sealed class PasswordSetHandlerTest
     {
 #region Arrange
         // Arrange
-        Guid id = Guid.NewGuid();
-        DateTime created = DateTime.UnixEpoch.ToUniversalTime();
-        const String EMAIL_ADDRESS = "john.doe@contoso.com";
-        const String USER_NAME = "johndoe2025";
-        const String FORENAME = "John";
-        const String SURNAME = "Doe";
         const String OTP = "123456";
-        DateTime consented = created.AddDays(1);
-
-        DateOnly born =
-            DateOnly
-                .FromDateTime(DateTime.UtcNow)
-                .AddYears(-18);
-
         this._password._validateAction = _ => { };
 
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
 
-            users._retrieve_StringFunc = ea =>
+            users._retrieve_StringFunc = _ =>
                 new UserEntity
                 {
-                    Born = born,
-                    Consented = consented,
-                    Created = created,
-                    EmailAddress = ea,
-                    Forename = FORENAME,
-                    Id = id,
                     IsActive = true,
                     Otp = OTP,
-                    OtpExpires = DateTime.MaxValue,
-                    Surname = SURNAME,
-                    Updated = created,
-                    UserName = USER_NAME
+                    OtpExpires = DateTime.MaxValue
                 };
 
             users._updateAction = _ => { };
@@ -311,94 +289,17 @@ public sealed class PasswordSetHandlerTest
         this._repository._userRolesFunc = () =>
         {
             MockUserRoleRepository userRoles = new();
-
-            userRoles._listForUserFunc = _ =>
-                new UserRoleEntity[]
-                {
-                    new UserRoleEntity
-                    {
-                        RoleId = Roles.AdministratorId
-                    },
-                    new UserRoleEntity
-                    {
-                        RoleId = Roles.SystemAdministratorId
-                    },
-                    new UserRoleEntity
-                    {
-                        RoleId = Roles.UserId
-                    }
-                };
-
+            userRoles._listForUserFunc = _ => Array.Empty<UserRoleEntity>();
             return userRoles;
         };
-
-        this._repository._rolesFunc = () =>
-        {
-            MockRoleRepository roles = new();
-
-            roles._retrieveFunc = id =>
-            {
-                switch (id)
-                {
-                    case Roles.AdministratorId:
-                        return new RoleEntity
-                        {
-                            Name = Roles.Administrator
-                        };
-
-                    case Roles.SystemAdministratorId:
-                        return new RoleEntity
-                        {
-                            Name = Roles.SystemAdministrator
-                        };
-
-                    case Roles.UserId:
-                        return new RoleEntity
-                        {
-                            Name = Roles.User
-                        };
-
-                    default:
-                        return null;
-                }
-            };
-
-            return roles;
-        };
-
-        DateTime notBefore = DateTime.UtcNow;
 #endregion
 
-        // Act
-        IUser user =
-            await this._handler.HandleAsync(
-                EMAIL_ADDRESS,
-                OTP,
-                String.Empty,
-                CancellationToken.None
-            );
-
-        // Assert
-        Assert.False(DateTime.Compare(notBefore, user.Updated) > 0);
-
-        IEnumerable<String> roles = new String[]
-        {
-            Roles.Administrator,
-            Roles.SystemAdministrator,
-            Roles.User
-        };
-
-        user.AssertEqual(
-            id,
-            created,
-            user.Updated,
-            EMAIL_ADDRESS,
-            USER_NAME,
-            FORENAME,
-            SURNAME,
-            born,
-            consented,
-            roles
+        // Act and assert
+        await this._handler.HandleAsync(
+            String.Empty,
+            OTP,
+            String.Empty,
+            CancellationToken.None
         );
     }
 #endregion

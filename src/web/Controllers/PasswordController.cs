@@ -11,7 +11,6 @@ using Shipstone.Extensions.Identity;
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Passwords;
-using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Web.Models.Password;
 
 namespace Shipstone.OpenBook.Api.Web.Controllers;
@@ -47,17 +46,14 @@ internal sealed class PasswordController : ControllerBase<PasswordController>
         CancellationToken cancellationToken
     )
     {
-        IUser user;
-
         try
         {
-            user =
-                await handler.HandleAsync(
-                    request._emailAddress,
-                    request._otp,
-                    request._password,
-                    cancellationToken
-                );
+            await handler.HandleAsync(
+                request._emailAddress,
+                request._otp,
+                request._password,
+                cancellationToken
+            );
         }
 
         catch (ForbiddenException ex)
@@ -98,8 +94,8 @@ internal sealed class PasswordController : ControllerBase<PasswordController>
 
         this._logger.LogInformation(
             "{TimeStamp}: User {EmailAddress} set password",
-            user.Updated,
-            user.EmailAddress
+            DateTime.UtcNow,
+            request._emailAddress
         );
 
         return this.NoContent();
@@ -137,16 +133,13 @@ internal sealed class PasswordController : ControllerBase<PasswordController>
         CancellationToken cancellationToken
     )
     {
-        IUser user;
-
         try
         {
-            user =
-                await handler.HandleAsync(
-                    request._passwordCurrent,
-                    request._passwordNew,
-                    cancellationToken
-                );
+            await handler.HandleAsync(
+                request._passwordCurrent,
+                request._passwordNew,
+                cancellationToken
+            );
         }
 
         catch (IncorrectPasswordException ex)
@@ -176,7 +169,7 @@ internal sealed class PasswordController : ControllerBase<PasswordController>
         this._logger.LogInformation(
             "{TimeStamp}: User {EmailAddress} set password",
             DateTime.UtcNow,
-            user.EmailAddress
+            claims.EmailAddress
         );
 
         return this.NoContent();
