@@ -91,7 +91,8 @@ public sealed class RoleRepositoryTest
         {
             IQueryable<RoleEntity> query =
                 Array
-                    .Empty<RoleEntity>().AsQueryable();
+                    .Empty<RoleEntity>()
+                    .AsQueryable();
 
             return new MockDataSet<RoleEntity>(query);
         };

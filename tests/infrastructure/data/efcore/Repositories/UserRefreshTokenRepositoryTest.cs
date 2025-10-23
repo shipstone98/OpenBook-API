@@ -176,7 +176,8 @@ public sealed class UserRefreshTokenRepositoryTest
         {
             IQueryable<UserRefreshTokenEntity> query =
                 Array
-                    .Empty<UserRefreshTokenEntity>().AsQueryable();
+                    .Empty<UserRefreshTokenEntity>()
+                    .AsQueryable();
 
             return new MockDataSet<UserRefreshTokenEntity>(query);
         };

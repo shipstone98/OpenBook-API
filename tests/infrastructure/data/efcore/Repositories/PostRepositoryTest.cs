@@ -179,7 +179,8 @@ public sealed class PostRepositoryTest
         {
             IQueryable<PostEntity> query =
                 Array
-                    .Empty<PostEntity>().AsQueryable();
+                    .Empty<PostEntity>()
+                    .AsQueryable();
 
             return new MockDataSet<PostEntity>(query);
         };
