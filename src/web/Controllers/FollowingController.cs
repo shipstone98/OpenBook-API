@@ -64,7 +64,7 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to follower user {UserName} - user is already followed",
+                "{TimeStamp}: User {EmailAddress} failed to follow user {UserName} - user is already followed",
                 DateTime.UtcNow,
                 claims.EmailAddress,
                 request._userName
@@ -77,7 +77,7 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to follower user {UserName} - user is current user",
+                "{TimeStamp}: User {EmailAddress} failed to follow user {UserName} - user is current user",
                 DateTime.UtcNow,
                 claims.EmailAddress,
                 request._userName
@@ -90,7 +90,7 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to follower user {UserName} - user not found",
+                "{TimeStamp}: User {EmailAddress} failed to follow user {UserName} - user not found",
                 DateTime.UtcNow,
                 claims.EmailAddress,
                 request._userName
@@ -103,7 +103,7 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to follower user {UserName} - user not active",
+                "{TimeStamp}: User {EmailAddress} failed to follow user {UserName} - user not active",
                 DateTime.UtcNow,
                 claims.EmailAddress,
                 request._userName
