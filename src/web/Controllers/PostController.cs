@@ -209,7 +209,7 @@ internal sealed class PostController(ILogger<PostController> logger)
     [Route("/api/[controller]/[action]")]
     public Task<IActionResult> ListAsync(
         [FromServices] IPostListHandler handler,
-        [FromQuery] String? userName,
+        [FromQuery(Name = "creator")] String? userName,
         CancellationToken cancellationToken
     )
     {
