@@ -50,6 +50,7 @@ public sealed class CoreServiceCollectionExtensionsTest
         {
             typeof (IAuthenticateHandler),
             typeof (IFollowingCreateHandler),
+            typeof (IFollowingDeleteHandler),
             typeof (IOtpAuthenticateHandler),
             typeof (IPasswordSetHandler),
             typeof (IPasswordUpdateHandler),

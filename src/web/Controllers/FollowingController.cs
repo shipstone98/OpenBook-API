@@ -121,4 +121,95 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
 
         return this.NoContent();
     }
+
+    [ActionName("Delete")]
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status410Gone)]
+    public Task<IActionResult> DeleteAsync(
+        [FromServices] IFollowingDeleteHandler handler,
+        [FromServices] IClaimsService claims,
+        [FromQuery] String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(claims);
+        ArgumentNullException.ThrowIfNull(userName);
+
+        return this.DeleteAsyncCore(
+            handler,
+            claims,
+            userName,
+            cancellationToken
+        );
+    }
+
+    private async Task<IActionResult> DeleteAsyncCore(
+        IFollowingDeleteHandler handler,
+        IClaimsService claims,
+        String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(userName);
+        IFollowing following;
+
+        try
+        {
+            following = await handler.HandleAsync(userName, cancellationToken);
+        }
+
+        catch (ForbiddenException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: User {EmailAddress} failed to unfollow user {UserName} - user is current user",
+                DateTime.UtcNow,
+                claims.EmailAddress,
+                userName
+            );
+
+            throw;
+        }
+
+        catch (NotFoundException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: User {EmailAddress} failed to unfollow user {UserName} - user is not followed",
+                DateTime.UtcNow,
+                claims.EmailAddress,
+                userName
+            );
+
+            throw;
+        }
+
+        catch (UserNotActiveException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: User {EmailAddress} failed to unfollow user {UserName} - user not active",
+                DateTime.UtcNow,
+                claims.EmailAddress,
+                userName
+            );
+
+            return this.StatusCode(StatusCodes.Status410Gone);
+        }
+
+        this._logger.LogInformation(
+            "{TimeStamp}: User {EmailAddress} unfollowed user {UserName}",
+            DateTime.UtcNow,
+            following.FollowerEmailAddress,
+            following.FolloweeName
+        );
+
+        return this.NoContent();
+    }
 }
