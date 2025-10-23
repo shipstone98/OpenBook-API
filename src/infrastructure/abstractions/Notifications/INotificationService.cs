@@ -23,7 +23,7 @@ public interface INotificationService
     /// <exception cref="ArgumentException"><c><paramref name="userDevices" /></c> contains one or more elements that are <c>null</c>.</exception>
     /// <exception cref="ArgumentNullException"><c><paramref name="creatorName" /></c> is <c>null</c> -or- <c><paramref name="userDevices" /></c> is <c>null</c>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><c><paramref name="id" /></c> is less than or equal to 0 (zero).</exception>
-    /// <exception cref="NotificationException">The post created notifications could not be sent.</exception>
+    /// <exception cref="NotificationException">The notifications could not be sent.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     Task SendPostCreatedAsync(
         String creatorName,
