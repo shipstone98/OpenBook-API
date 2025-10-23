@@ -60,13 +60,12 @@ internal sealed class AuthenticationService : IAuthenticationService
     {
         roles = new HashSet<String>(roles);
         String id = user.Id.ToString();
-        String emailAddress = user.EmailAddress;
 
         ICollection<Claim> claims = new List<Claim>
         {
-            new(ClaimTypes.Email, emailAddress),
+            new(ClaimTypes.Email, user.EmailAddress),
             new(ClaimTypes.GivenName, user.Forename),
-            new(ClaimTypes.Name, emailAddress),
+            new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.NameIdentifier, id),
             new(ClaimTypes.Surname, user.Surname)
         };
