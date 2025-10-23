@@ -24,10 +24,10 @@ public class UserEntity : Entity<Guid>
     public DateOnly Born { get; init; }
 
     /// <summary>
-    /// Gets or initializes the date and time the user last consented to policy.
+    /// Gets or sets the date and time the user last consented to policy.
     /// </summary>
     /// <value>The date and time the user last consented to policy.</value>
-    public DateTime Consented { get; init; }
+    public DateTime Consented { get; set; }
 
     public String EmailAddress
     {

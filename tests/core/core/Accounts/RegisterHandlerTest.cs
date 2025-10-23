@@ -11,6 +11,7 @@ using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
+using Shipstone.OpenBook.Api.Infrastructure.Entities;
 using Shipstone.OpenBook.Api.Infrastructure.Mail;
 
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
@@ -217,54 +218,124 @@ public sealed class RegisterHandlerTest
     }
 #endregion
 
-    [Fact]
-    public async Task TestHandleAsync_Valid_Failure()
+#region Valid arguments
+    [InlineData(false, null)]
+    [InlineData(true, "My password hash")]
+    [Theory]
+    public async Task TestHandleAsync_Valid_Failure(
+        bool isActive,
+        String? passwordHash
+    )
     {
         // Arrange
-        Exception innerException = new();
+        DateOnly born =
+            DateOnly
+                .FromDateTime(DateTime.UtcNow.Date)
+                .AddYears(-18);
+
+        this._repository._usersFunc = () =>
+        {
+            MockUserRepository users = new();
+
+            users._retrieve_StringFunc = _ =>
+                new UserEntity
+                {
+                    IsActive = isActive,
+                    PasswordHash = passwordHash
+                };
+
+            return users;
+        };
+
+        // Act and assert
+        await Assert.ThrowsAsync<ConflictException>(() =>
+            this._handler.HandleAsync(
+                "john.doe@contoso.com",
+                "johndoe2025",
+                "John",
+                "Doe",
+                born,
+                CancellationToken.None
+            ));
+    }
+
+    [Fact]
+    public async Task TestHandleAsync_Valid_Success_Exists()
+    {
+#region Arrange
+        // Arrange
+        Guid id = Guid.NewGuid();
+        DateTime created = DateTime.UnixEpoch.ToUniversalTime();
+        const String EMAIL_ADDRESS = "john.doe@contoso.com";
+        const String USER_NAME = "johndoe2025";
+        const String FORENAME = "John";
+        const String SURNAME = "Doe";
 
         DateOnly born =
             DateOnly
                 .FromDateTime(DateTime.UtcNow.Date)
                 .AddYears(-18);
 
-        this._normalization._normalizeFunc = _ => String.Empty;
-        this._authentication._generateOtpAction = (_, _) => { };
-
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._createAction = _ => { };
+
+            users._retrieve_StringFunc = ea =>
+                new UserEntity
+                {
+                    Born = born,
+                    Created = created,
+                    EmailAddress = ea,
+                    Forename = FORENAME,
+                    Id = id,
+                    IsActive = true,
+                    Surname = SURNAME,
+                    UserName = USER_NAME
+                };
+
+            users._updateAction = _ => { };
             return users;
         };
 
-        this._repository._userRolesFunc = () =>
-        {
-            MockUserRoleRepository userRoles = new();
-            userRoles._createAction = _ => { };
-            return userRoles;
-        };
+        this._authentication._generateOtpAction = (u, _) =>
+            u.OtpExpires = DateTime.MaxValue;
 
-        this._repository._saveAction = () => throw innerException;
+        this._repository._saveAction = () => { };
+        this._mail._sendRegistrationAction = (_, _) => { };
+        DateTime notBefore = DateTime.UtcNow;
+#endregion
 
         // Act
-        Exception ex =
-            await Assert.ThrowsAsync<ConflictException>(() =>
-                this._handler.HandleAsync(
-                    "john.doe@contoso.com",
-                    "johndoe2025",
-                    "John",
-                    "Doe",
-                    born,
-                    CancellationToken.None
-                ));
+        IUser user =
+            await this._handler.HandleAsync(
+                EMAIL_ADDRESS,
+                USER_NAME,
+                FORENAME,
+                SURNAME,
+                born,
+                CancellationToken.None
+            );
 
         // Assert
-        Assert.Same(innerException, ex.InnerException);
+        Assert.False(DateTime.Compare(notBefore, user.Updated) > 0);
+        IEnumerable<String> roles = new String[1] { Roles.User };
+
+        user.AssertEqual(
+            id,
+            created,
+            user.Updated,
+            EMAIL_ADDRESS,
+            USER_NAME,
+            FORENAME,
+            SURNAME,
+            born,
+            user.Updated,
+            roles
+        );
     }
 
     [Fact]
-    public async Task TestHandleAsync_Valid_Success()
+    public async Task TestHandleAsync_Valid_Success_NotExists()
     {
 #region Arrange
         // Arrange
@@ -279,17 +350,18 @@ public sealed class RegisterHandlerTest
                 .FromDateTime(DateTime.UtcNow.Date)
                 .AddYears(-18);
 
+        this._repository._usersFunc = () =>
+        {
+            MockUserRepository users = new();
+            users._retrieve_StringFunc = _ => null;
+            users._createAction = u => u.SetId(id);
+            return users;
+        };
+
         this._normalization._normalizeFunc = _ => String.Empty;
 
         this._authentication._generateOtpAction = (u, _) =>
             u.OtpExpires = DateTime.MaxValue;
-
-        this._repository._usersFunc = () =>
-        {
-            MockUserRepository users = new();
-            users._createAction = u => u.SetId(id);
-            return users;
-        };
 
         this._repository._userRolesFunc = () =>
         {
@@ -331,5 +403,6 @@ public sealed class RegisterHandlerTest
             roles
         );
     }
+#endregion
 #endregion
 }

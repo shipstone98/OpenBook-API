@@ -51,21 +51,46 @@ internal sealed class RegisterHandler : IRegisterHandler
         CancellationToken cancellationToken
     )
     {
-        UserEntity user = new UserEntity
+        bool isCreated;
+
+        UserEntity? user =
+            await this._repository.Users.RetrieveAsync(
+                emailAddress,
+                cancellationToken
+            );
+
+        if (user is null)
         {
-            Born = born,
-            Created = now,
-            Consented = now,
-            EmailAddress = emailAddress,
-            EmailAddressNormalized =
-                this._normalization.Normalize(emailAddress),
-            Forename = forename,
-            IsActive = true,
-            Surname = surname,
-            Updated = now,
-            UserName = userName,
-            UserNameNormalized = this._normalization.Normalize(userName)
-        };
+            user = new UserEntity
+            {
+                Born = born,
+                Created = now,
+                Consented = now,
+                EmailAddress = emailAddress,
+                EmailAddressNormalized =
+                    this._normalization.Normalize(emailAddress),
+                Forename = forename,
+                IsActive = true,
+                Surname = surname,
+                Updated = now,
+                UserName = userName,
+                UserNameNormalized = this._normalization.Normalize(userName)
+            };
+
+            isCreated = true;
+        }
+
+        else if (user.IsActive && user.PasswordHash is null)
+        {
+            user.Consented = now;
+            user.Updated = now;
+            isCreated = false;
+        }
+
+        else
+        {
+            throw new ConflictException("A user whose email address and/or name matches the provided email address and/or user name already exists.");
+        }
 
         await this._authentication.GenerateOtpAsync(
             user,
@@ -73,31 +98,27 @@ internal sealed class RegisterHandler : IRegisterHandler
             cancellationToken
         );
 
-        await this._repository.Users.CreateAsync(user, cancellationToken);
-
-        await this._repository.UserRoles.CreateAsync(
-            new UserRoleEntity
-            {
-                Assigned = now,
-                RoleId = Roles.UserId,
-                UserId = user.Id
-            },
-            cancellationToken
-        );
-
-        try
+        if (isCreated)
         {
-            await this._repository.SaveAsync(cancellationToken);
-        }
+            await this._repository.Users.CreateAsync(user, cancellationToken);
 
-        catch (Exception ex)
-        {
-            throw new ConflictException(
-                "A user whose email address and/or name matches the provided email address and/or user name already exists.",
-                ex
+            await this._repository.UserRoles.CreateAsync(
+                new UserRoleEntity
+                {
+                    Assigned = now,
+                    RoleId = Roles.UserId,
+                    UserId = user.Id
+                },
+                cancellationToken
             );
         }
 
+        else
+        {
+            await this._repository.Users.UpdateAsync(user, cancellationToken);
+        }
+
+        await this._repository.SaveAsync(cancellationToken);
         TimeSpan difference = user.OtpExpires!.Value.Subtract(now);
 
         await this._mail.SendRegistrationAsync(
