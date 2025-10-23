@@ -172,4 +172,212 @@ public sealed class NotificationServiceTest
         // Nothing to assert
     }
 #endregion
+
+#region SendUserFollowedAsync method
+#region Invalid arguments
+    [Fact]
+    public async Task TestSendUserFollowedAsync_Invalid_UserDevicesContainsNull()
+    {
+        // Arrange
+        IEnumerable<UserDeviceEntity> userDevices =
+            new UserDeviceEntity[1] { null! };
+
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                this._notification.SendUserFollowedAsync(
+                    String.Empty,
+                    userDevices,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("userDevices", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestSendUserFollowedAsync_Invalid_UserDevicesNull()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._notification.SendUserFollowedAsync(
+                    String.Empty,
+                    null!,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("userDevices", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestSendUserFollowedAsync_Invalid_UserNameNull()
+    {
+        // Arrange
+        IEnumerable<UserDeviceEntity> userDevices =
+            Array.Empty<UserDeviceEntity>();
+
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._notification.SendUserFollowedAsync(
+                    null!,
+                    userDevices,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("userName", ex.ParamName);
+    }
+#endregion
+
+    [Fact]
+    public async Task TestSendUserFollowedAsync_Valid_Failure()
+    {
+        // Arrange
+        Exception innerException =
+            new Extensions.Notifications.NotificationException();
+
+        IEnumerable<UserDeviceEntity> userDevices =
+            Array.Empty<UserDeviceEntity>();
+
+        this._mockNotification._sendAction = (_, _) => throw innerException;
+
+        // Act
+        Exception ex =
+            await Assert.ThrowsAsync<NotificationException>(() =>
+                this._notification.SendUserFollowedAsync(
+                    String.Empty,
+                    userDevices,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Same(innerException, ex.InnerException);
+    }
+
+    [Fact]
+    public Task TestSendUserFollowedAsync_Valid_Success()
+    {
+        // Arrange
+        IEnumerable<UserDeviceEntity> userDevices =
+            Array.Empty<UserDeviceEntity>();
+
+        this._mockNotification._sendAction = (_, _) => { };
+
+        // Act
+        return this._notification.SendUserFollowedAsync(
+            String.Empty,
+            userDevices,
+            CancellationToken.None
+        );
+
+        // Nothing to assert
+    }
+#endregion
+
+#region SendUserUnfollowedAsync method
+#region Invalid arguments
+    [Fact]
+    public async Task TestSendUserUnfollowedAsync_Invalid_UserDevicesContainsNull()
+    {
+        // Arrange
+        IEnumerable<UserDeviceEntity> userDevices =
+            new UserDeviceEntity[1] { null! };
+
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                this._notification.SendUserUnfollowedAsync(
+                    String.Empty,
+                    userDevices,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("userDevices", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestSendUserUnfollowedAsync_Invalid_UserDevicesNull()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._notification.SendUserUnfollowedAsync(
+                    String.Empty,
+                    null!,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("userDevices", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestSendUserUnfollowedAsync_Invalid_UserNameNull()
+    {
+        // Arrange
+        IEnumerable<UserDeviceEntity> userDevices =
+            Array.Empty<UserDeviceEntity>();
+
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._notification.SendUserUnfollowedAsync(
+                    null!,
+                    userDevices,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("userName", ex.ParamName);
+    }
+#endregion
+
+    [Fact]
+    public async Task TestSendUserUnfollowedAsync_Valid_Failure()
+    {
+        // Arrange
+        Exception innerException =
+            new Extensions.Notifications.NotificationException();
+
+        IEnumerable<UserDeviceEntity> userDevices =
+            Array.Empty<UserDeviceEntity>();
+
+        this._mockNotification._sendAction = (_, _) => throw innerException;
+
+        // Act
+        Exception ex =
+            await Assert.ThrowsAsync<NotificationException>(() =>
+                this._notification.SendUserUnfollowedAsync(
+                    String.Empty,
+                    userDevices,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Same(innerException, ex.InnerException);
+    }
+
+    [Fact]
+    public Task TestSendUserUnfollowedAsync_Valid_Success()
+    {
+        // Arrange
+        IEnumerable<UserDeviceEntity> userDevices =
+            Array.Empty<UserDeviceEntity>();
+
+        this._mockNotification._sendAction = (_, _) => { };
+
+        // Act
+        return this._notification.SendUserUnfollowedAsync(
+            String.Empty,
+            userDevices,
+            CancellationToken.None
+        );
+
+        // Nothing to assert
+    }
+#endregion
 }

@@ -10,6 +10,7 @@ using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Followings;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
+using Shipstone.OpenBook.Api.Infrastructure.Notifications;
 
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
 using Shipstone.OpenBook.Api.Test.Mocks;
@@ -21,6 +22,7 @@ public sealed class FollowingCreateHandlerTest
 {
     private readonly MockClaimsService _claims;
     private readonly IFollowingCreateHandler _handler;
+    private readonly MockNotificationService _notification;
     private readonly MockRepository _repository;
 
     public FollowingCreateHandlerTest()
@@ -34,11 +36,14 @@ public sealed class FollowingCreateHandlerTest
         services.AddOpenBookCore();
         MockClaimsService claims = new();
         services.AddSingleton<IClaimsService>(claims);
+        MockNotificationService notification = new();
+        services.AddSingleton<INotificationService>(notification);
         MockRepository repository = new();
         services.AddSingleton<IRepository>(repository);
         IServiceProvider provider = new MockServiceProvider(services);
         this._claims = claims;
         this._handler = provider.GetRequiredService<IFollowingCreateHandler>();
+        this._notification = notification;
         this._repository = repository;
     }
 
@@ -179,6 +184,7 @@ public sealed class FollowingCreateHandlerTest
     [Theory]
     public async Task TestHandleAsync_Valid_Success(bool isSubscribed)
     {
+#region Arrange
         // Arrange
         const String FOLLOWER_EMAIL_ADDRESS = "john.doe@contoso.com";
         const String FOLLOWEE_NAME = "janedoe2025";
@@ -207,8 +213,24 @@ public sealed class FollowingCreateHandlerTest
         };
 
         this._repository._saveAction = () => { };
+
+        this._repository._userDevicesFunc = () =>
+        {
+            MockUserDeviceRepository userDevices = new();
+
+            userDevices._listForUserFunc = _ => new UserDeviceEntity[]
+            {
+                new UserDeviceEntity { },
+                new UserDeviceEntity { }
+            };
+
+            return userDevices;
+        };
+
+        this._notification._sendUserFollowedAction = (_, _) => { };
         this._claims._emailAddressFunc = () => FOLLOWER_EMAIL_ADDRESS;
         DateTime notBefore = DateTime.UtcNow;
+#endregion
 
         // Act
         IFollowing following =

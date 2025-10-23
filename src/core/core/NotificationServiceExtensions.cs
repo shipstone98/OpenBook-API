@@ -14,6 +14,46 @@ namespace Shipstone.OpenBook.Api.Core;
 
 internal static class NotificationServiceExtensions
 {
+    internal static async Task NotifyUserFollowedAsync(
+        this INotificationService notification,
+        IRepository repository,
+        UserEntity followee,
+        CancellationToken cancellationToken
+    )
+    {
+        IEnumerable<UserDeviceEntity> userDevices =
+            await repository.UserDevices.ListForUserAsync(
+                followee.Id,
+                cancellationToken
+            );
+
+        await notification.SendUserFollowedAsync(
+            followee.UserName,
+            userDevices,
+            cancellationToken
+        );
+    }
+
+    internal static async Task NotifyUserUnfollowedAsync(
+        this INotificationService notification,
+        IRepository repository,
+        UserEntity followee,
+        CancellationToken cancellationToken
+    )
+    {
+        IEnumerable<UserDeviceEntity> userDevices =
+            await repository.UserDevices.ListForUserAsync(
+                followee.Id,
+                cancellationToken
+            );
+
+        await notification.SendUserUnfollowedAsync(
+            followee.UserName,
+            userDevices,
+            cancellationToken
+        );
+    }
+
     internal static async Task NotifyAllSubscribedFollowersAsync(
         this INotificationService notification,
         IRepository repository,

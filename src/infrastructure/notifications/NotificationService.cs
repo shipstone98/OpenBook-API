@@ -19,16 +19,12 @@ internal sealed class NotificationService : INotificationService
         this._notification = notification;
     }
 
-    private async Task SendPostCreatedAsync(
-        String creatorName,
-        long id,
+    private async Task SendAsync(
+        Extensions.Notifications.INotification notification,
         IEnumerable<UserDeviceEntity> userDevices,
         CancellationToken cancellationToken
     )
     {
-        Extensions.Notifications.INotification notification =
-            new PostCreatedNotification(creatorName);
-
         try
         {
             await this._notification.SendAsync(
@@ -41,7 +37,7 @@ internal sealed class NotificationService : INotificationService
         catch (Extensions.Notifications.NotificationException ex)
         {
             throw new NotificationException(
-                "The post created notifications could not be sent.",
+                "The notifications could not be sent.",
                 ex
             );
         }
@@ -56,6 +52,46 @@ internal sealed class NotificationService : INotificationService
     {
         ArgumentNullException.ThrowIfNull(creatorName);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(id, 0);
+        NotificationService.CheckUserDevices(userDevices);
+
+        Extensions.Notifications.INotification notification =
+            new PostCreatedNotification(creatorName);
+
+        return this.SendAsync(notification, userDevices, cancellationToken);
+    }
+
+    Task INotificationService.SendUserFollowedAsync(
+        String userName,
+        IEnumerable<UserDeviceEntity> userDevices,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(userName);
+        NotificationService.CheckUserDevices(userDevices);
+
+        Extensions.Notifications.INotification notification =
+            new UserFollowedNotification(userName);
+
+        return this.SendAsync(notification, userDevices, cancellationToken);
+    }
+
+    Task INotificationService.SendUserUnfollowedAsync(
+        String userName,
+        IEnumerable<UserDeviceEntity> userDevices,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(userName);
+        NotificationService.CheckUserDevices(userDevices);
+
+        Extensions.Notifications.INotification notification =
+            new UserUnfollowedNotification(userName);
+
+        return this.SendAsync(notification, userDevices, cancellationToken);
+    }
+
+    private static void CheckUserDevices(IEnumerable<UserDeviceEntity> userDevices)
+    {
         ArgumentNullException.ThrowIfNull(userDevices);
 
         if (userDevices.Any(ud => ud is null))
@@ -65,12 +101,5 @@ internal sealed class NotificationService : INotificationService
                 nameof (userDevices)
             );
         }
-
-        return this.SendPostCreatedAsync(
-            creatorName,
-            id,
-            userDevices,
-            cancellationToken
-        );
     }
 }

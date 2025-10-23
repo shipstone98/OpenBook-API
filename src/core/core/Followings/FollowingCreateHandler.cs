@@ -5,22 +5,27 @@ using System.Threading.Tasks;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
+using Shipstone.OpenBook.Api.Infrastructure.Notifications;
 
 namespace Shipstone.OpenBook.Api.Core.Followings;
 
 internal sealed class FollowingCreateHandler : IFollowingCreateHandler
 {
     private readonly IClaimsService _claims;
+    private readonly INotificationService _notification;
     private readonly IRepository _repository;
 
     public FollowingCreateHandler(
         IRepository repository,
-        IClaimsService claims
+        IClaimsService claims,
+        INotificationService notification
     )
     {
         ArgumentNullException.ThrowIfNull(repository);
         ArgumentNullException.ThrowIfNull(claims);
+        ArgumentNullException.ThrowIfNull(notification);
         this._claims = claims;
+        this._notification = notification;
         this._repository = repository;
     }
 
@@ -30,24 +35,24 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
         CancellationToken cancellationToken
     )
     {
-        UserEntity? user =
+        UserEntity? followee =
             await this._repository.Users.RetrieveForNameAsync(
                 userName,
                 cancellationToken
             );
 
-        if (user is null)
+        if (followee is null)
         {
             throw new NotFoundException("A user whose name matches the provided user name could not be found.");
         }
 
-        if (!user.IsActive)
+        if (!followee.IsActive)
         {
             throw new UserNotActiveException("The user whose name matches the provided user name is not active.");
         }
 
         Guid followerId = this._claims.Id;
-        Guid followeeId = user.Id;
+        Guid followeeId = followee.Id;
 
         if (Guid.Equals(followerId, followeeId))
         {
@@ -80,9 +85,15 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
             );
         }
 
+        await this._notification.NotifyUserFollowedAsync(
+            this._repository,
+            followee,
+            cancellationToken
+        );
+
         return new Following(
             this._claims.EmailAddress,
-            user.UserName,
+            followee.UserName,
             followed
         );
     }

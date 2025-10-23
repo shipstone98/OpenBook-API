@@ -31,4 +31,38 @@ public interface INotificationService
         IEnumerable<UserDeviceEntity> userDevices,
         CancellationToken cancellationToken
     );
+
+    /// <summary>
+    /// Asynchronously sends a <c>User Followed</c> notification to the specified user devices.
+    /// </summary>
+    /// <param name="userName">The name of the user that was followed.</param>
+    /// <param name="userDevices">A collection containing the user devices to send the notification to.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task" /> that represents the asynchronous send operation.</returns>
+    /// <exception cref="ArgumentException"><c><paramref name="userDevices" /></c> contains one or more elements that are <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException"><c><paramref name="userName" /></c> is <c>null</c> -or- <c><paramref name="userDevices" /></c> is <c>null</c>.</exception>
+    /// <exception cref="NotificationException">The notifications could not be sent.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task SendUserFollowedAsync(
+        String userName,
+        IEnumerable<UserDeviceEntity> userDevices,
+        CancellationToken cancellationToken
+    );
+
+    /// <summary>
+    /// Asynchronously sends a <c>User Unfollowed</c> notification to the specified user devices.
+    /// </summary>
+    /// <param name="userName">The name of the user that was unfollowed.</param>
+    /// <param name="userDevices">A collection containing the user devices to send the notification to.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task" /> that represents the asynchronous send operation.</returns>
+    /// <exception cref="ArgumentException"><c><paramref name="userDevices" /></c> contains one or more elements that are <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException"><c><paramref name="userName" /></c> is <c>null</c> -or- <c><paramref name="userDevices" /></c> is <c>null</c>.</exception>
+    /// <exception cref="NotificationException">The notifications could not be sent.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task SendUserUnfollowedAsync(
+        String userName,
+        IEnumerable<UserDeviceEntity> userDevices,
+        CancellationToken cancellationToken
+    );
 }
