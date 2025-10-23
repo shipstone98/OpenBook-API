@@ -51,7 +51,6 @@ public sealed class CoreServiceCollectionExtensionsTest
             typeof (IAuthenticateHandler),
             typeof (IFollowingCreateHandler),
             typeof (IOtpAuthenticateHandler),
-            typeof (IOtpGenerateHandler),
             typeof (IPasswordSetHandler),
             typeof (IPasswordUpdateHandler),
             typeof (IPostAggregateHandler),

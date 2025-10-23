@@ -31,7 +31,6 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IAuthenticateService, AuthenticateService>()
             .AddScoped<IFollowingCreateHandler, FollowingCreateHandler>()
             .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>()
-            .AddScoped<IOtpGenerateHandler, OtpGenerateHandler>()
             .AddScoped<IOtpService, OtpService>()
             .AddScoped<IPasswordSetHandler, PasswordSetHandler>()
             .AddScoped<IPasswordUpdateHandler, PasswordUpdateHandler>()
