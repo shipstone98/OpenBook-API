@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Services;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
