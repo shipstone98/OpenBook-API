@@ -20,7 +20,7 @@ public interface IPasswordSetHandler
     /// <param name="otp">The one-time passcode (OTP) of the user to set the password of.</param>
     /// <param name="password">The new password for the user.</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Task" /> that represents the asynchronous register operation.</returns>
+    /// <returns>A <see cref="Task" /> that represents the asynchronous set operation.</returns>
     /// <exception cref="ArgumentNullException"><c><paramref name="emailAddress" /></c> is <c>null</c> -or- <c><paramref name="otp" /></c> is <c>null</c> -or- <c><paramref name="password" /></c> is <c>null</c>.</exception>
     /// <exception cref="ForbiddenException">The provided OTP does not match the OTP of the user whose email address matches the provided email address -or- the provided OTP has expired.</exception>
     /// <exception cref="NotFoundException">A user whose email address matches the provided email address could not be found.</exception>
