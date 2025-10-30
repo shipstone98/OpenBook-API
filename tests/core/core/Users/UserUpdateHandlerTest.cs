@@ -108,13 +108,7 @@ public sealed class UserUpdateHandlerTest
     {
         // Arrange
         Exception innerException = new UnauthorizedException();
-
-        this._repository._usersFunc = () =>
-        {
-            MockUserRepository users = new();
-            return users;
-        };
-
+        this._repository._usersFunc = () => new MockUserRepository();
         this._claims._idFunc = () => throw innerException;
 
         // Act
