@@ -34,8 +34,7 @@ public class PaginatedListJsonConverter<T>
         writer.WriteStartObject();
         writer.WriteNumber("count", value.PageCount);
         writer.WriteNumber("index", value.PageIndex);
-        writer.WriteNumber("totalCount", value.TotalCount);
-        writer.WriteStartArray("elements");
+        writer.WriteStartArray("items");
 
         foreach (T item in value)
         {
@@ -44,6 +43,7 @@ public class PaginatedListJsonConverter<T>
         }
 
         writer.WriteEndArray();
+        writer.WriteNumber("totalCount", value.TotalCount);
         writer.WriteEndObject();
     }
 }
