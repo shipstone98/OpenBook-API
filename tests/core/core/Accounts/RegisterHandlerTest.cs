@@ -266,10 +266,10 @@ public sealed class RegisterHandlerTest
         // Arrange
         Guid id = Guid.NewGuid();
         DateTime created = DateTime.UnixEpoch.ToUniversalTime();
-        const String EMAIL_ADDRESS = "john.doe@contoso.com";
-        const String USER_NAME = "johndoe2025";
-        const String FORENAME = "John";
-        const String SURNAME = "Doe";
+        const String EMAIL_ADDRESS = " john.doe@contoso.com ";
+        const String USER_NAME = " johndoe2025 ";
+        const String FORENAME = " John ";
+        const String SURNAME = " Doe ";
 
         DateOnly born =
             DateOnly
@@ -286,16 +286,15 @@ public sealed class RegisterHandlerTest
                     Born = born,
                     Created = created,
                     EmailAddress = ea,
-                    Forename = FORENAME,
                     Id = id,
-                    IsActive = true,
-                    Surname = SURNAME,
-                    UserName = USER_NAME
+                    IsActive = true
                 };
 
             users._updateAction = _ => { };
             return users;
         };
+
+        this._normalization._normalizeFunc = _ => String.Empty;
 
         this._authentication._generateOtpAction = (u, _) =>
             u.OtpExpires = DateTime.MaxValue;
@@ -324,10 +323,10 @@ public sealed class RegisterHandlerTest
             id,
             created,
             user.Updated,
-            EMAIL_ADDRESS,
-            USER_NAME,
-            FORENAME,
-            SURNAME,
+            EMAIL_ADDRESS.Trim(),
+            USER_NAME.Trim(),
+            FORENAME.Trim(),
+            SURNAME.Trim(),
             born,
             user.Updated,
             roles
@@ -340,10 +339,10 @@ public sealed class RegisterHandlerTest
 #region Arrange
         // Arrange
         Guid id = Guid.NewGuid();
-        const String EMAIL_ADDRESS = "john.doe@contoso.com";
-        const String USER_NAME = "johndoe2025";
-        const String FORENAME = "John";
-        const String SURNAME = "Doe";
+        const String EMAIL_ADDRESS = " john.doe@contoso.com ";
+        const String USER_NAME = " johndoe2025 ";
+        const String FORENAME = " John ";
+        const String SURNAME = " Doe ";
 
         DateOnly born =
             DateOnly
@@ -394,10 +393,10 @@ public sealed class RegisterHandlerTest
             id,
             user.Created,
             user.Created,
-            EMAIL_ADDRESS,
-            USER_NAME,
-            FORENAME,
-            SURNAME,
+            EMAIL_ADDRESS.Trim(),
+            USER_NAME.Trim(),
+            FORENAME.Trim(),
+            SURNAME.Trim(),
             born,
             user.Created,
             roles
