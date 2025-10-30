@@ -33,6 +33,7 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IFollowingDeleteHandler, FollowingDeleteHandler>()
             .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>()
             .AddScoped<IOtpService, OtpService>()
+            .AddScoped<IPasswordResetHandler, PasswordResetHandler>()
             .AddScoped<IPasswordSetHandler, PasswordSetHandler>()
             .AddScoped<IPasswordUpdateHandler, PasswordUpdateHandler>()
             .AddScoped<IPostAggregateHandler, PostAggregateHandler>()
@@ -42,6 +43,8 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IPostRetrieveHandler, PostRetrieveHandler>()
             .AddScoped<IRefreshAuthenticateHandler, RefreshAuthenticateHandler>()
             .AddScoped<IRegisterHandler, RegisterHandler>()
-            .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>();
+            .AddScoped<IUnregisterHandler, UnregisterHandler>()
+            .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>()
+            .AddScoped<IUserUpdateHandler, UserUpdateHandler>();
     }
 }

@@ -23,23 +23,11 @@ internal sealed class UserRetrieveHandler : IUserRetrieveHandler
 
     async Task<IUser> IUserRetrieveHandler.HandleAsync(CancellationToken cancellationToken)
     {
-        Guid userId = this._claims.Id;
-
-        UserEntity? user =
-            await this._repository.Users.RetrieveAsync(
-                userId,
+        UserEntity user =
+            await this._claims.RetrieveActiveUserAsync(
+                this._repository,
                 cancellationToken
             );
-
-        if (user is null)
-        {
-            throw new NotFoundException("The current user could not be found.");
-        }
-
-        if (!user.IsActive)
-        {
-            throw new UserNotActiveException("The current user is not active.");
-        }
 
         return await this._repository.RetrieveUserAsync(
             user,

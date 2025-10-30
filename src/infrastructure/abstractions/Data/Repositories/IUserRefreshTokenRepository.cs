@@ -38,6 +38,19 @@ public interface IUserRefreshTokenRepository
     );
 
     /// <summary>
+    /// Asynchronously lists all user refresh tokens with the specified user ID.
+    /// </summary>
+    /// <param name="userId">A <see cref="Guid" /> containing the ID of the user to list associated roles for.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous list operation. The value of <see cref="Task{TResult}.Result" /> contains the listed user refresh tokens.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><c><paramref name="userId" /></c> is equal to <see cref="Guid.Empty" />.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task<UserRefreshTokenEntity[]> ListForUserAsync(
+        Guid userId,
+        CancellationToken cancellationToken
+    );
+
+    /// <summary>
     /// Asynchronously retrieves a user refresh token with the specified value.
     /// </summary>
     /// <param name="val">The value of the user refresh token to retrieve.</param>

@@ -22,6 +22,39 @@ internal sealed class PasswordController : ControllerBase<PasswordController>
         : base(logger)
     { }
 
+    [ActionName("Reset")]
+    [AllowAnonymous]
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> ResetAsync(
+        [FromServices] IPasswordResetHandler handler,
+        [FromBody] ResetRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(request);
+        return this.ResetAsyncCore(handler, request, cancellationToken);
+    }
+
+    private async Task<IActionResult> ResetAsyncCore(
+        IPasswordResetHandler handler,
+        ResetRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        await handler.HandleAsync(request._emailAddress, cancellationToken);
+
+        this._logger.LogInformation(
+            "{TimeStamp}: User {EmailAddress} reset password",
+            DateTime.UtcNow,
+            request._emailAddress
+        );
+
+        return this.NoContent();
+    }
+
     [ActionName("Set")]
     [AllowAnonymous]
     [HttpPost]

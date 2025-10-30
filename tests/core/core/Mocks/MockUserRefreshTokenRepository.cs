@@ -12,12 +12,14 @@ internal sealed class MockUserRefreshTokenRepository
 {
     internal Action<UserRefreshTokenEntity> _createAction;
     internal Action<UserRefreshTokenEntity> _deleteAction;
+    internal Func<Guid, UserRefreshTokenEntity[]> _listForUserFunc;
     internal Func<String, UserRefreshTokenEntity?> _retrieveFunc;
 
     internal MockUserRefreshTokenRepository()
     {
         this._createAction = _ => throw new NotImplementedException();
         this._deleteAction = _ => throw new NotImplementedException();
+        this._listForUserFunc = _ => throw new NotImplementedException();
         this._retrieveFunc = _ => throw new NotImplementedException();
     }
 
@@ -37,6 +39,17 @@ internal sealed class MockUserRefreshTokenRepository
     {
         this._deleteAction(userRefreshToken);
         return Task.CompletedTask;
+    }
+
+    Task<UserRefreshTokenEntity[]> IUserRefreshTokenRepository.ListForUserAsync(
+        Guid userId,
+        CancellationToken cancellationToken
+    )
+    {
+        UserRefreshTokenEntity[] userRefreshTokens =
+            this._listForUserFunc(userId);
+
+        return Task.FromResult(userRefreshTokens);
     }
 
     Task<UserRefreshTokenEntity?> IUserRefreshTokenRepository.RetrieveAsync(

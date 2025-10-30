@@ -25,6 +25,19 @@ public interface IUserRoleRepository
     );
 
     /// <summary>
+    /// Asynchronously deletes a user-role assocation with the specified properties.
+    /// </summary>
+    /// <param name="userRole">The user-role association to delete.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task" /> that represents the asynchronous delete operation.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="userRole" /></c> is <c>null</c>.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task DeleteAsync(
+        UserRoleEntity userRole,
+        CancellationToken cancellationToken
+    );
+
+    /// <summary>
     /// Asynchronously lists all user-role associations with the specified user ID.
     /// </summary>
     /// <param name="userId">A <see cref="Guid" /> containing the ID of the user to list associated roles for.</param>

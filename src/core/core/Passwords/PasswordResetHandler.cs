@@ -2,66 +2,54 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Shipstone.Extensions.Identity;
-
 using Shipstone.OpenBook.Api.Core.Services;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
-namespace Shipstone.OpenBook.Api.Core.Accounts;
+namespace Shipstone.OpenBook.Api.Core.Passwords;
 
-internal sealed class AuthenticateHandler : IAuthenticateHandler
+internal sealed class PasswordResetHandler : IPasswordResetHandler
 {
     private readonly IOtpService _otp;
-    private readonly IPasswordService _password;
     private readonly IRepository _repository;
 
-    public AuthenticateHandler(
-        IRepository repository,
-        IOtpService otp,
-        IPasswordService password
-    )
+    public PasswordResetHandler(IRepository repository, IOtpService otp)
     {
         ArgumentNullException.ThrowIfNull(repository);
         ArgumentNullException.ThrowIfNull(otp);
-        ArgumentNullException.ThrowIfNull(password);
         this._otp = otp;
-        this._password = password;
         this._repository = repository;
     }
 
     private async Task HandleAsync(
         String emailAddress,
-        String password,
         CancellationToken cancellationToken
     )
     {
-        UserEntity user =
-            await this._repository.RetrieveActiveUserAsync(
+        UserEntity? user =
+            await this._repository.Users.RetrieveAsync(
                 emailAddress,
                 cancellationToken
             );
 
-        if (!this._password.Verify(user, password))
+        if (user is null || !user.IsActive)
         {
-            user.PasswordHash = this._password.Hash(password);
+            return;
         }
 
         await this._otp.GenerateAsync(
             user,
-            (m, u, em, ct) => m.SendOtpAsync(u, em, ct),
+            (m, u, em, ct) => m.SendPasswordResetAsync(u, em, ct),
             cancellationToken
         );
     }
 
-    Task IAuthenticateHandler.HandleAsync(
+    Task IPasswordResetHandler.HandleAsync(
         String emailAddress,
-        String password,
         CancellationToken cancellationToken
     )
     {
         ArgumentNullException.ThrowIfNull(emailAddress);
-        ArgumentNullException.ThrowIfNull(password);
-        return this.HandleAsync(emailAddress, password, cancellationToken);
+        return this.HandleAsync(emailAddress, cancellationToken);
     }
 }

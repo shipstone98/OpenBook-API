@@ -15,12 +15,12 @@ using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Repositories;
 
-public sealed class UserRoleRepositoryTest
+public sealed class UserDeviceRepositoryTest
 {
     private readonly MockDataSource _dataSource;
-    private readonly IUserRoleRepository _repository;
+    private readonly IUserDeviceRepository _repository;
 
-    public UserRoleRepositoryTest()
+    public UserDeviceRepositoryTest()
     {
         ICollection<ServiceDescriptor> collection =
             new List<ServiceDescriptor>();
@@ -33,43 +33,7 @@ public sealed class UserRoleRepositoryTest
         services.AddSingleton<IDataSource>(dataSource);
         IServiceProvider provider = new MockServiceProvider(services);
         this._dataSource = dataSource;
-        this._repository = provider.GetRequiredService<IUserRoleRepository>();
-    }
-
-    [Fact]
-    public async Task TestCreateAsync_Invalid()
-    {
-        // Act
-        ArgumentException ex =
-            await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.CreateAsync(null!, CancellationToken.None));
-
-        // Assert
-        Assert.Equal("userRole", ex.ParamName);
-    }
-
-    [Fact]
-    public Task TestCreateAsync_Valid()
-    {
-        // Arrange
-        UserRoleEntity user = new();
-
-        this._dataSource._userRolesFunc = () =>
-        {
-            IQueryable<UserRoleEntity> query =
-                Array
-                    .Empty<UserRoleEntity>()
-                    .AsQueryable();
-
-            MockDataSet<UserRoleEntity> dataSet = new(query);
-            dataSet._setStateAction = (_, _) => { };
-            return dataSet;
-        };
-
-        // Act
-        return this._repository.CreateAsync(user, CancellationToken.None);
-
-        // Nothing to assert
+        this._repository = provider.GetRequiredService<IUserDeviceRepository>();
     }
 
     [Fact]
@@ -81,23 +45,23 @@ public sealed class UserRoleRepositoryTest
                 this._repository.DeleteAsync(null!, CancellationToken.None));
 
         // Assert
-        Assert.Equal("userRole", ex.ParamName);
+        Assert.Equal("userDevice", ex.ParamName);
     }
 
     [Fact]
     public Task TestDeleteAsync_Valid()
     {
         // Arrange
-        UserRoleEntity user = new();
+        UserDeviceEntity user = new();
 
-        this._dataSource._userRolesFunc = () =>
+        this._dataSource._userDevicesFunc = () =>
         {
-            IQueryable<UserRoleEntity> query =
+            IQueryable<UserDeviceEntity> query =
                 Array
-                    .Empty<UserRoleEntity>()
+                    .Empty<UserDeviceEntity>()
                     .AsQueryable();
 
-            MockDataSet<UserRoleEntity> dataSet = new(query);
+            MockDataSet<UserDeviceEntity> dataSet = new(query);
             dataSet._setStateAction = (_, _) => { };
             return dataSet;
         };

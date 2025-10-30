@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,9 +16,22 @@ internal sealed class StubMailService : IMailService
     ) =>
         Task.CompletedTask;
 
+    Task IMailService.SendPasswordResetAsync(
+        UserEntity user,
+        int expiryMinutes,
+        CancellationToken cancellationToken
+    ) =>
+        throw new NotImplementedException();
+
     Task IMailService.SendRegistrationAsync(
         UserEntity user,
         int expiryMinutes,
+        CancellationToken cancellationToken
+    ) =>
+        Task.CompletedTask;
+
+    Task IMailService.SendUnregistrationAsync(
+        String emailAddress,
         CancellationToken cancellationToken
     ) =>
         Task.CompletedTask;

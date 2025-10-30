@@ -52,6 +52,7 @@ public sealed class CoreServiceCollectionExtensionsTest
             typeof (IFollowingCreateHandler),
             typeof (IFollowingDeleteHandler),
             typeof (IOtpAuthenticateHandler),
+            typeof (IPasswordResetHandler),
             typeof (IPasswordSetHandler),
             typeof (IPasswordUpdateHandler),
             typeof (IPostAggregateHandler),
@@ -61,7 +62,9 @@ public sealed class CoreServiceCollectionExtensionsTest
             typeof (IPostRetrieveHandler),
             typeof (IRefreshAuthenticateHandler),
             typeof (IRegisterHandler),
-            typeof (IUserRetrieveHandler)
+            typeof (IUnregisterHandler),
+            typeof (IUserRetrieveHandler),
+            typeof (IUserUpdateHandler)
         };
 
         foreach (Type type in types)

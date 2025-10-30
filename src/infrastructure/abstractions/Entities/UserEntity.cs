@@ -18,10 +18,10 @@ public class UserEntity : Entity<Guid>
     private String _userNameNormalized;
 
     /// <summary>
-    /// Gets or initializes the date the user was born.
+    /// Gets or sets the date the user was born.
     /// </summary>
     /// <value>The date the user was born.</value>
-    public DateOnly Born { get; init; }
+    public DateOnly Born { get; set; }
 
     /// <summary>
     /// Gets or sets the date and time the user last consented to policy.
@@ -33,7 +33,7 @@ public class UserEntity : Entity<Guid>
     {
         get => this._emailAddress;
 
-        init
+        set
         {
             ArgumentNullException.ThrowIfNull(value);
             this._emailAddress = value;
@@ -44,7 +44,7 @@ public class UserEntity : Entity<Guid>
     {
         get => this._emailAddressNormalized;
 
-        init
+        set
         {
             ArgumentNullException.ThrowIfNull(value);
             this._emailAddressNormalized = value;
@@ -55,7 +55,7 @@ public class UserEntity : Entity<Guid>
     {
         get => this._forename;
 
-        init
+        set
         {
             ArgumentNullException.ThrowIfNull(value);
             this._forename = value;
@@ -63,10 +63,10 @@ public class UserEntity : Entity<Guid>
     }
 
     /// <summary>
-    /// Gets or initializes a value indicating whether the user is active.
+    /// Gets or sets a value indicating whether the user is active.
     /// </summary>
     /// <value><c>true</c> if the user is active; otherwise, <c>false</c>.</value>
-    public bool IsActive { get; init; }
+    public bool IsActive { get; set; }
 
     public String? Otp
     {
@@ -110,7 +110,7 @@ public class UserEntity : Entity<Guid>
     {
         get => this._surname;
 
-        init
+        set
         {
             ArgumentNullException.ThrowIfNull(value);
             this._surname = value;
@@ -121,7 +121,7 @@ public class UserEntity : Entity<Guid>
     {
         get => this._userName;
 
-        init
+        set
         {
             ArgumentNullException.ThrowIfNull(value);
             this._userName = value;
@@ -132,7 +132,7 @@ public class UserEntity : Entity<Guid>
     {
         get => this._userNameNormalized;
 
-        init
+        set
         {
             ArgumentNullException.ThrowIfNull(value);
             this._userNameNormalized = value;

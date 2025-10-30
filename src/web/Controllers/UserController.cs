@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
+using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Web.Models.User;
 
@@ -16,6 +17,7 @@ internal sealed class UserController(ILogger<UserController> logger)
     [ActionName("Retrieve")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status410Gone)]
     public Task<IActionResult> RetrieveAsync(
         [FromServices] IUserRetrieveHandler handler,
         CancellationToken cancellationToken
@@ -33,5 +35,69 @@ internal sealed class UserController(ILogger<UserController> logger)
         IUser user = await handler.HandleAsync(cancellationToken);
         Object? response = new RetrieveResponse(user);
         return this.Ok(response);
+    }
+
+    [ActionName("Update")]
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status410Gone)]
+    public Task<IActionResult> UpdateAsync(
+        [FromServices] IUserUpdateHandler handler,
+        [FromServices] IClaimsService claims,
+        [FromBody] UpdateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(claims);
+        ArgumentNullException.ThrowIfNull(request);
+
+        return this.UpdateAsyncCore(
+            handler,
+            claims,
+            request,
+            cancellationToken
+        );
+    }
+
+    private async Task<IActionResult> UpdateAsyncCore(
+        IUserUpdateHandler handler,
+        IClaimsService claims,
+        UpdateRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        IUser user;
+
+        try
+        {
+            user =
+                await handler.HandleAsync(
+                    request._forename,
+                    request._surname,
+                    cancellationToken
+                );
+        }
+
+        catch (UserNotActiveException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: Failed to update user {EmailAddress} - user not active",
+                DateTime.UtcNow,
+                claims.EmailAddress
+            );
+
+            return this.StatusCode(StatusCodes.Status410Gone);
+        }
+
+        this._logger.LogInformation(
+            "{TimeStamp}: User {EmailAddress} updated",
+            user.Updated,
+            user.EmailAddress
+        );
+
+        return this.NoContent();
     }
 }

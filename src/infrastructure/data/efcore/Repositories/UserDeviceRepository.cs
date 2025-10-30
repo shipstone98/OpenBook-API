@@ -19,6 +19,20 @@ internal sealed class UserDeviceRepository : IUserDeviceRepository
         this._dataSource = dataSource;
     }
 
+    Task IUserDeviceRepository.DeleteAsync(
+        UserDeviceEntity userDevice,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(userDevice);
+
+        return this._dataSource.UserDevices.SetStateAsync(
+            userDevice,
+            DataEntityState.Deleted,
+            cancellationToken
+        );
+    }
+
 #warning Not tested
     Task<UserDeviceEntity[]> IUserDeviceRepository.ListForUserAsync(
         Guid userId,

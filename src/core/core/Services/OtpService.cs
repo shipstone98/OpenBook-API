@@ -32,6 +32,7 @@ internal sealed class OtpService : IOtpService
 
     async Task IOtpService.GenerateAsync(
         UserEntity user,
+        Func<IMailService, UserEntity, int, CancellationToken, Task> mailSend,
         CancellationToken cancellationToken
     )
     {
@@ -48,7 +49,8 @@ internal sealed class OtpService : IOtpService
         await this._repository.SaveAsync(cancellationToken);
         TimeSpan difference = user.OtpExpires!.Value.Subtract(now);
 
-        await this._mail.SendOtpAsync(
+        await mailSend(
+            this._mail,
             user,
             (int) difference.TotalMinutes,
             cancellationToken

@@ -341,4 +341,50 @@ internal sealed class AccountController(ILogger<AccountController> logger)
 
         return this.NoContent();
     }
+
+    [ActionName("Unregister")]
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status410Gone)]
+    public Task<IActionResult> UnregisterAsync(
+        [FromServices] IUnregisterHandler handler,
+        [FromServices] IClaimsService claims,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(claims);
+        return this.UnregisterAsyncCore(handler, claims, cancellationToken);
+    }
+
+    private async Task<IActionResult> UnregisterAsyncCore(
+        IUnregisterHandler handler,
+        IClaimsService claims,
+        CancellationToken cancellationToken
+    )
+    {
+        try
+        {
+            await handler.HandleAsync(cancellationToken);
+        }
+
+        catch (UserNotActiveException ex)
+        {
+            this._logger.LogInformation(
+                ex,
+                "{TimeStamp}: Failed account deletion - user not active",
+                DateTime.UtcNow
+            );
+
+            return this.StatusCode(StatusCodes.Status410Gone);
+        }
+
+        this._logger.LogInformation(
+            "{TimeStamp}: User {EmailAddress} deleted account",
+            DateTime.UtcNow,
+            claims.EmailAddress
+        );
+
+        return this.NoContent();
+    }
 }

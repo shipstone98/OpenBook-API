@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,25 @@ internal sealed class UserRefreshTokenRepository : IUserRefreshTokenRepository
             DataEntityState.Deleted,
             cancellationToken
         );
+    }
+
+#warning Not tested
+    Task<UserRefreshTokenEntity[]> IUserRefreshTokenRepository.ListForUserAsync(
+        Guid userId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (Guid.Equals(userId, Guid.Empty))
+        {
+            throw new ArgumentException(
+                $"{nameof (userId)} is equal to Guid.Empty.",
+                nameof (userId)
+            );
+        }
+
+        return this._dataSource.UserRefreshTokens
+            .Where(urt => Guid.Equals(userId, urt.UserId))
+            .ToArrayAsync(cancellationToken);
     }
 
     Task<UserRefreshTokenEntity?> IUserRefreshTokenRepository.RetrieveAsync(

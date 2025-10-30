@@ -33,6 +33,20 @@ internal sealed class UserRoleRepository : IUserRoleRepository
         );
     }
 
+    Task IUserRoleRepository.DeleteAsync(
+        UserRoleEntity userRole,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(userRole);
+
+        return this._dataSource.UserRoles.SetStateAsync(
+            userRole,
+            DataEntityState.Deleted,
+            cancellationToken
+        );
+    }
+
 #warning Not tested
     Task<UserRoleEntity[]> IUserRoleRepository.ListForUserAsync(
         Guid userId,
