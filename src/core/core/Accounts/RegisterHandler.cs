@@ -63,18 +63,11 @@ internal sealed class RegisterHandler : IRegisterHandler
         {
             user = new UserEntity
             {
-                Born = born,
                 Created = now,
-                Consented = now,
                 EmailAddress = emailAddress,
                 EmailAddressNormalized =
                     this._normalization.Normalize(emailAddress),
-                Forename = forename,
-                IsActive = true,
-                Surname = surname,
-                Updated = now,
-                UserName = userName,
-                UserNameNormalized = this._normalization.Normalize(userName)
+                IsActive = true
             };
 
             isCreated = true;
@@ -82,8 +75,6 @@ internal sealed class RegisterHandler : IRegisterHandler
 
         else if (user.IsActive && user.PasswordHash is null)
         {
-            user.Consented = now;
-            user.Updated = now;
             isCreated = false;
         }
 
@@ -91,6 +82,14 @@ internal sealed class RegisterHandler : IRegisterHandler
         {
             throw new ConflictException("A user whose email address and/or name matches the provided email address and/or user name already exists.");
         }
+
+        user.Born = born;
+        user.Consented = now;
+        user.Forename = forename;
+        user.Surname = surname;
+        user.Updated = now;
+        user.UserName = userName;
+        user.UserNameNormalized = this._normalization.Normalize(userName);
 
         await this._authentication.GenerateOtpAsync(
             user,
