@@ -76,6 +76,7 @@ public sealed class PostAggregateHandlerTest
         const int TOTAL_COUNT = 31;
         const int PAGE_INDEX = 1;
         const int PAGE_COUNT = 17;
+        const int COUNT = 2;
         Guid followee1Id = Guid.NewGuid();
         const String FOLLOWEE_1_EMAIL_ADDRESS = "john.doe@contoso.com";
         const String FOLLOWEE_1_NAME = "johndoe2025";
@@ -111,7 +112,7 @@ public sealed class PostAggregateHandlerTest
 
             posts._listForCreatorsFunc = _ =>
             {
-                IEnumerable<PostEntity> collection = new PostEntity[]
+                IEnumerable<PostEntity> collection = new PostEntity[COUNT]
                 {
                     new PostEntity
                     {
@@ -174,6 +175,7 @@ public sealed class PostAggregateHandlerTest
             await this._handler.HandleAsync(CancellationToken.None);
 
         // Assert
+        posts.AssertEqual(COUNT, TOTAL_COUNT, PAGE_INDEX, PAGE_COUNT);
         Assert.Equal(FOLLOWEE_1_EMAIL_ADDRESS, posts[0].CreatorEmailAddress);
         Assert.Equal(FOLLOWEE_1_NAME, posts[0].CreatorName);
         Assert.Equal(1, posts[0].Id);

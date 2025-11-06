@@ -516,10 +516,6 @@ public sealed class PostListHandlerTest
     public async Task TestHandleAsync_String_Valid_Success_Empty()
     {
         // Arrange
-        const int TOTAL_COUNT = 0;
-        const int PAGE_INDEX = 0;
-        const int PAGE_COUNT = 1;
-
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
@@ -539,9 +535,9 @@ public sealed class PostListHandlerTest
                     Array.Empty<PostEntity>();
 
                 posts._getEnumeratorFunc = postCollection.GetEnumerator;
-                posts._totalCountFunc = () => TOTAL_COUNT;
-                posts._pageIndexFunc = () => PAGE_INDEX;
-                posts._pageCountFunc = () => PAGE_COUNT;
+                posts._totalCountFunc = () => 0;
+                posts._pageIndexFunc = () => 0;
+                posts._pageCountFunc = () => 1;
                 return posts;
             };
 
@@ -556,10 +552,7 @@ public sealed class PostListHandlerTest
             );
 
         // Assert
-        Assert.Empty(posts);
-        Assert.Equal(PAGE_COUNT, posts.PageCount);
-        Assert.Equal(PAGE_INDEX, posts.PageIndex);
-        Assert.Equal(TOTAL_COUNT, posts.TotalCount);
+        posts.AssertEmpty();
     }
 
     [Fact]
