@@ -10,7 +10,6 @@ using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Followings;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
-using Shipstone.OpenBook.Api.Infrastructure.Notifications;
 
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
 using Shipstone.OpenBook.Api.Test.Mocks;
@@ -18,14 +17,13 @@ using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.CoreTest.Followings;
 
-public sealed class FollowingDeleteHandlerTest
+public sealed class FollowingRetrieveHandlerTest
 {
     private readonly MockClaimsService _claims;
-    private readonly IFollowingDeleteHandler _handler;
-    private readonly MockNotificationService _notification;
+    private readonly IFollowingRetrieveHandler _handler;
     private readonly MockRepository _repository;
 
-    public FollowingDeleteHandlerTest()
+    public FollowingRetrieveHandlerTest()
     {
         ICollection<ServiceDescriptor> collection =
             new List<ServiceDescriptor>();
@@ -37,13 +35,11 @@ public sealed class FollowingDeleteHandlerTest
         MockClaimsService claims = new();
         services.AddSingleton<IClaimsService>(claims);
         MockNotificationService notification = new();
-        services.AddSingleton<INotificationService>(notification);
         MockRepository repository = new();
         services.AddSingleton<IRepository>(repository);
         IServiceProvider provider = new MockServiceProvider(services);
         this._claims = claims;
-        this._handler = provider.GetRequiredService<IFollowingDeleteHandler>();
-        this._notification = notification;
+        this._handler = provider.GetRequiredService<IFollowingRetrieveHandler>();
         this._repository = repository;
     }
 
@@ -194,30 +190,13 @@ public sealed class FollowingDeleteHandlerTest
             userFollowings._retrieveFunc = (_, _) =>
                 new UserFollowingEntity
                 {
-                   Followed = followed,
-                   IsSubscribed = isSubscribed
+                    Followed = followed,
+                    IsSubscribed = isSubscribed
                 };
 
-            userFollowings._deleteAction = _ => { };
             return userFollowings;
         };
 
-        this._repository._saveAction = () => { };
-
-        this._repository._userDevicesFunc = () =>
-        {
-            MockUserDeviceRepository userDevices = new();
-
-            userDevices._listForUserFunc = _ => new UserDeviceEntity[]
-            {
-                new UserDeviceEntity { },
-                new UserDeviceEntity { }
-            };
-
-            return userDevices;
-        };
-
-        this._notification._sendUserUnfollowedAction = (_, _) => { };
         this._claims._emailAddressFunc = () => FOLLOWER_EMAIL_ADDRESS;
 #endregion
 

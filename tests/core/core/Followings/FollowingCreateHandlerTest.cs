@@ -244,9 +244,10 @@ public sealed class FollowingCreateHandlerTest
         Assert.False(DateTime.Compare(notBefore, following.Followed) > 0);
 
         following.AssertEqual(
-            FOLLOWER_EMAIL_ADDRESS,
-            FOLLOWEE_NAME,
-            following.Followed
+            following.FollowerEmailAddress,
+            following.FolloweeName,
+            following.Followed,
+            following.IsSubscribed
         );
     }
 #endregion

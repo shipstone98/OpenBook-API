@@ -198,4 +198,49 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
 
         return this.NoContent();
     }
+
+    [ActionName("Retrieve")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> RetrieveAsync(
+        [FromServices] IFollowingRetrieveHandler handler,
+        [FromQuery] String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(userName);
+        return this.RetrieveAsyncCore(handler, userName, cancellationToken);
+    }
+
+    private async Task<IActionResult> RetrieveAsyncCore(
+        IFollowingRetrieveHandler handler,
+        String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentNullException.ThrowIfNull(userName);
+        IFollowing following;
+
+        try
+        {
+            following = await handler.HandleAsync(userName, cancellationToken);
+        }
+
+        catch (NotFoundException)
+        {
+            return this.NoContent();
+        }
+
+        catch (UserNotActiveException)
+        {
+            return this.NoContent();
+        }
+
+        Object? response = new RetrieveResponse(following);
+        return this.Ok(response);
+    }
 }

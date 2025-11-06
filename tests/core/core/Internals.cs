@@ -25,13 +25,15 @@ internal static class Internals
         this IFollowing following,
         String followerEmailAddress,
         String followeeName,
-        DateTime followed
+        DateTime followed,
+        bool isSubscribed
     )
     {
         Assert.Equal(followed, following.Followed);
         Assert.Equal(DateTimeKind.Utc, following.Followed.Kind);
         Assert.Equal(followeeName, following.FolloweeName);
         Assert.Equal(followerEmailAddress, following.FollowerEmailAddress);
+        Assert.Equal(isSubscribed, following.IsSubscribed);
     }
 
     internal static void AssertEqual(

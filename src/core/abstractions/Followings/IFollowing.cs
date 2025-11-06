@@ -24,4 +24,10 @@ public interface IFollowing
     /// </summary>
     /// <value>The email address of the associated follower.</value>
     String FollowerEmailAddress { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the associated follower is following the associated followee.
+    /// </summary>
+    /// <value><c>true</c> if the associated follower is following the associated followee; otherwise, <c>false</c>.</value>
+    bool IsSubscribed { get; }
 }
