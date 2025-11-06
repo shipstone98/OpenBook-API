@@ -209,38 +209,13 @@ internal sealed class PostController(ILogger<PostController> logger)
     [Route("/api/[controller]/[action]")]
     public Task<IActionResult> ListAsync(
         [FromServices] IPostListHandler handler,
-        [FromQuery(Name = "creator")] String? userName,
+        [FromQuery(Name = "creator")] String userName,
         CancellationToken cancellationToken
     )
     {
         ArgumentNullException.ThrowIfNull(handler);
-
-        if (userName is null)
-        {
-            ClaimsPrincipal user = this.HttpContext.User;
-
-            if (user.Identity is null || !user.Identity.IsAuthenticated)
-            {
-                IActionResult result = this.Unauthorized();
-                return Task.FromResult(result);
-            }
-
-            return this.ListAsyncCore(handler, cancellationToken);
-        }
-
+        ArgumentNullException.ThrowIfNull(userName);
         return this.ListAsyncCore(handler, userName, cancellationToken);
-    }
-
-    private async Task<IActionResult> ListAsyncCore(
-        IPostListHandler handler,
-        CancellationToken cancellationToken
-    )
-    {
-        IReadOnlyPaginatedList<IPost> posts =
-            await handler.HandleAsync(cancellationToken);
-
-        Object? response = posts.Select(p => new RetrieveResponse(p));
-        return this.Ok(response);
     }
 
     private async Task<IActionResult> ListAsyncCore(
