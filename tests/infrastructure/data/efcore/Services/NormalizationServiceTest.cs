@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
+
+using Shipstone.Extensions.Security;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 
-using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Mocks;
 using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Services;
 
 public sealed class NormalizationServiceTest
 {
-    private readonly MockHMAC _hmac;
     private readonly INormalizationService _normalization;
 
     public NormalizationServiceTest()
@@ -25,10 +25,10 @@ public sealed class NormalizationServiceTest
         services._addAction = collection.Add;
         services._getEnumeratorFunc = collection.GetEnumerator;
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
-        MockHMAC hmac = new();
-        services.AddSingleton<HMAC>(hmac);
+        MockOptions<EncryptionOptions> encryptionOptions = new();
+        services.AddSingleton<IOptions<EncryptionOptions>>(encryptionOptions);
+        encryptionOptions._valueFunc = () => new();
         IServiceProvider provider = new MockServiceProvider(services);
-        this._hmac = hmac;
 
         this._normalization =
             provider.GetRequiredService<INormalizationService>();
@@ -53,9 +53,6 @@ public sealed class NormalizationServiceTest
         const String S = "Hello, world!";
         String sUpper = S.ToUpper();
         String sLower = S.ToLower();
-        this._hmac._hashCoreAction = (_, _, _) => { };
-        this._hmac._hashFinalFunc = Array.Empty<byte>;
-        this._hmac._initializeAction = () => { };
 
         // Act
         String sUpperActual = this._normalization.Normalize(sUpper);

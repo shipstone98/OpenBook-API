@@ -96,24 +96,18 @@ builder.Services
     .AddSingleton<IEncryptionService, StubEncryptionService>()
     .AddSingleton<IMailService, StubMailService>()
     .AddSingleton<IPasswordHasher<IPasswordService>, PasswordHasher<IPasswordService>>()
-    .AddSingleton<HMAC>(_ =>
-    {
-        String? key = builder.Configuration["DataProtection:Key"];
-
-        if (key is null)
-        {
-            throw new NotImplementedException();
-        }
-
-        byte[] bytes = Convert.FromBase64String(key);
-        return new HMACSHA256(bytes);
-    })
     .AddSingleton<RandomNumberGenerator>(_ =>
     {
         RandomNumberGenerator rng = RandomNumberGenerator.Create();
         return new ConcurrentRandomNumberGenerator(rng);
     })
-    .AddSingleton<JwtSecurityTokenHandler>();
+    .AddSingleton<JwtSecurityTokenHandler>()
+#warning Remove when moving to lib
+    .Configure<EncryptionOptions>(
+        builder.Configuration
+            .GetRequiredSection("Encryption")
+            .Bind
+    );
 
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();

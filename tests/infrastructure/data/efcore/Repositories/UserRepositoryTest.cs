@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
+
+using Shipstone.Extensions.Security;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
@@ -19,7 +21,7 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Rep
 public sealed class UserRepositoryTest
 {
     private readonly MockDataSource _dataSource;
-    private readonly MockHMAC _hmac;
+    private readonly INormalizationService _normalization;
     private readonly IUserRepository _repository;
 
     public UserRepositoryTest()
@@ -33,11 +35,15 @@ public sealed class UserRepositoryTest
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
         MockDataSource dataSource = new();
         services.AddSingleton<IDataSource>(dataSource);
-        MockHMAC hmac = new();
-        services.AddSingleton<HMAC>(hmac);
+        MockOptions<EncryptionOptions> encryptionOptions = new();
+        services.AddSingleton<IOptions<EncryptionOptions>>(encryptionOptions);
+        encryptionOptions._valueFunc = () => new();
         IServiceProvider provider = new MockServiceProvider(services);
         this._dataSource = dataSource;
-        this._hmac = hmac;
+
+        this._normalization =
+            provider.GetRequiredService<INormalizationService>();
+
         this._repository = provider.GetRequiredService<IUserRepository>();
     }
 
@@ -166,9 +172,6 @@ public sealed class UserRepositoryTest
     {
         // Arrange
         const String EMAIL_ADDRESS = "john.doe@contoso.com";
-        this._hmac._hashCoreAction = (_, _, _) => { };
-        this._hmac._hashFinalFunc = () => Array.Empty<byte>();
-        this._hmac._initializeAction = () => { };
 
         this._dataSource._usersFunc = () =>
         {
@@ -176,7 +179,9 @@ public sealed class UserRepositoryTest
             {
                 new UserEntity
                 {
-                    EmailAddress = EMAIL_ADDRESS
+                    EmailAddress = EMAIL_ADDRESS,
+                    EmailAddressNormalized =
+                        this._normalization.Normalize(EMAIL_ADDRESS)
                 }
             };
 
@@ -200,10 +205,6 @@ public sealed class UserRepositoryTest
     public async Task TestRetrieveAsync_String_Valid_NotContains()
     {
         // Arrange
-        this._hmac._hashCoreAction = (_, _, _) => { };
-        this._hmac._hashFinalFunc = () => Array.Empty<byte>();
-        this._hmac._initializeAction = () => { };
-
         this._dataSource._usersFunc = () =>
         {
             IQueryable<UserEntity> query =
@@ -248,9 +249,6 @@ public sealed class UserRepositoryTest
     {
         // Arrange
         const String USER_NAME = "johndoe2025";
-        this._hmac._hashCoreAction = (_, _, _) => { };
-        this._hmac._hashFinalFunc = () => Array.Empty<byte>();
-        this._hmac._initializeAction = () => { };
 
         this._dataSource._usersFunc = () =>
         {
@@ -258,7 +256,9 @@ public sealed class UserRepositoryTest
             {
                 new UserEntity
                 {
-                    UserName = USER_NAME
+                    UserName = USER_NAME,
+                    UserNameNormalized =
+                        this._normalization.Normalize(USER_NAME)
                 }
             };
 
@@ -282,10 +282,6 @@ public sealed class UserRepositoryTest
     public async Task TestRetrieveForNameAsync_Valid_NotContains()
     {
         // Arrange
-        this._hmac._hashCoreAction = (_, _, _) => { };
-        this._hmac._hashFinalFunc = () => Array.Empty<byte>();
-        this._hmac._initializeAction = () => { };
-
         this._dataSource._usersFunc = () =>
         {
             IQueryable<UserEntity> query =

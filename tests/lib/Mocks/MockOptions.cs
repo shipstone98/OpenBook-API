@@ -1,13 +1,15 @@
+using System;
 using Microsoft.Extensions.Options;
 
 namespace Shipstone.Test.Mocks;
 
-internal sealed class MockOptions<TOptions> : IOptions<TOptions>
+public class MockOptions<TOptions> : IOptions<TOptions>
     where TOptions : class
 {
-    private readonly TOptions _value;
+    public Func<TOptions> _valueFunc;
 
-    TOptions IOptions<TOptions>.Value => this._value;
+    TOptions IOptions<TOptions>.Value => this._valueFunc();
 
-    internal MockOptions(TOptions val) => this._value = val;
+    public MockOptions() =>
+        this._valueFunc = () => throw new NotImplementedException();
 }
