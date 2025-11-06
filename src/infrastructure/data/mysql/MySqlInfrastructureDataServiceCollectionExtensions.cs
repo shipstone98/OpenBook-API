@@ -20,18 +20,18 @@ public static class MySqlDataInfrastructureServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        DbContextOptionsBuilder<MySqlDbContext> optionsBuilder = new();
+
+        ServerVersion serverVersion =
+            ServerVersion.AutoDetect(connectionString);
+
+        optionsBuilder.UseMySql(connectionString, serverVersion);
+
         return services
             .AddScoped<IDataSource>(provider =>
                 provider.GetRequiredService<MySqlDbContext>())
             .AddScoped(provider =>
             {
-                DbContextOptionsBuilder<MySqlDbContext> optionsBuilder = new();
-
-                ServerVersion serverVersion =
-                    ServerVersion.AutoDetect(connectionString);
-
-                optionsBuilder.UseMySql(connectionString, serverVersion);
-
                 IEncryptionService encryption =
                     provider.GetRequiredService<IEncryptionService>();
 
