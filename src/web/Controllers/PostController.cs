@@ -46,6 +46,35 @@ internal sealed class PostController(ILogger<PostController> logger)
         return this.Ok(response);
     }
 
+    [ActionName("Children")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Route("/api/[controller]/[action]")]
+    public Task<IActionResult> ChildrenAsync(
+        [FromServices] IPostListHandler handler,
+        [FromQuery] long id,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        return this.ChildrenAsyncCore(handler, id, cancellationToken);
+    }
+
+    private async Task<IActionResult> ChildrenAsyncCore(
+        IPostListHandler handler,
+        long id,
+        CancellationToken cancellationToken
+    )
+    {
+        IReadOnlyPaginatedList<IPost> posts =
+            await handler.HandleAsync(id, cancellationToken);
+
+        Object? response = posts.Select(p => new RetrieveResponse(p));
+        return this.Ok(response);
+    }
+
     [ActionName("Create")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]

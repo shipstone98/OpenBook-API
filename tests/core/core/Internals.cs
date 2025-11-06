@@ -36,6 +36,20 @@ internal static class Internals
         Assert.Equal(isSubscribed, following.IsSubscribed);
     }
 
+    internal static void AssertEqual<T>(
+        this IReadOnlyPaginatedList<T> list,
+        int count,
+        int totalCount,
+        int pageIndex,
+        int pageCount
+    )
+    {
+        Assert.Equal(count, list.Count);
+        Assert.Equal(pageCount, list.PageCount);
+        Assert.Equal(pageIndex, list.PageIndex);
+        Assert.Equal(totalCount, list.TotalCount);
+    }
+
     internal static void AssertEqual(
         this IPost post,
         long id,

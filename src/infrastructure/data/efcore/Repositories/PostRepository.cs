@@ -102,6 +102,22 @@ internal sealed class PostRepository : IPostRepository
         return this._pagination.GetPageOrFirstAsync(query, cancellationToken);
     }
 
+#warning Not tested
+    Task<IReadOnlyPaginatedList<PostEntity>> IPostRepository.ListForParentAsync(
+        long parentId,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(parentId, 0);
+
+        IQueryable<PostEntity> query =
+            this._dataSource.Posts
+                .Where(p => p.ParentId.HasValue && parentId == p.ParentId)
+                .OrderByDescending(p => p.Created);
+
+        return this._pagination.GetPageOrFirstAsync(query, cancellationToken);
+    }
+
     Task<PostEntity?> IPostRepository.RetrieveAsync(
         long id,
         CancellationToken cancellationToken
