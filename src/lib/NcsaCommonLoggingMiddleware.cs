@@ -29,7 +29,7 @@ internal sealed class NcsaCommonLoggingMiddleware
                 context.Connection.RemoteIpAddress,
                 context.User.Identity?.Name,
                 DateTime.Now,
-                $"{request.Method} {request.Path} {request.Protocol}",
+                $"{request.Method} {request.Path}{request.QueryString} {request.Protocol}",
                 (HttpStatusCode) response.StatusCode,
                 body._length
             );
