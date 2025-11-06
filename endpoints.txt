@@ -1,0 +1,20 @@
+GET /api/administrator/user/list                                TESTED
+POST /api/account/authenticate                                  TESTED
+POST /api/account/otpauthenticate                               TESTED (no JWT)
+POST /api/account/refreshauthenticate                           TESTED (no JWT)
+POST /api/account/register                                      TESTED
+DELETE /api/account/unregister                                  TESTED
+POST /api/following                                             TESTED
+DELETE /api/following                                           TESTED
+GET /api/following                                              TESTED
+PUT /api/password/reset                                         TESTED
+POST /api/password/set                                          TESTED
+POST /api/password/update                                       TESTED
+POST /api/post                                                  TESTED
+DELETE /api/post                                                TESTED
+GET /api/post                                                   TESTED
+GET /api/post/aggregate                                         TESTED (no body)
+GET /api/post/children
+GET /api/post/list                                              TESTED (no body)
+GET /api/user                                                   TESTED
+PUT /api/user                                                   TESTED
