@@ -56,6 +56,7 @@ internal sealed class PostRepository : IPostRepository
     ) =>
         this.ModifyAsync(post, DataEntityState.Deleted, cancellationToken);
 
+#warning Not tested
     Task<IReadOnlyPaginatedList<PostEntity>> IPostRepository.ListForCreatorAsync(
         Guid creatorId,
         CancellationToken cancellationToken
@@ -69,10 +70,8 @@ internal sealed class PostRepository : IPostRepository
             );
         }
 
-        IDataSet<PostEntity> dataSet = this._dataSource.Posts;
-
         IQueryable<PostEntity> query =
-            dataSet
+            this._dataSource.Posts
                 .Where(p => Guid.Equals(creatorId, p.CreatorId))
                 .OrderByDescending(p => p.Created);
 
@@ -95,10 +94,8 @@ internal sealed class PostRepository : IPostRepository
             );
         }
 
-        IDataSet<PostEntity> dataSet = this._dataSource.Posts;
-
         IQueryable<PostEntity> query =
-            dataSet
+            this._dataSource.Posts
                 .Where(p => creatorIds.Contains(p.CreatorId))
                 .OrderByDescending(p => p.Created);
 
