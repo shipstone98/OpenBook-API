@@ -18,7 +18,6 @@ public interface IFollowingDeleteHandler
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous retrieve operation. The value of <see cref="Task{TResult}.Result" /> contains the created <see cref="IFollowing" />.</returns>
     /// <exception cref="ArgumentNullException"><c><paramref name="userName" /></c> is <c>null</c>.</exception>
-    /// <exception cref="ForbiddenException">The name of the current user matches the provided user name.</exception>
     /// <exception cref="NotFoundException">A user whose name matches the provided user name could not be found -or- the current user is not following the user whose name matches the provided user name.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     /// <exception cref="UserNotActiveException">The user whose name matches the provided user name is not active.</exception>
