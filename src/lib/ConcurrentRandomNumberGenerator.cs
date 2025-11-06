@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace Shipstone.Utilities.Security;
+namespace Shipstone.Utilities.Security.Cryptography;
 
 public sealed class ConcurrentRandomNumberGenerator : RandomNumberGenerator
 {

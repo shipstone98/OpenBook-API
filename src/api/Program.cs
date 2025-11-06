@@ -15,7 +15,7 @@ using Shipstone.AspNetCore.Http;
 using Shipstone.Extensions.Identity;
 using Shipstone.Extensions.Notifications;
 using Shipstone.Extensions.Security;
-using Shipstone.Utilities.Security;
+using Shipstone.Utilities.Security.Cryptography;
 using Shipstone.Utilities.Text.Json;
 
 using Shipstone.OpenBook.Api.Core;
