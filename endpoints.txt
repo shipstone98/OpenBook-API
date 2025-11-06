@@ -14,7 +14,7 @@ POST /api/post                                                  TESTED
 DELETE /api/post                                                TESTED
 GET /api/post                                                   TESTED
 GET /api/post/aggregate                                         TESTED (no body)
-GET /api/post/children
+GET /api/post/children                                          TESTED
 GET /api/post/list                                              TESTED (no body)
 GET /api/user                                                   TESTED
 PUT /api/user                                                   TESTED
