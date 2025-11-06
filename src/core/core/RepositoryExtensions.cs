@@ -40,6 +40,31 @@ internal static class RepositoryExtensions
         return user;
     }
 
+    internal static async Task<UserEntity> RetrieveActiveUserForNameAsync(
+        this IRepository repository,
+        String userName,
+        CancellationToken cancellationToken
+    )
+    {
+        UserEntity? user =
+            await repository.Users.RetrieveForNameAsync(
+                userName,
+                cancellationToken
+            );
+
+        if (user is null)
+        {
+            throw new NotFoundException("A user whose name matches the provided user name could not be found.");
+        }
+
+        if (!user.IsActive)
+        {
+            throw new UserNotActiveException("The user whose name matches the provided user name is not active.");
+        }
+
+        return user;
+    }
+
     internal static async Task<IPost> RetrievePostAsync(
         this IRepository repository,
         IClaimsService claims,

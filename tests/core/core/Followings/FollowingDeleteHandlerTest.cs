@@ -84,8 +84,15 @@ public sealed class FollowingDeleteHandlerTest
 
         this._claims._idFunc = () => id;
 
+        this._repository._userFollowingsFunc = () =>
+        {
+            MockUserFollowingRepository userFollowings = new();
+            userFollowings._retrieveFunc = (_, _) => null;
+            return userFollowings;
+        };
+
         // Act
-        return Assert.ThrowsAsync<ForbiddenException>(() =>
+        return Assert.ThrowsAsync<NotFoundException>(() =>
             this._handler.HandleAsync(String.Empty, CancellationToken.None));
     }
 

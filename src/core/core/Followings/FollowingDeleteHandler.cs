@@ -34,29 +34,14 @@ internal sealed class FollowingDeleteHandler : IFollowingDeleteHandler
         CancellationToken cancellationToken
     )
     {
-        UserEntity? followee =
-            await this._repository.Users.RetrieveForNameAsync(
+        UserEntity followee =
+            await this._repository.RetrieveActiveUserForNameAsync(
                 userName,
                 cancellationToken
             );
 
-        if (followee is null)
-        {
-            throw new NotFoundException("A user whose name matches the provided user name could not be found.");
-        }
-
-        if (!followee.IsActive)
-        {
-            throw new UserNotActiveException("The user whose name matches the provided user name is not active.");
-        }
-
         Guid followerId = this._claims.Id;
         Guid followeeId = followee.Id;
-
-        if (Guid.Equals(followerId, followeeId))
-        {
-            throw new ForbiddenException("The name of the current user matches the provided user name.");
-        }
 
         UserFollowingEntity? userFollowing =
             await this._repository.UserFollowings.RetrieveAsync(
@@ -86,7 +71,8 @@ internal sealed class FollowingDeleteHandler : IFollowingDeleteHandler
         return new Following(
             this._claims.EmailAddress,
             followee.UserName,
-            userFollowing.Followed
+            userFollowing.Followed,
+            userFollowing.IsSubscribed
         );
     }
 

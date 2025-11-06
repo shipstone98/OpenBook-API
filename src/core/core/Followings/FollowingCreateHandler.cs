@@ -35,21 +35,11 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
         CancellationToken cancellationToken
     )
     {
-        UserEntity? followee =
-            await this._repository.Users.RetrieveForNameAsync(
+        UserEntity followee =
+            await this._repository.RetrieveActiveUserForNameAsync(
                 userName,
                 cancellationToken
             );
-
-        if (followee is null)
-        {
-            throw new NotFoundException("A user whose name matches the provided user name could not be found.");
-        }
-
-        if (!followee.IsActive)
-        {
-            throw new UserNotActiveException("The user whose name matches the provided user name is not active.");
-        }
 
         Guid followerId = this._claims.Id;
         Guid followeeId = followee.Id;
@@ -94,7 +84,8 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
         return new Following(
             this._claims.EmailAddress,
             followee.UserName,
-            followed
+            followed,
+            isSubscribed
         );
     }
 

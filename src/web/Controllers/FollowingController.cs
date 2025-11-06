@@ -126,7 +126,6 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status410Gone)]
     public Task<IActionResult> DeleteAsync(
@@ -162,19 +161,6 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         try
         {
             following = await handler.HandleAsync(userName, cancellationToken);
-        }
-
-        catch (ForbiddenException ex)
-        {
-            this._logger.LogInformation(
-                ex,
-                "{TimeStamp}: User {EmailAddress} failed to unfollow user {UserName} - user is current user",
-                DateTime.UtcNow,
-                claims.EmailAddress,
-                userName
-            );
-
-            throw;
         }
 
         catch (NotFoundException ex)
