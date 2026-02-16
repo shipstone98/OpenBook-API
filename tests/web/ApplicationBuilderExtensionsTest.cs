@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 
-using Shipstone.OpenBook.Api.WebTest.Mocks;
+using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.WebTest;
 

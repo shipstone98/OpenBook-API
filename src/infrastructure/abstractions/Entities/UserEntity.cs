@@ -10,12 +10,10 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Entities;
 public class UserEntity : Entity<Guid>
 {
     private String _emailAddress;
-    private String _emailAddressNormalized;
     private String _forename;
     private String? _otp;
     private String _surname;
     private String _userName;
-    private String _userNameNormalized;
 
     /// <summary>
     /// Gets or sets the date the user was born.
@@ -40,16 +38,11 @@ public class UserEntity : Entity<Guid>
         }
     }
 
-    public String EmailAddressNormalized
-    {
-        get => this._emailAddressNormalized;
-
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            this._emailAddressNormalized = value;
-        }
-    }
+    /// <summary>
+    /// Gets or sets the normalized email address of the user.
+    /// </summary>
+    /// <value>The normalized email address of the user, if the user is active; otherwise, <c>null</c>.</value>
+    public String? EmailAddressNormalized { get; set; }
 
     public String Forename
     {
@@ -128,16 +121,11 @@ public class UserEntity : Entity<Guid>
         }
     }
 
-    public String UserNameNormalized
-    {
-        get => this._userNameNormalized;
-
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            this._userNameNormalized = value;
-        }
-    }
+    /// <summary>
+    /// Gets or sets the normalized user name of the user.
+    /// </summary>
+    /// <value>The normalized user name of the user, if the user is active; otherwise, <c>null</c>.</value>
+    public String? UserNameNormalized { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserEntity" /> class.
@@ -145,10 +133,8 @@ public class UserEntity : Entity<Guid>
     public UserEntity()
     {
         this._emailAddress = String.Empty;
-        this._emailAddressNormalized = String.Empty;
         this._forename = String.Empty;
         this._surname = String.Empty;
         this._userName = String.Empty;
-        this._userNameNormalized = String.Empty;
     }
 }

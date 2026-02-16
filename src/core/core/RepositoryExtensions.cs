@@ -117,7 +117,7 @@ internal static class RepositoryExtensions
 
         return userRoles
             .SelectAsync(
-                async (ur, ct) =>
+                async (ur, _, ct) =>
                 {
                     RoleEntity? role =
                         await repository.Roles.RetrieveAsync(ur.RoleId, ct);
@@ -126,7 +126,7 @@ internal static class RepositoryExtensions
                 },
                 cancellationToken
             )
-            .WithoutNullAsync(cancellationToken);
+            .WhereNotNullAsync(cancellationToken);
     }
 
     internal static async Task<IUser> RetrieveUserAsync(

@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
+using Shipstone.Extensions.Security;
+
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
-using Shipstone.OpenBook.Api.Infrastructure.Data;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 using Shipstone.OpenBook.Api.Infrastructure.Mail;

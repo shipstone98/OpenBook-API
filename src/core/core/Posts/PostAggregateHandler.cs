@@ -49,7 +49,8 @@ internal sealed class PostAggregateHandler : IPostAggregateHandler
             );
 
         return await posts.SelectAsync(
-            (p, ct) => this._repository.RetrievePostAsync(this._claims, p, ct),
+            (p, _, ct) =>
+                this._repository.RetrievePostAsync(this._claims, p, ct),
             cancellationToken
         );
     }

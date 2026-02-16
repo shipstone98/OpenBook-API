@@ -35,9 +35,9 @@ public sealed class UserRepositoryTest
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
         MockDataSource dataSource = new();
         services.AddSingleton<IDataSource>(dataSource);
-        MockOptions<EncryptionOptions> encryptionOptions = new();
-        services.AddSingleton<IOptions<EncryptionOptions>>(encryptionOptions);
-        encryptionOptions._valueFunc = () => new();
+        MockOptions<SecurityOptions> securityOptions = new();
+        services.AddSingleton<IOptions<SecurityOptions>>(securityOptions);
+        securityOptions._valueFunc = () => new();
         IServiceProvider provider = new MockServiceProvider(services);
         this._dataSource = dataSource;
 

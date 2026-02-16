@@ -1,6 +1,6 @@
 using System;
 
-using Shipstone.OpenBook.Api.Infrastructure.Data;
+using Shipstone.Extensions.Security;
 
 namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 

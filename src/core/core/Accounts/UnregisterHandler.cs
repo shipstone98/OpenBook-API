@@ -133,7 +133,7 @@ internal sealed class UnregisterHandler : IUnregisterHandler
 
         user.Born = DateOnly.MinValue;
         user.EmailAddress = String.Empty;
-        user.EmailAddressNormalized = String.Empty;
+        user.EmailAddressNormalized = null;
         user.Forename = String.Empty;
         user.IsActive = false;
         user.Otp = null;
@@ -142,7 +142,7 @@ internal sealed class UnregisterHandler : IUnregisterHandler
         user.Surname = String.Empty;
         user.Updated = DateTime.UtcNow;
         user.UserName = String.Empty;
-        user.UserNameNormalized = String.Empty;
+        user.UserNameNormalized = null;
         Guid userId = user.Id;
         await this.DeleteUserDevicesAsync(userId, cancellationToken);
         await this.DeleteUserFollowingsAsync(userId, cancellationToken);

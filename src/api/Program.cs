@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Shipstone.AspNetCore.Http;
 using Shipstone.Extensions.Identity;
 using Shipstone.Extensions.Notifications;
+using Shipstone.Extensions.Pagination;
 using Shipstone.Extensions.Security;
 using Shipstone.Utilities.Security.Cryptography;
 using Shipstone.Utilities.Text.Json;
@@ -77,9 +78,15 @@ builder.Services
     .AddIdentityExtensions()
     .AddNcsaCommonLogging(ncsaCommonLoggingWriter)
     .AddNotificationsExtensions()
-    .AddPagination(
+    .AddPagination()
+    .AddPaginationExtensions(
         builder.Configuration
             .GetSection("Pagination")
+            .Bind
+    )
+    .AddSecurityExtensions(
+        builder.Configuration
+            .GetRequiredSection("Security")
             .Bind
     )
     .AddOpenBookCore()
@@ -101,13 +108,7 @@ builder.Services
         RandomNumberGenerator rng = RandomNumberGenerator.Create();
         return new ConcurrentRandomNumberGenerator(rng);
     })
-    .AddSingleton<JwtSecurityTokenHandler>()
-#warning Remove when moving to lib
-    .Configure<EncryptionOptions>(
-        builder.Configuration
-            .GetRequiredSection("Encryption")
-            .Bind
-    );
+    .AddSingleton<JwtSecurityTokenHandler>();
 
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();

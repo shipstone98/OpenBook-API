@@ -42,7 +42,7 @@ internal sealed class PostController(ILogger<PostController> logger)
         IReadOnlyPaginatedList<IPost> posts =
             await handler.HandleAsync(cancellationToken);
 
-        Object? response = posts.Select(p => new RetrieveResponse(p));
+        Object? response = posts.Select((p, _) => new RetrieveResponse(p));
         return this.Ok(response);
     }
 
@@ -71,7 +71,7 @@ internal sealed class PostController(ILogger<PostController> logger)
         IReadOnlyPaginatedList<IPost> posts =
             await handler.HandleAsync(id, cancellationToken);
 
-        Object? response = posts.Select(p => new RetrieveResponse(p));
+        Object? response = posts.Select((p, _) => new RetrieveResponse(p));
         return this.Ok(response);
     }
 
@@ -255,7 +255,7 @@ internal sealed class PostController(ILogger<PostController> logger)
         IReadOnlyPaginatedList<IPost> posts =
             await handler.HandleAsync(userName, cancellationToken);
 
-        Object? response = posts.Select(p => new RetrieveResponse(p));
+        Object? response = posts.Select((p, _) => new RetrieveResponse(p));
         return this.Ok(response);
     }
 

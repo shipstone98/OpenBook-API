@@ -73,11 +73,10 @@ internal static class NotificationServiceExtensions
             await userFollowings
                 .Where(uf => uf.IsSubscribed)
                 .SelectManyAsync<UserFollowingEntity, UserDeviceEntity>(
-                    async (uf, ct) =>
-                        await repository.UserDevices.ListForUserAsync(
-                            uf.FollowerId,
-                            ct
-                        ),
+                    (uf, _, ct) =>
+                        repository.UserDevices
+                            .ListForUserAsync(uf.FollowerId, ct)
+                            .ToAsyncEnumerable(),
                     cancellationToken
                 )
                 .ToListAsync(cancellationToken);

@@ -33,9 +33,9 @@ public sealed class RepositoryTest
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
         MockDataSource dataSource = new();
         services.AddSingleton<IDataSource>(dataSource);
-        MockOptions<EncryptionOptions> encryptionOptions = new();
-        services.AddSingleton<IOptions<EncryptionOptions>>(encryptionOptions);
-        encryptionOptions._valueFunc = () => new();
+        MockOptions<SecurityOptions> securityOptions = new();
+        services.AddSingleton<IOptions<SecurityOptions>>(securityOptions);
+        securityOptions._valueFunc = () => new();
         MockOptionsSnapshot<PaginationOptions> paginationOptions = new();
         services.AddSingleton<IOptionsSnapshot<PaginationOptions>>(paginationOptions);
         paginationOptions._valueFunc = () => new();

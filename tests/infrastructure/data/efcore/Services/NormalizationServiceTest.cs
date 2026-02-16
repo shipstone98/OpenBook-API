@@ -25,9 +25,9 @@ public sealed class NormalizationServiceTest
         services._addAction = collection.Add;
         services._getEnumeratorFunc = collection.GetEnumerator;
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
-        MockOptions<EncryptionOptions> encryptionOptions = new();
-        services.AddSingleton<IOptions<EncryptionOptions>>(encryptionOptions);
-        encryptionOptions._valueFunc = () => new();
+        MockOptions<SecurityOptions> securityOptions = new();
+        services.AddSingleton<IOptions<SecurityOptions>>(securityOptions);
+        securityOptions._valueFunc = () => new();
         IServiceProvider provider = new MockServiceProvider(services);
 
         this._normalization =

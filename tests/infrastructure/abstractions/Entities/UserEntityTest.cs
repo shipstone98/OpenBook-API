@@ -44,7 +44,6 @@ public sealed class UserEntityTest
 
         // Assert
         Assert.NotNull(user.EmailAddress);
-        Assert.NotNull(user.EmailAddressNormalized);
         Assert.NotNull(user.Forename);
 
         Assert.True(

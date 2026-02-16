@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
+using Shipstone.Extensions.Pagination;
 using Shipstone.Utilities.Collections;
 
-using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Services;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 

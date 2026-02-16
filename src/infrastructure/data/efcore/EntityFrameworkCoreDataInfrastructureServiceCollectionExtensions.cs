@@ -1,8 +1,9 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
+using Shipstone.Extensions.Pagination;
+
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Repositories;
-using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Services;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
@@ -23,8 +24,7 @@ public static class EntityFrameworkCoreDataInfrastructureServiceCollectionExtens
         ArgumentNullException.ThrowIfNull(services);
 
         return services
-            .AddSingleton<INormalizationService, NormalizationService>()
-            .AddScoped<IPaginationService, PaginationService>()
+            .AddSingleton<IAsyncQueryableService, AsyncQueryableService>()
             .AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IRepository, Repository>()
             .AddScoped<IRoleRepository, RoleRepository>()

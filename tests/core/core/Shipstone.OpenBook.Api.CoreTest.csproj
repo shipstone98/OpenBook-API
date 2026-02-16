@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\core\core\Shipstone.OpenBook.Api.Core.csproj" />
-    <ProjectReference Include="..\..\lib\Shipstone.Test.csproj" />
+    <ProjectReference Include="..\..\lib\Shipstone.OpenBook.Api.Test.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -156,7 +156,7 @@ internal sealed class AuthenticationService : IAuthenticationService
     )
     {
         ArgumentNullException.ThrowIfNull(user);
-        String otp = this._rng.GenerateOtp(Constants.UserOtpMaxLength);
+        String otp = this._rng.GetNonZeroString(Constants.UserOtpMaxLength);
         DateTime otpExpires = now.Add(this._options._otpExpiry);
         user.Otp = otp;
         user.OtpExpires = otpExpires;

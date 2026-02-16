@@ -47,7 +47,8 @@ internal sealed class PostListHandler : IPostListHandler
             );
 
         return await posts.SelectAsync(
-            (p, ct) => this._repository.RetrievePostAsync(this._claims, p, ct),
+            (p, _, ct) =>
+                this._repository.RetrievePostAsync(this._claims, p, ct),
             cancellationToken
         );
     }
@@ -74,7 +75,7 @@ internal sealed class PostListHandler : IPostListHandler
                 cancellationToken
             );
 
-        return posts.Select(p =>
+        return posts.Select((p, _) =>
             new Post(p, user.EmailAddress, user.UserName));
     }
 

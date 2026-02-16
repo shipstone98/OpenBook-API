@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.Extensions.Security;
+
 using Shipstone.OpenBook.Api.Core.Services;
 using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Infrastructure.Authentication;
-using Shipstone.OpenBook.Api.Infrastructure.Data;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 using Shipstone.OpenBook.Api.Infrastructure.Mail;
