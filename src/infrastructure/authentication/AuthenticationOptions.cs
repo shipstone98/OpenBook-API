@@ -9,6 +9,11 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Authentication;
 /// </summary>
 public class AuthenticationOptions : IOptions<AuthenticationOptions>
 {
+    /// <summary>
+    /// Represents the length of a signing key, in bytes. This field is constant.
+    /// </summary>
+    public const int SigningKeyLength = 32;
+
     internal TimeSpan _accessTokenExpiry;
     internal SigningCredentials _accessTokenSigningKey;
     private String _accessTokenSigningKeyString;
@@ -41,6 +46,15 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
             try
             {
                 byte[] bytes = Convert.FromBase64String(value);
+
+                if (bytes.Length != AuthenticationOptions.SigningKeyLength)
+                {
+                    throw new ArgumentException(
+                        $"The length of {nameof (value)} is less than {nameof (AuthenticationOptions.SigningKeyLength)}.",
+                        nameof (value)
+                    );
+                }
+
                 SecurityKey key = new SymmetricSecurityKey(bytes);
 
                 SigningCredentials signingKey =
@@ -130,6 +144,15 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
             try
             {
                 byte[] bytes = Convert.FromBase64String(value);
+
+                if (bytes.Length != AuthenticationOptions.SigningKeyLength)
+                {
+                    throw new ArgumentException(
+                        $"The length of {nameof (value)} is less than {nameof (AuthenticationOptions.SigningKeyLength)}.",
+                        nameof (value)
+                    );
+                }
+
                 SecurityKey key = new SymmetricSecurityKey(bytes);
 
                 SigningCredentials signingKey =
@@ -156,7 +179,7 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
     /// </summary>
     public AuthenticationOptions()
     {
-        byte[] bytes = new byte[16];
+        byte[] bytes = new byte[AuthenticationOptions.SigningKeyLength];
         SecurityKey key = new SymmetricSecurityKey(bytes);
 
         SigningCredentials signingKey =
