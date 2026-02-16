@@ -10,9 +10,9 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Authentication;
 public class AuthenticationOptions : IOptions<AuthenticationOptions>
 {
     /// <summary>
-    /// Represents the length of a signing key, in bytes. This field is constant.
+    /// Represents the minimum length of a signing key, in bytes. This field is constant.
     /// </summary>
-    public const int SigningKeyLength = 32;
+    public const int SigningKeyMinLength = 32;
 
     internal TimeSpan _accessTokenExpiry;
     internal SigningCredentials _accessTokenSigningKey;
@@ -47,10 +47,10 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
             {
                 byte[] bytes = Convert.FromBase64String(value);
 
-                if (bytes.Length != AuthenticationOptions.SigningKeyLength)
+                if (bytes.Length < AuthenticationOptions.SigningKeyMinLength)
                 {
                     throw new ArgumentException(
-                        $"The length of {nameof (value)} is less than {nameof (AuthenticationOptions.SigningKeyLength)}.",
+                        $"The length of {nameof (value)} is less than {nameof (AuthenticationOptions.SigningKeyMinLength)}.",
                         nameof (value)
                     );
                 }
@@ -145,10 +145,10 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
             {
                 byte[] bytes = Convert.FromBase64String(value);
 
-                if (bytes.Length != AuthenticationOptions.SigningKeyLength)
+                if (bytes.Length < AuthenticationOptions.SigningKeyMinLength)
                 {
                     throw new ArgumentException(
-                        $"The length of {nameof (value)} is less than {nameof (AuthenticationOptions.SigningKeyLength)}.",
+                        $"The length of {nameof (value)} is less than {nameof (AuthenticationOptions.SigningKeyMinLength)}.",
                         nameof (value)
                     );
                 }
@@ -179,7 +179,7 @@ public class AuthenticationOptions : IOptions<AuthenticationOptions>
     /// </summary>
     public AuthenticationOptions()
     {
-        byte[] bytes = new byte[AuthenticationOptions.SigningKeyLength];
+        byte[] bytes = new byte[AuthenticationOptions.SigningKeyMinLength];
         SecurityKey key = new SymmetricSecurityKey(bytes);
 
         SigningCredentials signingKey =
