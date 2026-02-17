@@ -45,6 +45,7 @@ public static class CoreServiceCollectionExtensions
             .AddScoped<IRefreshAuthenticateHandler, RefreshAuthenticateHandler>()
             .AddScoped<IRegisterHandler, RegisterHandler>()
             .AddScoped<IUnregisterHandler, UnregisterHandler>()
+            .AddScoped<IUserListHandler, UserListHandler>()
             .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>()
             .AddScoped<IUserUpdateHandler, UserUpdateHandler>();
     }

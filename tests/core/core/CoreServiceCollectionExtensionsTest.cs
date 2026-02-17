@@ -64,6 +64,7 @@ public sealed class CoreServiceCollectionExtensionsTest
             typeof (IRefreshAuthenticateHandler),
             typeof (IRegisterHandler),
             typeof (IUnregisterHandler),
+            typeof (IUserListHandler),
             typeof (IUserRetrieveHandler),
             typeof (IUserUpdateHandler)
         };

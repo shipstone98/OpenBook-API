@@ -5,7 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
+using Shipstone.Extensions.Pagination;
 using Shipstone.Extensions.Security;
+using Shipstone.Utilities.Collections;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
@@ -16,30 +18,20 @@ internal sealed class UserRepository : IUserRepository
 {
     private readonly IDataSource _dataSource;
     private readonly INormalizationService _normalization;
+    private readonly IPaginationService _pagination;
 
     public UserRepository(
         IDataSource dataSource,
-        INormalizationService normalization
+        INormalizationService normalization,
+        IPaginationService pagination
     )
     {
         ArgumentNullException.ThrowIfNull(dataSource);
         ArgumentNullException.ThrowIfNull(normalization);
+        ArgumentNullException.ThrowIfNull(pagination);
         this._dataSource = dataSource;
         this._normalization = normalization;
-    }
-
-    Task IUserRepository.CreateAsync(
-        UserEntity user,
-        CancellationToken cancellationToken
-    )
-    {
-        ArgumentNullException.ThrowIfNull(user);
-
-        return this._dataSource.Users.SetStateAsync(
-            user,
-            DataEntityState.Created,
-            cancellationToken
-        );
+        this._pagination = pagination;
     }
 
     private async Task<UserEntity?> RetrieveAsync(
@@ -72,6 +64,31 @@ internal sealed class UserRepository : IUserRepository
                 .ToArrayAsync(cancellationToken);
 
         return users.FirstOrDefault(u => userName.Equals(u.UserName));
+    }
+
+    Task IUserRepository.CreateAsync(
+        UserEntity user,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return this._dataSource.Users.SetStateAsync(
+            user,
+            DataEntityState.Created,
+            cancellationToken
+        );
+    }
+
+#warning Not tested
+    Task<IReadOnlyPaginatedList<UserEntity>> IUserRepository.ListAsync(CancellationToken cancellationToken)
+    {
+        IQueryable<UserEntity> query = this._dataSource.Users.AsNoTracking();
+
+        return this._pagination.GetPageOrFirstAsync(
+            query,
+            cancellationToken
+        );
     }
 
     Task<UserEntity?> IUserRepository.RetrieveAsync(

@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.Utilities.Collections;
+
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
@@ -20,6 +22,14 @@ public interface IUserRepository
     /// <exception cref="ArgumentNullException"><c><paramref name="user" /></c> is <c>null</c>.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     Task CreateAsync(UserEntity user, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Asynchronously lists users.
+    /// </summary>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous list operation. The value of <see cref="Task{TResult}.Result" /> contains the listed users.</returns>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task<IReadOnlyPaginatedList<UserEntity>> ListAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously retrieves a user with the specified email address.

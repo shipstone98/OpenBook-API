@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.Utilities.Collections;
+
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
@@ -10,6 +12,7 @@ namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 internal sealed class MockUserRepository : IUserRepository
 {
     internal Action<UserEntity> _createAction;
+    internal Func<IReadOnlyPaginatedList<UserEntity>> _listFunc;
     internal Func<Guid, UserEntity?> _retrieve_GuidFunc;
     internal Func<String, UserEntity?> _retrieve_StringFunc;
     internal Func<String, UserEntity?> _retrieveForNameFunc;
@@ -18,6 +21,7 @@ internal sealed class MockUserRepository : IUserRepository
     public MockUserRepository()
     {
         this._createAction = _ => throw new NotImplementedException();
+        this._listFunc = () => throw new NotImplementedException();
         this._retrieve_GuidFunc = _ => throw new NotImplementedException();
         this._retrieve_StringFunc = _ => throw new NotImplementedException();
         this._retrieveForNameFunc = _ => throw new NotImplementedException();
@@ -31,6 +35,12 @@ internal sealed class MockUserRepository : IUserRepository
     {
         this._createAction(user);
         return Task.CompletedTask;
+    }
+
+    Task<IReadOnlyPaginatedList<UserEntity>> IUserRepository.ListAsync(CancellationToken cancellationToken)
+    {
+        IReadOnlyPaginatedList<UserEntity> result = this._listFunc();
+        return Task.FromResult(result);
     }
 
     Task<UserEntity?> IUserRepository.RetrieveAsync(

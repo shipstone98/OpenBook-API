@@ -1,4 +1,4 @@
-GET /api/administrator/user/list                                
+GET /api/administrator/user/list                                TESTED
 POST /api/account/authenticate                                  TESTED
 POST /api/account/otpauthenticate                               TESTED (no JWT)
 POST /api/account/refreshauthenticate                           TESTED (no JWT)
@@ -10,9 +10,9 @@ GET /api/following
 PUT /api/password/reset                                         
 POST /api/password/set                                          TESTED
 POST /api/password/update                                       
-POST /api/post                                                  
+POST /api/post                                                  TESTED
 DELETE /api/post                                                
-GET /api/post                                                   
+GET /api/post                                                   TESTED
 GET /api/post/aggregate                                         
 GET /api/post/children                                          
 GET /api/post/list                                              
