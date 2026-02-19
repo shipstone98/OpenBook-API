@@ -49,6 +49,13 @@ public sealed class ClaimsServiceTest
     }
 
     [Fact]
+    public void TestRoles_Get()
+    {
+        // Act and assert
+        Assert.Throws<UnauthorizedException>(() => this._claims.Roles);
+    }
+
+    [Fact]
     public void TestUserName_Get()
     {
         // Act and assert

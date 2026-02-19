@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Shipstone.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Shipstone.Utilities" Version="9.0.1" />
   </ItemGroup>
 
   <PropertyGroup>

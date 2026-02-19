@@ -16,12 +16,6 @@ namespace Shipstone.OpenBook.Api.Web;
 /// </summary>
 public static class WebServiceCollectionExtensions
 {
-    /// <summary>
-    /// Registers OpenBook web authorization services with the specified <see cref="IServiceCollection" />.
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection" /> to register services with.</param>
-    /// <returns>A reference to <c><paramref name="services" /></c> that can be further used to register services.</returns>
-    /// <exception cref="ArgumentNullException"><c><paramref name="services" /></c> is <c>null</c>.</exception>
     public static IServiceCollection AddOpenBookWebAuthorization(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -29,6 +23,17 @@ public static class WebServiceCollectionExtensions
         return services
             .AddAuthorization(options =>
             {
+                options.AddPolicy(
+                    Policies.Administrator,
+                    policy =>
+                    {
+                        IAuthorizationRequirement requirement =
+                            new AdministratorAuthorizationRequirement();
+
+                        policy.AddRequirements(requirement);
+                    }
+                );
+
                 options.AddPolicy(
                     Policies.ResourceOwner,
                     policy =>
@@ -40,6 +45,7 @@ public static class WebServiceCollectionExtensions
                     }
                 );
             })
+            .AddScoped<IAuthorizationHandler, AdministratorAuthorizationHandler>()
             .AddScoped<IAuthorizationHandler, ResourceOwnerAuthorizationHandler>();
     }
 

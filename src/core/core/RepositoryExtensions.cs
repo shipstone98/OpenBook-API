@@ -102,6 +102,25 @@ internal static class RepositoryExtensions
         return new Post(post, creatorEmailAddress, creatorName);
     }
 
+    internal static async Task<IResource> RetrieveResourceAsync(
+        this IRepository repository,
+        Guid creatorId,
+        CancellationToken cancellationToken
+    )
+    {
+        IAsyncEnumerable<String> roles =
+            await RepositoryExtensions.RetrieveRolesAsync(
+                repository,
+                creatorId,
+                cancellationToken
+            );
+
+        SortedSet<String> creatorRoles =
+            await roles.ToSortedSetAsync(cancellationToken: cancellationToken);
+
+        return new Resource(creatorId, creatorRoles);
+    }
+
     internal static async Task<IAsyncEnumerable<String>> RetrieveRolesAsync(
         this IRepository repository,
         Guid userId,

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Shipstone.OpenBook.Api.Core.Accounts;
 
@@ -26,6 +27,12 @@ public interface IClaimsService
     /// </summary>
     /// <value><c>true</c> if the current user is authenticated; otherwise, <c>false</c>.</value>
     bool IsAuthenticated { get; }
+
+    /// <summary>
+    /// Gets a set containing the roles assigned to the current user.
+    /// </summary>
+    /// <value>A read-only set containing the roles assigned to the current user.</value>
+    IReadOnlySet<String> Roles { get; }
 
     /// <summary>
     /// Gets the name of the current user.

@@ -89,12 +89,20 @@ public sealed class PostDeleteHandlerTest
     [Fact]
     public Task TestHandleAsync_Valid_Failure_CreatorNotFound()
     {
+#region Arrange
         // Arrange
         this._repository._postsFunc = () =>
         {
             MockPostRepository posts = new();
             posts._retrieveFunc = _ => new();
             return posts;
+        };
+
+        this._repository._userRolesFunc = () =>
+        {
+            MockUserRoleRepository userRoles = new();
+            userRoles._listForUserFunc = _ => Array.Empty<UserRoleEntity>();
+            return userRoles;
         };
 
         this._authorization._authorizeAction = (_, _) => { };
@@ -106,6 +114,7 @@ public sealed class PostDeleteHandlerTest
             users._retrieve_GuidFunc = _ => null;
             return users;
         };
+#endregion
 
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
@@ -147,6 +156,13 @@ public sealed class PostDeleteHandlerTest
             MockPostRepository posts = new();
             posts._retrieveFunc = _ => new();
             return posts;
+        };
+
+        this._repository._userRolesFunc = () =>
+        {
+            MockUserRoleRepository userRoles = new();
+            userRoles._listForUserFunc = _ => Array.Empty<UserRoleEntity>();
+            return userRoles;
         };
 
         this._authorization._authorizeAction = (_, _) => throw innerException;
@@ -195,6 +211,13 @@ public sealed class PostDeleteHandlerTest
 
             posts._deleteAction = _ => { };
             return posts;
+        };
+
+        this._repository._userRolesFunc = () =>
+        {
+            MockUserRoleRepository userRoles = new();
+            userRoles._listForUserFunc = _ => Array.Empty<UserRoleEntity>();
+            return userRoles;
         };
 
         this._authorization._authorizeAction = (_, _) => { };
@@ -255,6 +278,13 @@ public sealed class PostDeleteHandlerTest
 
             posts._deleteAction = _ => { };
             return posts;
+        };
+
+        this._repository._userRolesFunc = () =>
+        {
+            MockUserRoleRepository userRoles = new();
+            userRoles._listForUserFunc = _ => Array.Empty<UserRoleEntity>();
+            return userRoles;
         };
 
         this._authorization._authorizeAction = (_, _) => { };
@@ -328,6 +358,13 @@ public sealed class PostDeleteHandlerTest
 
             posts._deleteAction = _ => { };
             return posts;
+        };
+
+        this._repository._userRolesFunc = () =>
+        {
+            MockUserRoleRepository userRoles = new();
+            userRoles._listForUserFunc = _ => Array.Empty<UserRoleEntity>();
+            return userRoles;
         };
 
         this._authorization._authorizeAction = (_, _) => { };

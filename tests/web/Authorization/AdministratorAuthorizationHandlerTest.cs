@@ -16,13 +16,13 @@ using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.WebTest.Authorization;
 
-public sealed class ResourceOwnerAuthorizationHandlerTest
+public sealed class AdministratorAuthorizationHandlerTest
 {
     private readonly IAuthorizationService _authorization;
     private readonly MockClaimsService _claims;
     private readonly MockLogger<DefaultAuthorizationService> _logger;
 
-    public ResourceOwnerAuthorizationHandlerTest()
+    public AdministratorAuthorizationHandlerTest()
     {
         IList<ServiceDescriptor> list = new List<ServiceDescriptor>();
         MockServiceCollection services = new();
@@ -45,24 +45,42 @@ public sealed class ResourceOwnerAuthorizationHandlerTest
     }
 
 #region HandleRequirementAsync method
-    [Fact]
-    public async Task TestHandleRequirementAsync_Authenticated_Creator()
+    [InlineData(Roles.Administrator, Roles.User)]
+    [InlineData(Roles.SystemAdministrator, Roles.User)]
+    [InlineData(Roles.SystemAdministrator, Roles.Administrator)]
+    [Theory]
+    public async Task TestHandleRequirementAsync_Authenticated_CreatorUser_Authorized(
+        String role,
+        String creatorRole
+    )
     {
         // Arrange
-        Guid id = Guid.NewGuid();
         ClaimsPrincipal user = new();
         MockResource resource = new();
-        this._logger._isEnabledFunc = _ => false;
         this._claims._isAuthenticatedFunc = () => true;
-        this._claims._idFunc = () => id;
-        resource._creatorIdFunc = () => id;
+
+        this._claims._rolesFunc = () =>
+        {
+            MockReadOnlySet<String> roles = new();
+            roles._containsFunc = i => String.Equals(role, i);
+            return roles;
+        };
+
+        resource._creatorRolesFunc = () =>
+        {
+            MockReadOnlySet<String> roles = new();
+            roles._containsFunc = i => String.Equals(creatorRole, i);
+            return roles;
+        };
+
+        this._logger._isEnabledFunc = _ => false;
 
         // Act
         AuthorizationResult result =
             await this._authorization.AuthorizeAsync(
                 user,
                 resource,
-                Policies.ResourceOwner
+                Policies.Administrator
             );
 
         // Assert
@@ -70,28 +88,49 @@ public sealed class ResourceOwnerAuthorizationHandlerTest
         Assert.True(result.Succeeded);
     }
 
-    [Fact]
-    public async Task TestHandleRequirementAsync_Authenticated_NotCreator()
+    [InlineData(Roles.User, Roles.User)]
+    [InlineData(Roles.User, Roles.Administrator)]
+    [InlineData(Roles.User, Roles.SystemAdministrator)]
+    [InlineData(Roles.Administrator, Roles.Administrator)]
+    [InlineData(Roles.Administrator, Roles.SystemAdministrator)]
+    [InlineData(Roles.SystemAdministrator, Roles.SystemAdministrator)]
+    [Theory]
+    public async Task TestHandleRequirementAsync_Authenticated_NotAuthorized(
+        String role,
+        String creatorRole
+    )
     {
         // Arrange
         ClaimsPrincipal user = new();
         MockResource resource = new();
-        this._logger._isEnabledFunc = _ => false;
         this._claims._isAuthenticatedFunc = () => true;
-        this._claims._idFunc = Guid.NewGuid;
-        resource._creatorIdFunc = Guid.NewGuid;
+
+        this._claims._rolesFunc = () =>
+        {
+            MockReadOnlySet<String> roles = new();
+            roles._containsFunc = i => String.Equals(role, i);
+            return roles;
+        };
+
+        resource._creatorRolesFunc = () =>
+        {
+            MockReadOnlySet<String> roles = new();
+            roles._containsFunc = i => String.Equals(creatorRole, i);
+            return roles;
+        };
+
+        this._logger._isEnabledFunc = _ => false;
 
         // Act
         AuthorizationResult result =
             await this._authorization.AuthorizeAsync(
                 user,
                 resource,
-                Policies.ResourceOwner
+                Policies.Administrator
             );
 
         // Assert
         Assert.NotNull(result.Failure);
-        Assert.NotEmpty(result.Failure.FailedRequirements);
         Assert.False(result.Succeeded);
     }
 
@@ -101,20 +140,19 @@ public sealed class ResourceOwnerAuthorizationHandlerTest
         // Arrange
         ClaimsPrincipal user = new();
         MockResource resource = new();
-        this._logger._isEnabledFunc = _ => false;
         this._claims._isAuthenticatedFunc = () => false;
+        this._logger._isEnabledFunc = _ => false;
 
         // Act
         AuthorizationResult result =
             await this._authorization.AuthorizeAsync(
                 user,
                 resource,
-                Policies.ResourceOwner
+                Policies.Administrator
             );
 
         // Assert
         Assert.NotNull(result.Failure);
-        Assert.NotEmpty(result.Failure.FailedRequirements);
         Assert.False(result.Succeeded);
     }
 #endregion

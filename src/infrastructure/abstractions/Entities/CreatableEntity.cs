@@ -1,15 +1,12 @@
 using System;
 
-using Shipstone.OpenBook.Api.Core;
-
 namespace Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 /// <summary>
 /// Represents an entity with a simple primary key and creator ID. This class cannot be instantiated.
 /// </summary>
 /// <typeparam name="TId">The type of the ID of the entity.</typeparam>
-public abstract class CreatableEntity<TId> : Entity<TId>, IResource
-    where TId : struct
+public abstract class CreatableEntity<TId> : Entity<TId> where TId : struct
 {
     /// <summary>
     /// Gets or initializes the ID of user that created the entity.

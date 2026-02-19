@@ -4,8 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
+using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
-using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Authorization;
 
@@ -19,16 +19,15 @@ internal sealed class AuthorizationService : IAuthorizationService
         this._authorization = authorization;
     }
 
-    private async Task AuthorizeAsync<TId>(
-        CreatableEntity<TId> entity,
+    private async Task AuthorizeAsync(
+        IResource resource,
         String policy
     )
-        where TId : struct
     {
         ClaimsPrincipal user = new();
 
         AuthorizationResult result =
-            await this._authorization.AuthorizeAsync(user, entity, policy);
+            await this._authorization.AuthorizeAsync(user, resource, policy);
 
         if (!result.Succeeded)
         {
@@ -36,15 +35,14 @@ internal sealed class AuthorizationService : IAuthorizationService
         }
     }
 
-    Task IAuthorizationService.AuthorizeAsync<TId>(
-        CreatableEntity<TId> entity,
+    Task IAuthorizationService.AuthorizeAsync(
+        IResource resource,
         String policy,
         CancellationToken cancellationToken
     )
-        where TId : struct
     {
-        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentNullException.ThrowIfNull(resource);
         ArgumentNullException.ThrowIfNull(policy);
-        return this.AuthorizeAsync(entity, policy);
+        return this.AuthorizeAsync(resource, policy);
     }
 }

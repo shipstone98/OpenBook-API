@@ -2,8 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Infrastructure.Authorization;
-using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 
@@ -14,13 +14,13 @@ internal sealed class MockAuthorizationService : IAuthorizationService
     public MockAuthorizationService() =>
         this._authorizeAction = (_, _) => throw new NotImplementedException();
 
-    Task IAuthorizationService.AuthorizeAsync<TId>(
-        CreatableEntity<TId> entity,
+    Task IAuthorizationService.AuthorizeAsync(
+        IResource resource,
         String policy,
         CancellationToken cancellationToken
     )
     {
-        this._authorizeAction(entity, policy);
+        this._authorizeAction(resource, policy);
         return Task.CompletedTask;
     }
 }

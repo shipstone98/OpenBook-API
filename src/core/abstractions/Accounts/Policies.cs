@@ -8,6 +8,11 @@ namespace Shipstone.OpenBook.Api.Core.Accounts;
 public static class Policies
 {
     /// <summary>
+    /// Specifies the name of the <c>Administrator</c> policy. This field is constant.
+    /// </summary>
+    public const String Administrator = "Administrator";
+
+    /// <summary>
     /// Specifies the name of the <c>Resource Owner</c> policy. This field is constant.
     /// </summary>
     public const String ResourceOwner = "Resource Owner";

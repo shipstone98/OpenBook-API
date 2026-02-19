@@ -2,3 +2,7 @@ INSERT INTO `openbook`.`users` (`Id`, `Consented`, `EmailAddress`, `EmailAddress
 INSERT INTO `openbook`.`userroles` (`RoleId`, `UserId`, `Assigned`) VALUES ('1', '637bd9c7-c55c-4055-a7ae-04e36406576a', '2025-08-28 08:58:28.000000');
 INSERT INTO `openbook`.`userroles` (`RoleId`, `UserId`, `Assigned`) VALUES ('2', '637bd9c7-c55c-4055-a7ae-04e36406576a', '2025-08-28 08:58:28.000000');
 INSERT INTO `openbook`.`userroles` (`RoleId`, `UserId`, `Assigned`) VALUES ('3', '637bd9c7-c55c-4055-a7ae-04e36406576a', '2025-08-28 08:58:28.000000');
+
+INSERT INTO `openbook`.`users` (`Id`, `Consented`, `EmailAddress`, `EmailAddressNormalized`, `Forename`, `IsActive`, `PasswordHash`, `Surname`, `UserName`, `UserNameNormalized`, `Created`, `Updated`, `Born`) VALUES ('637bd9c7-c55c-4055-a7ae-04e36406576b', '2025-08-28 08:58:28.000000', 'administrator@contoso.com', 'c1KkIZG1Z13ELlIwCOC1lMGx/qMRnmuNBUKa0+8Bzxg=', 'Mr', '1', 'AQAAAAIAAYagAAAAEDzy9F4lnVlinUlWjEveN2QHF0JKluIl61T3qUkydyN/DT7p7QnC/gmcg605AqGaOQ==', 'Administrator', 'administrator2025', 'RxEuDeZWaM5TeaEvCNWiY0rC9v3A9LVuaN3ncozT48g=', '2025-08-28 08:58:28.000000', '2025-08-28 08:58:28.000000', '1998-10-12');
+INSERT INTO `openbook`.`userroles` (`RoleId`, `UserId`, `Assigned`) VALUES ('1', '637bd9c7-c55c-4055-a7ae-04e36406576b', '2025-08-28 08:58:28.000000');
+INSERT INTO `openbook`.`userroles` (`RoleId`, `UserId`, `Assigned`) VALUES ('2', '637bd9c7-c55c-4055-a7ae-04e36406576b', '2025-08-28 08:58:28.000000');

@@ -45,8 +45,14 @@ internal sealed class PostDeleteHandler : IPostDeleteHandler
             throw new NotFoundException("A post whose ID matches the provided ID could not be found.");
         }
 
+        IResource postResource =
+            await this._repository.RetrieveResourceAsync(
+                postEntity.CreatorId,
+                cancellationToken
+            );
+
         await this._authorization.AuthorizeAsync(
-            postEntity,
+            postResource,
             policy,
             "The current user is not authorized to delete the post whose ID matches the provided ID.",
             cancellationToken

@@ -1,3 +1,4 @@
+DELETE /api/administrator/post                                  TESTED
 GET /api/administrator/user/list                                TESTED
 POST /api/account/authenticate                                  TESTED
 POST /api/account/otpauthenticate                               TESTED (no JWT)

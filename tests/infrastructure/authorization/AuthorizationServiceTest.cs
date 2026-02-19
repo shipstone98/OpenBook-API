@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
+using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Infrastructure.Authorization;
-using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 using Shipstone.OpenBook.Api.Infrastructure.AuthorizationTest.Mocks;
 using Shipstone.Test.Mocks;
@@ -40,32 +40,16 @@ public sealed class AuthorizationServiceTest
 
 #region AuthorizeAsync method
     [Fact]
-    public async Task TestAuthorizeAsync_Invalid_EntityNull()
-    {
-        // Act
-        ArgumentException ex =
-            await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._authorization.AuthorizeAsync<int>(
-                    null!,
-                    String.Empty,
-                    CancellationToken.None
-                ));
-
-        // Assert
-        Assert.Equal("entity", ex.ParamName);
-    }
-
-    [Fact]
     public async Task TestAuthorizeAsync_Invalid_PolicyNull()
     {
         // Arrange
-        CreatableEntity<int> entity = new MockCreatableEntity<int>();
+        IResource resource = new MockResource();
 
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 this._authorization.AuthorizeAsync(
-                    entity,
+                    resource,
                     null!,
                     CancellationToken.None
                 ));
@@ -75,10 +59,26 @@ public sealed class AuthorizationServiceTest
     }
 
     [Fact]
+    public async Task TestAuthorizeAsync_Invalid_ResourceNull()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                this._authorization.AuthorizeAsync(
+                    null!,
+                    String.Empty,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("resource", ex.ParamName);
+    }
+
+    [Fact]
     public Task TestAuthorizeAsync_Valid_Failure()
     {
         // Arrange
-        CreatableEntity<int> entity = new MockCreatableEntity<int>();
+        IResource resource = new MockResource();
 
         this._mockAuthorization._authorizeFunc = (_, _, _) =>
             Microsoft.AspNetCore.Authorization.AuthorizationResult.Failed();
@@ -86,7 +86,7 @@ public sealed class AuthorizationServiceTest
         // Act and assert
         return Assert.ThrowsAsync<ForbiddenException>(() =>
             this._authorization.AuthorizeAsync(
-                entity,
+                resource,
                 String.Empty,
                 CancellationToken.None
             ));
@@ -96,14 +96,14 @@ public sealed class AuthorizationServiceTest
     public Task TestAuthorizeAsync_Valid_Success()
     {
         // Arrange
-        CreatableEntity<int> entity = new MockCreatableEntity<int>();
+        IResource resource = new MockResource();
 
         this._mockAuthorization._authorizeFunc = (_, _, _) =>
             Microsoft.AspNetCore.Authorization.AuthorizationResult.Success();
 
         // Act
         return this._authorization.AuthorizeAsync(
-            entity,
+            resource,
             String.Empty,
             CancellationToken.None
         );
