@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.EntityFrameworkCore;
+
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;

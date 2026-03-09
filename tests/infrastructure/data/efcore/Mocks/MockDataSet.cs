@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
+using Shipstone.EntityFrameworkCore;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Mocks;
 

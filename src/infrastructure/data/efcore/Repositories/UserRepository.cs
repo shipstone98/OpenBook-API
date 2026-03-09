@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
+using Shipstone.EntityFrameworkCore;
 using Shipstone.Extensions.Pagination;
 using Shipstone.Extensions.Security;
 using Shipstone.Utilities.Collections;

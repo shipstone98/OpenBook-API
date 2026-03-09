@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
+using Shipstone.EntityFrameworkCore;
 using Shipstone.Extensions.Security;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore.Configuration;
