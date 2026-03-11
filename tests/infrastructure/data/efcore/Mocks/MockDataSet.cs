@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Shipstone.EntityFrameworkCore;
 
+using Shipstone.Test.Mocks;
+
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Mocks;
 
 internal sealed class MockDataSet<TEntity>
