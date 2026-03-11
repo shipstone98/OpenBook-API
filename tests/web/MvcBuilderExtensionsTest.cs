@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -37,6 +38,10 @@ public sealed class MvcBuilderExtensionsTest
 
         // Assert
         Assert.Same(builder, result);
-        Assert.NotEmpty(manager.FeatureProviders);
+        
+        Assert.Contains(
+            manager.FeatureProviders,
+            fp => fp is ControllerFeatureProvider
+        );
     }
 }
