@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.Utilities;
 using Shipstone.Utilities.Linq;
 
 using Shipstone.OpenBook.Api.Core.Accounts;

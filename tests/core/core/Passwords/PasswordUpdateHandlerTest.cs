@@ -6,11 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 using Shipstone.Extensions.Identity;
+using Shipstone.Utilities;
 
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Passwords;
-using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 

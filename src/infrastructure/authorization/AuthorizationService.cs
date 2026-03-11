@@ -4,8 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
+using Shipstone.Utilities;
+
 using Shipstone.OpenBook.Api.Core;
-using Shipstone.OpenBook.Api.Core.Accounts;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Authorization;
 

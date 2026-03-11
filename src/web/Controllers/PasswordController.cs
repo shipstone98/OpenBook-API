@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using Shipstone.Extensions.Identity;
+using Shipstone.Utilities;
 
-using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Passwords;
 using Shipstone.OpenBook.Api.Web.Models.Password;

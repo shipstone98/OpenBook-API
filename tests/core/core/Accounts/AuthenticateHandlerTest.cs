@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 using Shipstone.Extensions.Identity;
+using Shipstone.Utilities;
 
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;

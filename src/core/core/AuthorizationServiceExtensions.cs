@@ -2,7 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Shipstone.OpenBook.Api.Core.Accounts;
+using Shipstone.Utilities;
+
 using Shipstone.OpenBook.Api.Infrastructure.Authorization;
 
 namespace Shipstone.OpenBook.Api.Core;

@@ -1,6 +1,6 @@
 using Shipstone.AspNetCore.Http;
 
-using Shipstone.OpenBook.Api.Core;
+using Shipstone.Utilities;
 
 namespace Shipstone.OpenBook.Api.Web.Middleware;
 

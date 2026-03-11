@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
+using Shipstone.Utilities;
+
 using Shipstone.OpenBook.Api.Core;
-using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Infrastructure.Authorization;
 
 using Shipstone.OpenBook.Api.Infrastructure.AuthorizationTest.Mocks;

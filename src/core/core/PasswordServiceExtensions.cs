@@ -1,8 +1,8 @@
 using System;
 
 using Shipstone.Extensions.Identity;
+using Shipstone.Utilities;
 
-using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 namespace Shipstone.OpenBook.Api.Core;
