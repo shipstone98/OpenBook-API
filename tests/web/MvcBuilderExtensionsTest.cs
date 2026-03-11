@@ -1,10 +1,11 @@
 using System;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 using Shipstone.OpenBook.Api.Web;
 
-using Shipstone.OpenBook.Api.WebTest.Mocks;
+using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.WebTest;
 
@@ -26,7 +27,7 @@ public sealed class MvcBuilderExtensionsTest
     public void TestAddOpenBookControllers_Valid()
     {
         // Arrange
-        MockApplicationPartManager manager = new();
+        ApplicationPartManager manager = new();
         MockMvcBuilder builder = new();
         builder._partManagerFunc = () => manager;
 
