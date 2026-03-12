@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Shipstone.Utilities.Linq;
+using Shipstone.Utilities.Threading.Tasks;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
@@ -76,7 +77,7 @@ internal static class NotificationServiceExtensions
                     (uf, _, ct) =>
                         repository.UserDevices
                             .ListForUserAsync(uf.FollowerId, ct)
-                            .ToAsyncEnumerable(),
+                            .AsAsyncEnumerable(),
                     cancellationToken
                 )
                 .ToListAsync(cancellationToken);

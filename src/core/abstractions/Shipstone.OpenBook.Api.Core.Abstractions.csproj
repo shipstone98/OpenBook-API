@@ -7,6 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="Shipstone.Extensions.Abstractions" Version="9.0.0" />
-    <PackageReference Include="Shipstone.Utilities" Version="9.0.4" />
+    <PackageReference Include="Shipstone.Utilities" Version="9.0.5" />
   </ItemGroup>
 </Project>
