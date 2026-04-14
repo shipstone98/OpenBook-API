@@ -39,11 +39,6 @@ String? connectionString =
 bool isNcsaCommonLoggingEnabled =
     builder.Configuration.GetValue<bool>("IsNcsaCommonLoggingEnabled");
 
-TextWriter ncsaCommonLoggingWriter =
-    isNcsaCommonLoggingEnabled
-        ? new StreamWriter("log.txt", true)
-        : TextWriter.Null;
-
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -113,6 +108,11 @@ builder.Services
 
 if (isNcsaCommonLoggingEnabled)
 {
+    TextWriter ncsaCommonLoggingWriter =
+        isNcsaCommonLoggingEnabled
+            ? new StreamWriter("log.txt", true)
+            : TextWriter.Null;
+
     builder.Services.AddNcsaCommonLogging(ncsaCommonLoggingWriter);
 }
 
