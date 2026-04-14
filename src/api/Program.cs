@@ -117,7 +117,6 @@ if (isNcsaCommonLoggingEnabled)
 }
 
 WebApplication app = builder.Build();
-app.UseHttpsRedirection();
 
 if (isNcsaCommonLoggingEnabled)
 {
