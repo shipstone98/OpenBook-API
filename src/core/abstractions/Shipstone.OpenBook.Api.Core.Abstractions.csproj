@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Shipstone.Extensions.Abstractions" Version="9.0.0" />
-    <PackageReference Include="Shipstone.Utilities" Version="9.0.5" />
+    <PackageReference Include="Shipstone.Utilities" Version="10.0.0" />
   </ItemGroup>
 </Project>

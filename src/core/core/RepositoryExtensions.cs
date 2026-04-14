@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -146,7 +147,7 @@ internal static class RepositoryExtensions
                 },
                 cancellationToken
             )
-            .WhereNotNullAsync(cancellationToken);
+            .OfType<String>();
     }
 
     internal static async Task<IUser> RetrieveUserAsync(
