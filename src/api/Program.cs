@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 using Shipstone.AspNetCore.Http;
@@ -37,8 +36,11 @@ IConfigurationSection authenticationSection =
 String? connectionString =
     builder.Configuration.GetConnectionString("MySql");
 
+bool isNcsaCommonLoggingEnabled =
+    builder.Configuration.GetValue<bool>("IsNcsaCommonLoggingEnabled");
+
 TextWriter ncsaCommonLoggingWriter =
-    builder.Environment.IsDevelopment()
+    isNcsaCommonLoggingEnabled
         ? new StreamWriter("log.txt", true)
         : TextWriter.Null;
 
@@ -76,7 +78,6 @@ builder.Services
 builder.Services
     .AddArgumentExceptionHandling()
     .AddIdentityExtensions()
-    .AddNcsaCommonLogging(ncsaCommonLoggingWriter)
     .AddNotificationsExtensions()
     .AddPagination()
     .AddPaginationExtensions(
@@ -110,9 +111,19 @@ builder.Services
     })
     .AddSingleton<JwtSecurityTokenHandler>();
 
+if (isNcsaCommonLoggingEnabled)
+{
+    builder.Services.AddNcsaCommonLogging(ncsaCommonLoggingWriter);
+}
+
 WebApplication app = builder.Build();
 app.UseHttpsRedirection();
-app.UseNcsaCommonLogging();
+
+if (isNcsaCommonLoggingEnabled)
+{
+    app.UseNcsaCommonLogging();
+}
+
 app.UseArgumentExceptionHandling();
 app.UseOpenBookWebForbiddenExceptionHandling();
 app.UseOpenBookWebNotFoundExceptionHandling();
