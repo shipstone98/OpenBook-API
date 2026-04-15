@@ -108,12 +108,8 @@ builder.Services
 
 if (isNcsaCommonLoggingEnabled)
 {
-    TextWriter ncsaCommonLoggingWriter =
-        isNcsaCommonLoggingEnabled
-            ? new StreamWriter("log.txt", true)
-            : TextWriter.Null;
-
-    builder.Services.AddNcsaCommonLogging(ncsaCommonLoggingWriter);
+    TextWriter writer = new StreamWriter("log.txt", true);
+    builder.Services.AddNcsaCommonLogging(writer);
 }
 
 WebApplication app = builder.Build();
