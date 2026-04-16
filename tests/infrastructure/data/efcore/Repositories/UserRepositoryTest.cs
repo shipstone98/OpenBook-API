@@ -294,7 +294,7 @@ public sealed class UserRepositoryTest
 
         // Assert
         Assert.NotNull(user);
-        Assert.Equal(identityId, user.Id);
+        Assert.Equal(identityId, user.IdentityId);
     }
 
     [Fact]
