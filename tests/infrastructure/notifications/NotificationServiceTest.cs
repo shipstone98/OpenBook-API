@@ -53,7 +53,7 @@ public sealed class NotificationServiceTest
                     null!,
                     1,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -77,7 +77,7 @@ public sealed class NotificationServiceTest
                     String.Empty,
                     id,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -99,7 +99,7 @@ public sealed class NotificationServiceTest
                     String.Empty,
                     1,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -116,7 +116,7 @@ public sealed class NotificationServiceTest
                     String.Empty,
                     1,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -143,7 +143,7 @@ public sealed class NotificationServiceTest
                     String.Empty,
                     1,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -166,7 +166,7 @@ public sealed class NotificationServiceTest
             String.Empty,
             id,
             userDevices,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert
@@ -188,7 +188,7 @@ public sealed class NotificationServiceTest
                 this._notification.SendUserFollowedAsync(
                     String.Empty,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -204,7 +204,7 @@ public sealed class NotificationServiceTest
                 this._notification.SendUserFollowedAsync(
                     String.Empty,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -224,7 +224,7 @@ public sealed class NotificationServiceTest
                 this._notification.SendUserFollowedAsync(
                     null!,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -250,7 +250,7 @@ public sealed class NotificationServiceTest
                 this._notification.SendUserFollowedAsync(
                     String.Empty,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -270,7 +270,7 @@ public sealed class NotificationServiceTest
         return this._notification.SendUserFollowedAsync(
             String.Empty,
             userDevices,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert
@@ -292,7 +292,7 @@ public sealed class NotificationServiceTest
                 this._notification.SendUserUnfollowedAsync(
                     String.Empty,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -308,7 +308,7 @@ public sealed class NotificationServiceTest
                 this._notification.SendUserUnfollowedAsync(
                     String.Empty,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -328,7 +328,7 @@ public sealed class NotificationServiceTest
                 this._notification.SendUserUnfollowedAsync(
                     null!,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -354,7 +354,7 @@ public sealed class NotificationServiceTest
                 this._notification.SendUserUnfollowedAsync(
                     String.Empty,
                     userDevices,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -374,7 +374,7 @@ public sealed class NotificationServiceTest
         return this._notification.SendUserUnfollowedAsync(
             String.Empty,
             userDevices,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert

@@ -67,7 +67,7 @@ public sealed class PostAggregateHandlerTest
 
         // Act
         IReadOnlyPaginatedList<IPost> posts =
-            await this._handler.HandleAsync(CancellationToken.None);
+            await this._handler.HandleAsync(TestContext.Current.CancellationToken);
 
         // Assert
         posts.AssertEmpty();
@@ -178,7 +178,7 @@ public sealed class PostAggregateHandlerTest
 
         // Act
         IReadOnlyPaginatedList<IPost> posts =
-            await this._handler.HandleAsync(CancellationToken.None);
+            await this._handler.HandleAsync(TestContext.Current.CancellationToken);
 
         // Assert
         posts.AssertEqual(COUNT, TOTAL_COUNT, PAGE_INDEX, PAGE_COUNT);

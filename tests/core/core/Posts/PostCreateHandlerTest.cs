@@ -56,7 +56,10 @@ public sealed class PostCreateHandlerTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._handler.HandleAsync(null!, CancellationToken.None));
+                this._handler.HandleAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("builder", ex.ParamName);
@@ -90,7 +93,7 @@ public sealed class PostCreateHandlerTest
                 {
                     ParentId = 12345
                 },
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -121,7 +124,7 @@ public sealed class PostCreateHandlerTest
             await Assert.ThrowsAsync<Exception>(() =>
                 this._handler.HandleAsync(
                     new PostBuilder { },
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -221,7 +224,7 @@ public sealed class PostCreateHandlerTest
                     Body = BODY,
                     ParentId = PARENT_ID
                 },
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

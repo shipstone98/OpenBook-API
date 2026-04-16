@@ -42,7 +42,10 @@ public sealed class UserRoleRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.CreateAsync(null!, CancellationToken.None));
+                this._repository.CreateAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("userRole", ex.ParamName);
@@ -67,7 +70,10 @@ public sealed class UserRoleRepositoryTest
         };
 
         // Act
-        return this._repository.CreateAsync(user, CancellationToken.None);
+        return this._repository.CreateAsync(
+            user,
+            TestContext.Current.CancellationToken
+        );
 
         // Nothing to assert
     }
@@ -78,7 +84,10 @@ public sealed class UserRoleRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.DeleteAsync(null!, CancellationToken.None));
+                this._repository.DeleteAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("userRole", ex.ParamName);
@@ -103,7 +112,10 @@ public sealed class UserRoleRepositoryTest
         };
 
         // Act
-        return this._repository.DeleteAsync(user, CancellationToken.None);
+        return this._repository.DeleteAsync(
+            user,
+            TestContext.Current.CancellationToken
+        );
 
         // Nothing to assert
     }

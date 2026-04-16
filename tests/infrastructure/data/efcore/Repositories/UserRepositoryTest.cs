@@ -56,7 +56,10 @@ public sealed class UserRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.CreateAsync(null!, CancellationToken.None));
+                this._repository.CreateAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("user", ex.ParamName);
@@ -81,7 +84,10 @@ public sealed class UserRepositoryTest
         };
 
         // Act
-        return this._repository.CreateAsync(user, CancellationToken.None);
+        return this._repository.CreateAsync(
+            user,
+            TestContext.Current.CancellationToken
+        );
 
         // Nothing to assert
     }
@@ -96,7 +102,7 @@ public sealed class UserRepositoryTest
             await Assert.ThrowsAsync<ArgumentException>(() =>
                 this._repository.RetrieveAsync(
                     Guid.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -125,7 +131,10 @@ public sealed class UserRepositoryTest
 
         // Act
         UserEntity? user =
-            await this._repository.RetrieveAsync(id, CancellationToken.None);
+            await this._repository.RetrieveAsync(
+                id,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         Assert.NotNull(user);
@@ -150,7 +159,10 @@ public sealed class UserRepositoryTest
 
         // Act
         UserEntity? user =
-            await this._repository.RetrieveAsync(id, CancellationToken.None);
+            await this._repository.RetrieveAsync(
+                id,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         Assert.Null(user);
@@ -164,7 +176,10 @@ public sealed class UserRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.RetrieveAsync(null!, CancellationToken.None));
+                this._repository.RetrieveAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("userName", ex.ParamName);
@@ -197,7 +212,7 @@ public sealed class UserRepositoryTest
         UserEntity? user =
             await this._repository.RetrieveAsync(
                 USER_NAME,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -225,7 +240,7 @@ public sealed class UserRepositoryTest
         UserEntity? user =
             await this._repository.RetrieveAsync(
                 "johndoe2025",
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -243,7 +258,7 @@ public sealed class UserRepositoryTest
             await Assert.ThrowsAsync<ArgumentException>(() =>
                 this._repository.RetrieveForIdentityIdAsync(
                     Guid.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -274,7 +289,7 @@ public sealed class UserRepositoryTest
         UserEntity? user =
             await this._repository.RetrieveForIdentityIdAsync(
                 identityId,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -302,7 +317,7 @@ public sealed class UserRepositoryTest
         UserEntity? user =
             await this._repository.RetrieveForIdentityIdAsync(
                 identityId,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -316,7 +331,10 @@ public sealed class UserRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.UpdateAsync(null!, CancellationToken.None));
+                this._repository.UpdateAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("user", ex.ParamName);
@@ -341,7 +359,10 @@ public sealed class UserRepositoryTest
         };
 
         // Act
-        return this._repository.UpdateAsync(user, CancellationToken.None);
+        return this._repository.UpdateAsync(
+            user,
+            TestContext.Current.CancellationToken
+        );
 
         // Nothing to assert
     }

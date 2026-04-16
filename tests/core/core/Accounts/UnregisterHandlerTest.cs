@@ -69,7 +69,7 @@ public sealed class UnregisterHandlerTest
 
         // Act
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
-            this._handler.HandleAsync(CancellationToken.None));
+            this._handler.HandleAsync(TestContext.Current.CancellationToken));
 
         // Nothing to assert
     }
@@ -94,7 +94,7 @@ public sealed class UnregisterHandlerTest
 
         // Act
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(CancellationToken.None));
+            this._handler.HandleAsync(TestContext.Current.CancellationToken));
 
         // Nothing to assert
     }
@@ -179,7 +179,7 @@ public sealed class UnregisterHandlerTest
 #endregion
 
         // Act
-        return this._handler.HandleAsync(CancellationToken.None);
+        return this._handler.HandleAsync(TestContext.Current.CancellationToken);
 
         // Nothing to assert
     }

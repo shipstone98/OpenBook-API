@@ -44,7 +44,10 @@ public sealed class UserFollowingRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.CreateAsync(null!, CancellationToken.None));
+                this._repository.CreateAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("userFollowing", ex.ParamName);
@@ -71,7 +74,7 @@ public sealed class UserFollowingRepositoryTest
         // Act
         return this._repository.CreateAsync(
             userFollowing,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert
@@ -83,7 +86,10 @@ public sealed class UserFollowingRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.DeleteAsync(null!, CancellationToken.None));
+                this._repository.DeleteAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("userFollowing", ex.ParamName);
@@ -110,7 +116,7 @@ public sealed class UserFollowingRepositoryTest
         // Act
         return this._repository.DeleteAsync(
             userFollowing,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert
@@ -129,7 +135,7 @@ public sealed class UserFollowingRepositoryTest
                 this._repository.RetrieveAsync(
                     followerId,
                     Guid.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -148,7 +154,7 @@ public sealed class UserFollowingRepositoryTest
                 this._repository.RetrieveAsync(
                     Guid.Empty,
                     followeeId,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -185,7 +191,7 @@ public sealed class UserFollowingRepositoryTest
             await this._repository.RetrieveAsync(
                 followerId,
                 followeeId,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -216,7 +222,7 @@ public sealed class UserFollowingRepositoryTest
             await this._repository.RetrieveAsync(
                 followerId,
                 followeeId,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

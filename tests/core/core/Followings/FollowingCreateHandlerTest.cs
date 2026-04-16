@@ -59,7 +59,7 @@ public sealed class FollowingCreateHandlerTest
                 this._handler.HandleAsync(
                     null!,
                     false,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -109,7 +109,7 @@ public sealed class FollowingCreateHandlerTest
                 this._handler.HandleAsync(
                     String.Empty,
                     false,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -148,7 +148,7 @@ public sealed class FollowingCreateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 false,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -168,7 +168,7 @@ public sealed class FollowingCreateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 false,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -188,7 +188,7 @@ public sealed class FollowingCreateHandlerTest
             this._handler.HandleAsync(
                 String.Empty,
                 false,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 #endregion
@@ -256,7 +256,7 @@ public sealed class FollowingCreateHandlerTest
             await this._handler.HandleAsync(
                 FOLLOWEE_NAME,
                 isSubscribed,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

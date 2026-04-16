@@ -56,7 +56,10 @@ public sealed class FollowingDeleteHandlerTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._handler.HandleAsync(null!, CancellationToken.None));
+                this._handler.HandleAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("userName", ex.ParamName);
@@ -102,7 +105,10 @@ public sealed class FollowingDeleteHandlerTest
 
         // Act
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(String.Empty, CancellationToken.None));
+            this._handler.HandleAsync(
+                String.Empty,
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -118,7 +124,10 @@ public sealed class FollowingDeleteHandlerTest
 
         // Act
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
-            this._handler.HandleAsync(String.Empty, CancellationToken.None));
+            this._handler.HandleAsync(
+                String.Empty,
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -156,7 +165,10 @@ public sealed class FollowingDeleteHandlerTest
 
         // Act
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(String.Empty, CancellationToken.None));
+            this._handler.HandleAsync(
+                String.Empty,
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -172,7 +184,10 @@ public sealed class FollowingDeleteHandlerTest
 
         // Act
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(String.Empty, CancellationToken.None));
+            this._handler.HandleAsync(
+                String.Empty,
+                TestContext.Current.CancellationToken
+            ));
     }
 #endregion
 
@@ -246,7 +261,7 @@ public sealed class FollowingDeleteHandlerTest
         IFollowing following =
             await this._handler.HandleAsync(
                 FOLLOWEE_NAME,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

@@ -60,7 +60,7 @@ public sealed class RegisterHandlerTest
                 this._handler.HandleAsync(
                     Guid.Empty,
                     "johndoe2025",
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -83,7 +83,7 @@ public sealed class RegisterHandlerTest
                 this._handler.HandleAsync(
                     identityId,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -122,7 +122,7 @@ public sealed class RegisterHandlerTest
                 this._handler.HandleAsync(
                     identityId,
                     "johndoe2025",
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -161,7 +161,7 @@ public sealed class RegisterHandlerTest
             await this._handler.HandleAsync(
                 identityId,
                 USER_NAME,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

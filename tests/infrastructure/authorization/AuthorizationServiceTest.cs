@@ -53,7 +53,7 @@ public sealed class AuthorizationServiceTest
                 this._authorization.AuthorizeAsync(
                     resource,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -69,7 +69,7 @@ public sealed class AuthorizationServiceTest
                 this._authorization.AuthorizeAsync(
                     null!,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -90,7 +90,7 @@ public sealed class AuthorizationServiceTest
             this._authorization.AuthorizeAsync(
                 resource,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -107,7 +107,7 @@ public sealed class AuthorizationServiceTest
         return this._authorization.AuthorizeAsync(
             resource,
             String.Empty,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert

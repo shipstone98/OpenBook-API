@@ -42,7 +42,10 @@ public sealed class UserDeviceRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.DeleteAsync(null!, CancellationToken.None));
+                this._repository.DeleteAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("userDevice", ex.ParamName);
@@ -67,7 +70,10 @@ public sealed class UserDeviceRepositoryTest
         };
 
         // Act
-        return this._repository.DeleteAsync(user, CancellationToken.None);
+        return this._repository.DeleteAsync(
+            user,
+            TestContext.Current.CancellationToken
+        );
 
         // Nothing to assert
     }

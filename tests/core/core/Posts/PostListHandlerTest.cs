@@ -56,7 +56,10 @@ public sealed class PostListHandlerTest
         // Act
         ArgumentOutOfRangeException ex =
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-                this._handler.HandleAsync(parentId, CancellationToken.None));
+                this._handler.HandleAsync(
+                    parentId,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal(parentId, ex.ActualValue);
@@ -77,7 +80,10 @@ public sealed class PostListHandlerTest
 
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(12345, CancellationToken.None));
+            this._handler.HandleAsync(
+                12345,
+                TestContext.Current.CancellationToken
+            ));
     }
 
 #region Success
@@ -109,7 +115,10 @@ public sealed class PostListHandlerTest
 
         // Act
         IReadOnlyPaginatedList<IPost> posts =
-            await this._handler.HandleAsync(12345, CancellationToken.None);
+            await this._handler.HandleAsync(
+                12345,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         posts.AssertEmpty();
@@ -206,7 +215,10 @@ public sealed class PostListHandlerTest
 
         // Act
         IReadOnlyPaginatedList<IPost> posts =
-            await this._handler.HandleAsync(PARENT_ID, CancellationToken.None);
+            await this._handler.HandleAsync(
+                PARENT_ID,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         posts.AssertEqual(COUNT, TOTAL_COUNT, PAGE_INDEX, PAGE_COUNT);
@@ -331,7 +343,10 @@ public sealed class PostListHandlerTest
 
         // Act
         IReadOnlyPaginatedList<IPost> posts =
-            await this._handler.HandleAsync(PARENT_ID, CancellationToken.None);
+            await this._handler.HandleAsync(
+                PARENT_ID,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         posts.AssertEqual(COUNT, TOTAL_COUNT, PAGE_INDEX, PAGE_COUNT);
@@ -449,7 +464,10 @@ public sealed class PostListHandlerTest
 
         // Act
         IReadOnlyPaginatedList<IPost> posts =
-            await this._handler.HandleAsync(PARENT_ID, CancellationToken.None);
+            await this._handler.HandleAsync(
+                PARENT_ID,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         posts.AssertEqual(COUNT, TOTAL_COUNT, PAGE_INDEX, PAGE_COUNT);
@@ -484,7 +502,10 @@ public sealed class PostListHandlerTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._handler.HandleAsync(null!, CancellationToken.None));
+                this._handler.HandleAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("userName", ex.ParamName);
@@ -504,7 +525,10 @@ public sealed class PostListHandlerTest
 
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(String.Empty, CancellationToken.None));
+            this._handler.HandleAsync(
+                String.Empty,
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -543,7 +567,7 @@ public sealed class PostListHandlerTest
         IReadOnlyPaginatedList<IPost> posts =
             await this._handler.HandleAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -627,7 +651,7 @@ public sealed class PostListHandlerTest
         IReadOnlyPaginatedList<IPost> posts =
             await this._handler.HandleAsync(
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

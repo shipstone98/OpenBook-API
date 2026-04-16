@@ -62,7 +62,7 @@ public sealed class PostDeleteHandlerTest
                 this._handler.HandleAsync(
                     id,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -79,7 +79,7 @@ public sealed class PostDeleteHandlerTest
                 this._handler.HandleAsync(
                     12345,
                     null!,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -123,7 +123,7 @@ public sealed class PostDeleteHandlerTest
             this._handler.HandleAsync(
                 12345,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -143,7 +143,7 @@ public sealed class PostDeleteHandlerTest
             this._handler.HandleAsync(
                 12345,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             ));
     }
 
@@ -175,7 +175,7 @@ public sealed class PostDeleteHandlerTest
                 this._handler.HandleAsync(
                     12345,
                     String.Empty,
-                    CancellationToken.None
+                    TestContext.Current.CancellationToken
                 ));
 
         // Assert
@@ -241,7 +241,7 @@ public sealed class PostDeleteHandlerTest
             await this._handler.HandleAsync(
                 12345,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -324,7 +324,7 @@ public sealed class PostDeleteHandlerTest
             await this._handler.HandleAsync(
                 12345,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -400,7 +400,7 @@ public sealed class PostDeleteHandlerTest
             await this._handler.HandleAsync(
                 12345,
                 String.Empty,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

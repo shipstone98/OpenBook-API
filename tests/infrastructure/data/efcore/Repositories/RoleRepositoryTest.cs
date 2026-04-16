@@ -46,7 +46,10 @@ public sealed class RoleRepositoryTest
         // Act
         ArgumentOutOfRangeException ex =
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-                this._repository.RetrieveAsync(id, CancellationToken.None));
+                this._repository.RetrieveAsync(
+                    id,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("id", ex.ParamName);
@@ -74,7 +77,10 @@ public sealed class RoleRepositoryTest
 
         // Act
         RoleEntity? role =
-            await this._repository.RetrieveAsync(id, CancellationToken.None);
+            await this._repository.RetrieveAsync(
+                    id,
+                    TestContext.Current.CancellationToken
+                );
 
         // Assert
         Assert.NotNull(role);
@@ -99,7 +105,10 @@ public sealed class RoleRepositoryTest
 
         // Act
         RoleEntity? role =
-            await this._repository.RetrieveAsync(id, CancellationToken.None);
+            await this._repository.RetrieveAsync(
+                    id,
+                    TestContext.Current.CancellationToken
+                );
 
         // Assert
         Assert.Null(role);

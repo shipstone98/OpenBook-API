@@ -54,7 +54,10 @@ public sealed class PostRetrieveHandlerTest
         // Act
         ArgumentOutOfRangeException ex =
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-                this._handler.HandleAsync(id, CancellationToken.None));
+                this._handler.HandleAsync(
+                    id,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal(id, ex.ActualValue);
@@ -84,7 +87,10 @@ public sealed class PostRetrieveHandlerTest
 
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(12345, CancellationToken.None));
+            this._handler.HandleAsync(
+                12345,
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -100,7 +106,10 @@ public sealed class PostRetrieveHandlerTest
 
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(1, CancellationToken.None));
+            this._handler.HandleAsync(
+                1,
+                TestContext.Current.CancellationToken
+            ));
     }
 
 #region Success
@@ -148,7 +157,10 @@ public sealed class PostRetrieveHandlerTest
 
         // Act
         IPost post =
-            await this._handler.HandleAsync(ID, CancellationToken.None);
+            await this._handler.HandleAsync(
+                ID,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         post.AssertEqual(
@@ -215,7 +227,10 @@ public sealed class PostRetrieveHandlerTest
 
         // Act
         IPost post =
-            await this._handler.HandleAsync(ID, CancellationToken.None);
+            await this._handler.HandleAsync(
+                ID,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         post.AssertEqual(
@@ -276,7 +291,10 @@ public sealed class PostRetrieveHandlerTest
 
         // Act
         IPost post =
-            await this._handler.HandleAsync(ID, CancellationToken.None);
+            await this._handler.HandleAsync(
+                ID,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         post.AssertEqual(

@@ -70,7 +70,7 @@ public sealed class UserListHandlerTest
 
         // Act
         IReadOnlyPaginatedList<IUser> users =
-            await this._handler.HandleAsync(CancellationToken.None);
+            await this._handler.HandleAsync(TestContext.Current.CancellationToken);
 
         // Assert
         users.AssertEmpty();
@@ -219,7 +219,7 @@ public sealed class UserListHandlerTest
 
         // Act
         IReadOnlyPaginatedList<IUser> users =
-            await this._handler.HandleAsync(CancellationToken.None);
+            await this._handler.HandleAsync(TestContext.Current.CancellationToken);
 
 #region Assert
         // Assert

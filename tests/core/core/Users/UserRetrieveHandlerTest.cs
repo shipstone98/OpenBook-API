@@ -46,7 +46,10 @@ public sealed class UserRetrieveHandlerTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentException>(() =>
-                this._handler.HandleAsync(Guid.Empty, CancellationToken.None));
+                this._handler.HandleAsync(
+                    Guid.Empty,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("identityId", ex.ParamName);
@@ -68,7 +71,10 @@ public sealed class UserRetrieveHandlerTest
 
         // Act and assert
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
-            this._handler.HandleAsync(id, CancellationToken.None));
+            this._handler.HandleAsync(
+                id,
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -86,7 +92,10 @@ public sealed class UserRetrieveHandlerTest
 
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(id, CancellationToken.None));
+            this._handler.HandleAsync(
+                id,
+                TestContext.Current.CancellationToken
+            ));
     }
 
     [Fact]
@@ -183,7 +192,7 @@ public sealed class UserRetrieveHandlerTest
         IUser user =
             await this._handler.HandleAsync(
                 identityId,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert
@@ -247,7 +256,7 @@ public sealed class UserRetrieveHandlerTest
         IUser user =
             await this._handler.HandleAsync(
                 identityId,
-                CancellationToken.None
+                TestContext.Current.CancellationToken
             );
 
         // Assert

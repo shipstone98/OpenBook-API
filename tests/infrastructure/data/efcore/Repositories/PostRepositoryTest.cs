@@ -51,7 +51,10 @@ public sealed class PostRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.CreateAsync(null!, CancellationToken.None));
+                this._repository.CreateAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("post", ex.ParamName);
@@ -78,7 +81,7 @@ public sealed class PostRepositoryTest
         // Act
         return this._repository.CreateAsync(
             post,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert
@@ -90,7 +93,10 @@ public sealed class PostRepositoryTest
         // Act
         ArgumentException ex =
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.DeleteAsync(null!, CancellationToken.None));
+                this._repository.DeleteAsync(
+                    null!,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal("post", ex.ParamName);
@@ -117,7 +123,7 @@ public sealed class PostRepositoryTest
         // Act
         return this._repository.DeleteAsync(
             post,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         // Nothing to assert
@@ -133,7 +139,10 @@ public sealed class PostRepositoryTest
         // Act
         ArgumentOutOfRangeException ex =
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-                this._repository.RetrieveAsync(id, CancellationToken.None));
+                this._repository.RetrieveAsync(
+                    id,
+                    TestContext.Current.CancellationToken
+                ));
 
         // Assert
         Assert.Equal(id, ex.ActualValue);
@@ -162,7 +171,10 @@ public sealed class PostRepositoryTest
 
         // Act
         PostEntity? post =
-            await this._repository.RetrieveAsync(id, CancellationToken.None);
+            await this._repository.RetrieveAsync(
+                id,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         Assert.NotNull(post);
@@ -187,7 +199,10 @@ public sealed class PostRepositoryTest
 
         // Act
         PostEntity? post =
-            await this._repository.RetrieveAsync(id, CancellationToken.None);
+            await this._repository.RetrieveAsync(
+                id,
+                TestContext.Current.CancellationToken
+            );
 
         // Assert
         Assert.Null(post);
