@@ -38,7 +38,7 @@ internal sealed class PostCreateHandler : IPostCreateHandler
     {
         DateTime now = DateTime.UtcNow;
         Nullable<long> parentId = builder.ParentId;
-        Guid creatorId = this._claims.Id;
+        Guid creatorId = this._claims.User.Id;
 
         PostEntity post = new PostEntity
         {
@@ -65,7 +65,7 @@ internal sealed class PostCreateHandler : IPostCreateHandler
             throw;
         }
 
-        String creatorName = this._claims.UserName;
+        String creatorName = this._claims.User.UserName;
 
         await this._notification.NotifyAllSubscribedFollowersAsync(
             this._repository,
@@ -75,7 +75,7 @@ internal sealed class PostCreateHandler : IPostCreateHandler
             cancellationToken
         );
 
-        return new Post(post, this._claims.EmailAddress, creatorName);
+        return new Post(post, creatorName);
     }
 
     Task<IPost> IPostCreateHandler.HandleAsync(

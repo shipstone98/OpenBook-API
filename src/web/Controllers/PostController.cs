@@ -125,9 +125,9 @@ internal sealed class PostController(ILogger<PostController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: Failed to create post for user {EmailAddress} - parent post not found",
+                "{TimeStamp}: Failed to create post for user {UserName} - parent post not found",
                 DateTime.UtcNow,
-                claims.EmailAddress
+                claims.User.UserName
             );
 
             throw;
@@ -136,9 +136,9 @@ internal sealed class PostController(ILogger<PostController> logger)
         long id = post.Id;
 
         this._logger.LogInformation(
-            "{TimeStamp}: User {EmailAddress} created post {Id}",
+            "{TimeStamp}: User {UserName} created post {Id}",
             post.Created,
-            post.CreatorEmailAddress,
+            post.CreatorName,
             id
         );
 
@@ -196,9 +196,9 @@ internal sealed class PostController(ILogger<PostController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to delete post {Id} - not authorized",
+                "{TimeStamp}: User {UserName} failed to delete post {Id} - not authorized",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 id
             );
 
@@ -209,9 +209,9 @@ internal sealed class PostController(ILogger<PostController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to delete post {Id} - not found",
+                "{TimeStamp}: User {UserName} failed to delete post {Id} - not found",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 id
             );
 
@@ -219,9 +219,9 @@ internal sealed class PostController(ILogger<PostController> logger)
         }
 
         this._logger.LogInformation(
-            "{TimeStamp}: User {EmailAddress} deleted post {Id}",
+            "{TimeStamp}: User {UserName} deleted post {Id}",
             post.Updated,
-            post.CreatorEmailAddress,
+            post.CreatorName,
             post.Id
         );
 

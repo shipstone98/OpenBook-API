@@ -4,10 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Shipstone.Extensions.Security;
+using Shipstone.Utilities;
 
 using Shipstone.OpenBook.Api.Core.Services;
 using Shipstone.OpenBook.Api.Core.Users;
-using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 using Shipstone.OpenBook.Api.Infrastructure.Mail;
@@ -16,7 +16,6 @@ namespace Shipstone.OpenBook.Api.Core.Accounts;
 
 internal sealed class RegisterHandler : IRegisterHandler
 {
-    private readonly IAuthenticationService _authentication;
     private readonly IMailService _mail;
     private readonly INormalizationService _normalization;
     private readonly IRepository _repository;
@@ -24,18 +23,15 @@ internal sealed class RegisterHandler : IRegisterHandler
 
     public RegisterHandler(
         IRepository repository,
-        IAuthenticationService authentication,
         IMailService mail,
         INormalizationService normalization,
         IValidationService validation
     )
     {
         ArgumentNullException.ThrowIfNull(repository);
-        ArgumentNullException.ThrowIfNull(authentication);
         ArgumentNullException.ThrowIfNull(mail);
         ArgumentNullException.ThrowIfNull(normalization);
         ArgumentNullException.ThrowIfNull(validation);
-        this._authentication = authentication;
         this._mail = mail;
         this._normalization = normalization;
         this._repository = repository;
@@ -43,119 +39,69 @@ internal sealed class RegisterHandler : IRegisterHandler
     }
 
     private async Task<IUser> HandleAsync(
-        String emailAddress,
+        Guid identityId,
         String userName,
-        String forename,
-        String surname,
-        DateOnly born,
         DateTime now,
         CancellationToken cancellationToken
     )
     {
-        bool isCreated;
-
-        UserEntity? user =
-            await this._repository.Users.RetrieveAsync(
-                emailAddress,
-                cancellationToken
-            );
-
-        if (user is null)
+        UserEntity user = new UserEntity
         {
-            user = new UserEntity
+            Consented = now,
+            Created = now,
+            IdentityId = identityId,
+            IsActive = true,
+            Updated = now,
+            UserName = userName,
+            UserNameNormalized = this._normalization.Normalize(userName)
+        };
+
+        await this._repository.Users.CreateAsync(user, cancellationToken);
+
+        await this._repository.UserRoles.CreateAsync(
+            new UserRoleEntity
             {
-                Created = now,
-                EmailAddress = emailAddress,
-                EmailAddressNormalized =
-                    this._normalization.Normalize(emailAddress),
-                IsActive = true
-            };
-
-            isCreated = true;
-        }
-
-        else if (user.IsActive && user.PasswordHash is null)
-        {
-            isCreated = false;
-        }
-
-        else
-        {
-            throw new ConflictException("A user whose email address and/or name matches the provided email address and/or user name already exists.");
-        }
-
-        user.Born = born;
-        user.Consented = now;
-        user.Forename = forename;
-        user.Surname = surname;
-        user.Updated = now;
-        user.UserName = userName;
-        user.UserNameNormalized = this._normalization.Normalize(userName);
-
-        await this._authentication.GenerateOtpAsync(
-            user,
-            now,
+                Assigned = now,
+                RoleId = Roles.UserId,
+                UserId = user.Id
+            },
             cancellationToken
         );
 
-        if (isCreated)
+        try
         {
-            await this._repository.Users.CreateAsync(user, cancellationToken);
+            await this._repository.SaveAsync(cancellationToken);
+        }
 
-            await this._repository.UserRoles.CreateAsync(
-                new UserRoleEntity
-                {
-                    Assigned = now,
-                    RoleId = Roles.UserId,
-                    UserId = user.Id
-                },
-                cancellationToken
+        catch (Exception ex)
+        {
+            throw new ConflictException(
+                "A user whose identity ID and/or name matches the identity ID of the current user already exists -or- a user whose name matches the provided user name already exists.",
+                ex
             );
         }
 
-        else
-        {
-            await this._repository.Users.UpdateAsync(user, cancellationToken);
-        }
-
-        await this._repository.SaveAsync(cancellationToken);
-        TimeSpan difference = user.OtpExpires!.Value.Subtract(now);
-
-        await this._mail.SendRegistrationAsync(
-            user,
-            (int) difference.TotalMinutes,
-            cancellationToken
-        );
-
+        await this._mail.SendRegistrationAsync(cancellationToken);
         IReadOnlySet<String> roles = new SortedSet<String> { Roles.User };
         return new User(user, roles);
     }
 
     Task<IUser> IRegisterHandler.HandleAsync(
-        String emailAddress,
+        Guid identityId,
         String userName,
-        String forename,
-        String surname,
-        DateOnly born,
         CancellationToken cancellationToken
     )
     {
-        emailAddress = this._validation.ValidateEmailAddress(emailAddress);
-        userName = this._validation.ValidateUserName(userName);
-        forename = this._validation.ValidateForename(forename);
-        surname = this._validation.ValidateSurname(surname);
-        DateTime now = DateTime.UtcNow;
-        DateOnly today = DateOnly.FromDateTime(now);
-        this._validation.ValidateBorn(born, today);
+        if (Guid.Equals(identityId, Guid.Empty))
+        {
+            throw new ArgumentException(
+                $"{nameof (identityId)} is equal to Guid.Empty.",
+                nameof (identityId)
+            );
+        }
 
-        return this.HandleAsync(
-            emailAddress,
-            userName,
-            forename,
-            surname,
-            born,
-            now,
-            cancellationToken
-        );
+        userName = this._validation.ValidateUserName(userName);
+        DateTime now = DateTime.UtcNow;
+        return this.HandleAsync(identityId, userName, now, cancellationToken);
     }
 }

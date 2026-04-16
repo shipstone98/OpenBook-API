@@ -31,7 +31,7 @@ internal sealed class AdministratorAuthorizationHandler
 
         if (this._claims.IsAuthenticated)
         {
-            IReadOnlySet<String> roles = this._claims.Roles;
+            IReadOnlySet<String> roles = this._claims.User.Roles;
             IReadOnlySet<String> creatorRoles = resource.CreatorRoles;
 
             if (

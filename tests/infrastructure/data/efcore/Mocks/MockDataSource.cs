@@ -16,7 +16,6 @@ internal sealed class MockDataSource : IDataSource
     internal Action _saveAction;
     internal Func<IDataSet<UserDeviceEntity>> _userDevicesFunc;
     internal Func<IDataSet<UserFollowingEntity>> _userFollowingsFunc;
-    internal Func<IDataSet<UserRefreshTokenEntity>> _userRefreshTokensFunc;
     internal Func<IDataSet<UserRoleEntity>> _userRolesFunc;
     internal Func<IDataSet<UserEntity>> _usersFunc;
 
@@ -29,9 +28,6 @@ internal sealed class MockDataSource : IDataSource
     IDataSet<UserFollowingEntity> IDataSource.UserFollowings =>
         this._userFollowingsFunc();
 
-    IDataSet<UserRefreshTokenEntity> IDataSource.UserRefreshTokens =>
-        this._userRefreshTokensFunc();
-
     IDataSet<UserRoleEntity> IDataSource.UserRoles => this._userRolesFunc();
     IDataSet<UserEntity> IDataSource.Users => this._usersFunc();
 
@@ -42,10 +38,6 @@ internal sealed class MockDataSource : IDataSource
         this._saveAction = () => throw new NotImplementedException();
         this._userDevicesFunc = () => throw new NotImplementedException();
         this._userFollowingsFunc = () => throw new NotImplementedException();
-
-        this._userRefreshTokensFunc = () =>
-            throw new NotImplementedException();
-
         this._userRolesFunc = () => throw new NotImplementedException();
         this._usersFunc = () => throw new NotImplementedException();
     }

@@ -19,7 +19,7 @@ internal static class ClaimsServiceExtensions
     {
         UserEntity? user =
             await repository.Users.RetrieveAsync(
-                claims.Id,
+                claims.User.Id,
                 cancellationToken
             );
 

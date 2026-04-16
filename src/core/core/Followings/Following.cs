@@ -6,16 +6,16 @@ internal sealed class Following : IFollowing
 {
     private readonly DateTime _followed;
     private readonly String _followeeName;
-    private readonly String _followerEmailAddress;
+    private readonly String _followerName;
     private readonly bool _isSubscribed;
 
     DateTime IFollowing.Followed => this._followed;
     String IFollowing.FolloweeName => this._followeeName;
-    String IFollowing.FollowerEmailAddress => this._followerEmailAddress;
+    String IFollowing.FollowerName => this._followerName;
     bool IFollowing.IsSubscribed => this._isSubscribed;
 
     internal Following(
-        String followerEmailAddress,
+        String followerName,
         String followeeName,
         DateTime followed,
         bool isSubscribed
@@ -23,7 +23,7 @@ internal sealed class Following : IFollowing
     {
         this._followed = followed;
         this._followeeName = followeeName;
-        this._followerEmailAddress = followerEmailAddress;
+        this._followerName = followerName;
         this._isSubscribed = isSubscribed;
     }
 }

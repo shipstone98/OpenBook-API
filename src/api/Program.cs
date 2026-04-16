@@ -19,7 +19,6 @@ using Shipstone.Utilities.Security.Cryptography;
 using Shipstone.Utilities.Text.Json;
 
 using Shipstone.OpenBook.Api.Core;
-using Shipstone.OpenBook.Api.Infrastructure.Authentication;
 using Shipstone.OpenBook.Api.Infrastructure.Authorization;
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 using Shipstone.OpenBook.Api.Infrastructure.Data.MySql;
@@ -43,11 +42,11 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        String? signingKey = authenticationSection["AccessTokenSigningKey"];
+        String? signingKey = authenticationSection["SigningKey"];
 
         if (signingKey is null)
         {
-            throw new InvalidOperationException("The provided configuration does not contain a valid access token signing key.");
+            throw new InvalidOperationException("The provided configuration does not contain a valid signing key.");
         }
 
         byte[] bytes = Convert.FromBase64String(signingKey);
@@ -72,7 +71,7 @@ builder.Services
 
 builder.Services
     .AddArgumentExceptionHandling()
-    .AddIdentityExtensions()
+    .AddConflictExceptionHandling()
     .AddNotificationsExtensions()
     .AddPagination()
     .AddPaginationExtensions(
@@ -86,14 +85,12 @@ builder.Services
             .Bind
     )
     .AddOpenBookCore()
-    .AddOpenBookInfrastructureAuthentication(authenticationSection.Bind)
     .AddOpenBookInfrastructureAuthorization()
     .AddOpenBookInfrastructureDataEntityFrameworkCore()
     .AddOpenBookInfrastructureDataMySql(connectionString)
     .AddOpenBookInfrastructureNotifications()
     .AddOpenBookWebAuthorization()
     .AddOpenBookWebClaims()
-    .AddOpenBookWebConflictExceptionHandling()
     .AddOpenBookWebForbiddenExceptionHandling()
     .AddOpenBookWebNotFoundExceptionHandling()
     .AddSingleton<IEncryptionService, StubEncryptionService>()
@@ -122,9 +119,8 @@ if (isNcsaCommonLoggingEnabled)
 app.UseArgumentExceptionHandling();
 app.UseOpenBookWebForbiddenExceptionHandling();
 app.UseOpenBookWebNotFoundExceptionHandling();
-app.UseOpenBookWebConflictExceptionHandling();
+app.UseConflictExceptionHandling();
 app.UseAuthentication();
-app.UseOpenBookWebClaims();
 app.UseAuthorization();
 app.UsePagination();
 app.MapControllers();

@@ -14,14 +14,12 @@ using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 using Shipstone.OpenBook.Api.CoreTest.Mocks;
-using Shipstone.OpenBook.Api.Test.Mocks;
 using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.CoreTest.Users;
 
 public sealed class UserRetrieveHandlerTest
 {
-    private readonly MockClaimsService _claims;
     private readonly IUserRetrieveHandler _handler;
     private readonly MockRepository _repository;
 
@@ -34,115 +32,93 @@ public sealed class UserRetrieveHandlerTest
         services._addAction = collection.Add;
         services._getEnumeratorFunc = collection.GetEnumerator;
         services.AddOpenBookCore();
-        MockClaimsService claims = new();
-        services.AddSingleton<IClaimsService>(claims);
         MockRepository repository = new();
         services.AddSingleton<IRepository>(repository);
         IServiceProvider provider = new MockServiceProvider(services);
-        this._claims = claims;
         this._handler = provider.GetRequiredService<IUserRetrieveHandler>();
         this._repository = repository;
     }
 
 #region HandleAsync method
-#region Failure
     [Fact]
-    public Task TestHandleAsync_Failure_UserNotActive()
+    public async Task TestHandleAsync_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                this._handler.HandleAsync(Guid.Empty, CancellationToken.None));
+
+        // Assert
+        Assert.Equal("identityId", ex.ParamName);
+    }
+
+#region Valid arguments
+    [Fact]
+    public Task TestHandleAsync_Valid_Failure_UserNotActive()
     {
         // Arrange
+        Guid id = Guid.NewGuid();
+
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._retrieve_GuidFunc = _ => new();
+            users._retrieveForIdentityIdFunc = _ => new();
             return users;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
-
         // Act and assert
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
-            this._handler.HandleAsync(CancellationToken.None));
-    }
-
-    [Fact]
-    public async Task TestHandleAsync_Failure_UserNotAuthenticated()
-    {
-        // Arrange
-        Exception innerException = new UnauthorizedException();
-        this._repository._usersFunc = () => new MockUserRepository();
-        this._claims._idFunc = () => throw innerException;
-
-        // Act
-        Exception ex =
-            await Assert.ThrowsAsync<UnauthorizedException>(() =>
-                this._handler.HandleAsync(CancellationToken.None));
-
-        // Assert
-        Assert.Same(innerException, ex);
+            this._handler.HandleAsync(id, CancellationToken.None));
     }
 
     [Fact]
     public Task TestHandleAsync_Failure_UserNotFound()
     {
         // Arrange
+        Guid id = Guid.NewGuid();
+
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._retrieve_GuidFunc = _ => null;
+            users._retrieveForIdentityIdFunc = _ => null;
             return users;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
-
         // Act and assert
         return Assert.ThrowsAsync<NotFoundException>(() =>
-            this._handler.HandleAsync(CancellationToken.None));
+            this._handler.HandleAsync(id, CancellationToken.None));
     }
-#endregion
 
     [Fact]
     public async Task TestHandleAsync_Success_AssignedRoles()
     {
 #region Arrange
         // Arrange
+        Guid identityId = Guid.NewGuid();
         Guid id = Guid.NewGuid();
         DateTime now = DateTime.UtcNow;
         DateTime created = now;
         DateTime updated = created.AddDays(12345);
-        const String EMAIL_ADDRESS = "john.doe@contoso.com";
         const String USER_NAME = "johndoe2025";
-        const String FORENAME = "John";
-        const String SURNAME = "Doe";
         DateTime consented = created.AddDays(1);
-
-        DateOnly born =
-            DateOnly
-                .FromDateTime(now)
-                .AddYears(-18);
 
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
 
-            users._retrieve_GuidFunc = id =>
+            users._retrieveForIdentityIdFunc = _ =>
                 new UserEntity
                 {
-                    Born = born,
                     Consented = consented,
                     Created = created,
-                    EmailAddress = EMAIL_ADDRESS,
-                    Forename = FORENAME,
                     Id = id,
                     IsActive = true,
-                    Surname = SURNAME,
                     Updated = updated,
                     UserName = USER_NAME
                 };
 
             return users;
         };
-
-        this._claims._idFunc = () => id;
 
         this._repository._userRolesFunc = () =>
         {
@@ -204,7 +180,11 @@ public sealed class UserRetrieveHandlerTest
 #endregion
 
         // Act
-        IUser user = await this._handler.HandleAsync(CancellationToken.None);
+        IUser user =
+            await this._handler.HandleAsync(
+                identityId,
+                CancellationToken.None
+            );
 
         // Assert
         IEnumerable<String> roles = new String[]
@@ -218,11 +198,7 @@ public sealed class UserRetrieveHandlerTest
             id,
             created,
             updated,
-            EMAIL_ADDRESS,
             USER_NAME,
-            FORENAME,
-            SURNAME,
-            born,
             consented,
             roles
         );
@@ -233,44 +209,31 @@ public sealed class UserRetrieveHandlerTest
     {
 #region Arrange
         // Arrange
+        Guid identityId = Guid.NewGuid();
         Guid id = Guid.NewGuid();
         DateTime now = DateTime.UtcNow;
         DateTime created = now;
         DateTime updated = created.AddDays(12345);
-        const String EMAIL_ADDRESS = "john.doe@contoso.com";
         const String USER_NAME = "johndoe2025";
-        const String FORENAME = "John";
-        const String SURNAME = "Doe";
         DateTime consented = created.AddDays(1);
-
-        DateOnly born =
-            DateOnly
-                .FromDateTime(now)
-                .AddYears(-18);
 
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
 
-            users._retrieve_GuidFunc = id =>
+            users._retrieveForIdentityIdFunc = _ =>
                 new UserEntity
                 {
-                    Born = born,
                     Consented = consented,
                     Created = created,
-                    EmailAddress = EMAIL_ADDRESS,
-                    Forename = FORENAME,
                     Id = id,
                     IsActive = true,
-                    Surname = SURNAME,
                     Updated = updated,
                     UserName = USER_NAME
                 };
 
             return users;
         };
-
-        this._claims._idFunc = () => id;
 
         this._repository._userRolesFunc = () =>
         {
@@ -281,7 +244,11 @@ public sealed class UserRetrieveHandlerTest
 #endregion
 
         // Act
-        IUser user = await this._handler.HandleAsync(CancellationToken.None);
+        IUser user =
+            await this._handler.HandleAsync(
+                identityId,
+                CancellationToken.None
+            );
 
         // Assert
         IEnumerable<String> roles = Array.Empty<String>();
@@ -290,14 +257,11 @@ public sealed class UserRetrieveHandlerTest
             id,
             created,
             updated,
-            EMAIL_ADDRESS,
             USER_NAME,
-            FORENAME,
-            SURNAME,
-            born,
             consented,
             roles
         );
     }
+#endregion
 #endregion
 }

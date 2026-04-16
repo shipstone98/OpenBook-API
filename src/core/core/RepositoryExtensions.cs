@@ -19,40 +19,12 @@ internal static class RepositoryExtensions
 {
     internal static async Task<UserEntity> RetrieveActiveUserAsync(
         this IRepository repository,
-        String emailAddress,
-        CancellationToken cancellationToken
-    )
-    {
-        UserEntity? user =
-            await repository.Users.RetrieveAsync(
-                emailAddress,
-                cancellationToken
-            );
-
-        if (user is null)
-        {
-            throw new NotFoundException("A user whose email address matches the provided email address could not be found.");
-        }
-
-        if (!user.IsActive)
-        {
-            throw new UserNotActiveException("The user whose email address matches the provided email address is not active.");
-        }
-
-        return user;
-    }
-
-    internal static async Task<UserEntity> RetrieveActiveUserForNameAsync(
-        this IRepository repository,
         String userName,
         CancellationToken cancellationToken
     )
     {
         UserEntity? user =
-            await repository.Users.RetrieveForNameAsync(
-                userName,
-                cancellationToken
-            );
+            await repository.Users.RetrieveAsync(userName, cancellationToken);
 
         if (user is null)
         {
@@ -75,13 +47,11 @@ internal static class RepositoryExtensions
     )
     {
         Guid creatorId = post.CreatorId;
-        String creatorEmailAddress;
         String creatorName;
 
-        if (claims.IsAuthenticated && Guid.Equals(creatorId, claims.Id))
+        if (claims.IsAuthenticated && Guid.Equals(creatorId, claims.User.Id))
         {
-            creatorEmailAddress = claims.EmailAddress;
-            creatorName = claims.UserName;
+            creatorName = claims.User.UserName;
         }
 
         else
@@ -97,11 +67,10 @@ internal static class RepositoryExtensions
                 throw new NotFoundException("A user whose ID matches the creator ID of the post whose ID matches the provided ID could not be found.");
             }
 
-            creatorEmailAddress = creator.EmailAddress;
             creatorName = creator.UserName;
         }
 
-        return new Post(post, creatorEmailAddress, creatorName);
+        return new Post(post, creatorName);
     }
 
     internal static async Task<IResource> RetrieveResourceAsync(

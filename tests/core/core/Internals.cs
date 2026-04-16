@@ -23,7 +23,7 @@ internal static class Internals
 
     internal static void AssertEqual(
         this IFollowing following,
-        String followerEmailAddress,
+        String followerName,
         String followeeName,
         DateTime followed,
         bool isSubscribed
@@ -32,7 +32,7 @@ internal static class Internals
         Assert.Equal(followed, following.Followed);
         Assert.Equal(DateTimeKind.Utc, following.Followed.Kind);
         Assert.Equal(followeeName, following.FolloweeName);
-        Assert.Equal(followerEmailAddress, following.FollowerEmailAddress);
+        Assert.Equal(followerName, following.FollowerName);
         Assert.Equal(isSubscribed, following.IsSubscribed);
     }
 
@@ -55,7 +55,6 @@ internal static class Internals
         long id,
         DateTime created,
         DateTime updated,
-        String creatorEmailAddress,
         String creatorUserName,
         String body,
         Nullable<long> parentId = null
@@ -64,7 +63,6 @@ internal static class Internals
         Assert.Equal(body, post.Body);
         Assert.Equal(created, post.Created);
         Assert.Equal(DateTimeKind.Utc, post.Created.Kind);
-        Assert.Equal(creatorEmailAddress, post.CreatorEmailAddress);
         Assert.Equal(creatorUserName, post.CreatorName);
         Assert.Equal(id, post.Id);
 
@@ -88,25 +86,17 @@ internal static class Internals
         Guid id,
         DateTime created,
         DateTime updated,
-        String emailAddress,
         String userName,
-        String forename,
-        String surname,
-        DateOnly born,
         DateTime consented,
         IEnumerable<String> roles
     )
     {
-        Assert.Equal(born, user.Born);
         Assert.Equal(consented, user.Consented);
         Assert.Equal(DateTimeKind.Utc, user.Consented.Kind);
         Assert.Equal(created, user.Created);
         Assert.Equal(DateTimeKind.Utc, user.Created.Kind);
-        Assert.Equal(emailAddress, user.EmailAddress);
-        Assert.Equal(forename, user.Forename);
         Assert.Equal(id, user.Id);
         Assert.True(roles.SequenceEqual(user.Roles));
-        Assert.Equal(surname, user.Surname);
         Assert.Equal(updated, user.Updated);
         Assert.Equal(userName, user.UserName);
     }

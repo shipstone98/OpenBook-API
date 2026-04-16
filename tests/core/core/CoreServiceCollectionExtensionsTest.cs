@@ -7,7 +7,6 @@ using Xunit;
 using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Followings;
-using Shipstone.OpenBook.Api.Core.Passwords;
 using Shipstone.OpenBook.Api.Core.Posts;
 using Shipstone.OpenBook.Api.Core.Users;
 
@@ -48,25 +47,18 @@ public sealed class CoreServiceCollectionExtensionsTest
 
         IEnumerable<Type> types = new Type[]
         {
-            typeof (IAuthenticateHandler),
             typeof (IFollowingCreateHandler),
             typeof (IFollowingDeleteHandler),
             typeof (IFollowingRetrieveHandler),
-            typeof (IOtpAuthenticateHandler),
-            typeof (IPasswordResetHandler),
-            typeof (IPasswordSetHandler),
-            typeof (IPasswordUpdateHandler),
             typeof (IPostAggregateHandler),
             typeof (IPostCreateHandler),
             typeof (IPostDeleteHandler),
             typeof (IPostListHandler),
             typeof (IPostRetrieveHandler),
-            typeof (IRefreshAuthenticateHandler),
             typeof (IRegisterHandler),
             typeof (IUnregisterHandler),
             typeof (IUserListHandler),
-            typeof (IUserRetrieveHandler),
-            typeof (IUserUpdateHandler)
+            typeof (IUserRetrieveHandler)
         };
 
         foreach (Type type in types)

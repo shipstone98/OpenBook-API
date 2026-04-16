@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.Utilities;
+
 using Shipstone.OpenBook.Api.Core.Users;
 
 namespace Shipstone.OpenBook.Api.Core.Accounts;
@@ -14,23 +16,17 @@ public interface IRegisterHandler
     /// <summary>
     /// Asynchronously registers a new user with the specified properties.
     /// </summary>
-    /// <param name="emailAddress">The email address for the new user.</param>
+    /// <param name="identityId">A <see cref="Guid" /> containing the identity ID for the new user.</param>
     /// <param name="userName">The name for the new user.</param>
-    /// <param name="forename">The forename for the new user.</param>
-    /// <param name="surname">The surname for the new user.</param>
-    /// <param name="born">The date the new user was born.</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous register operation. The value of <see cref="Task{TResult}.Result" /> contains the new <see cref="IUser" />.</returns>
-    /// <exception cref="ArgumentException"><c><paramref name="emailAddress" /></c> is not a valid email address -or- <c><paramref name="userName" /></c> is not a valid user name -or- <c><paramref name="forename" /></c> is not a valid forename -or- <c><paramref name="surname" /></c> is not a valid surname -or- <c><paramref name="born" /></c> is not a valid date of birth.</exception>
-    /// <exception cref="ArgumentNullException"><c><paramref name="emailAddress" /></c> is <c>null</c> -or- <c><paramref name="userName" /></c> is <c>null</c> -or- <c><paramref name="forename" /></c> is <c>null</c> -or- <c><paramref name="surname" /></c> is <c>null</c>.</exception>
-    /// <exception cref="ConflictException">A user whose email address and/or name matches the provided email address and/or user name already exists.</exception>
+    /// <exception cref="ArgumentException"><c><paramref name="identityId" /></c> is equal to <see cref="Guid.Empty" /> -or- <c><paramref name="userName" /></c> is not a valid user name.</exception>
+    /// <exception cref="ArgumentNullException"><c><paramref name="userName" /></c> is <c>null</c>.</exception>
+    /// <exception cref="ConflictException">A user whose identity ID and/or name matches the identity ID of the current user already exists -or- a user whose name matches the provided user name already exists.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     Task<IUser> HandleAsync(
-        String emailAddress,
+        Guid identityId,
         String userName,
-        String forename,
-        String surname,
-        DateOnly born,
         CancellationToken cancellationToken
     );
 }

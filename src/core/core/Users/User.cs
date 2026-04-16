@@ -10,14 +10,10 @@ internal sealed class User : IUser
     private readonly IReadOnlySet<String> _roles;
     private readonly UserEntity _user;
 
-    DateOnly IUser.Born => this._user.Born;
     DateTime IUser.Consented => this._user.Consented;
     DateTime IUser.Created => this._user.Created;
-    String IUser.EmailAddress => this._user.EmailAddress;
-    String IUser.Forename => this._user.Forename;
     Guid IUser.Id => this._user.Id;
     IReadOnlySet<String> IUser.Roles => this._roles;
-    String IUser.Surname => this._user.Surname;
     DateTime IUser.Updated => this._user.Updated;
     String IUser.UserName => this._user.UserName;
 

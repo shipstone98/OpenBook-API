@@ -58,7 +58,12 @@ public sealed class PostAggregateHandlerTest
             return userFollowings;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         // Act
         IReadOnlyPaginatedList<IPost> posts =
@@ -73,15 +78,13 @@ public sealed class PostAggregateHandlerTest
     {
 #region Arrange
         // Arrange
-        const int TOTAL_COUNT = 31;
+        const int TOTAL_COUNT = 33;
         const int PAGE_INDEX = 1;
         const int PAGE_COUNT = 17;
         const int COUNT = 2;
         Guid followee1Id = Guid.NewGuid();
-        const String FOLLOWEE_1_EMAIL_ADDRESS = "john.doe@contoso.com";
         const String FOLLOWEE_1_NAME = "johndoe2025";
         Guid followee2Id = Guid.NewGuid();
-        const String FOLLOWEE_2_EMAIL_ADDRESS = "jane.doe@contoso.com";
         const String FOLLOWEE_2_NAME = "janedoe2025";
 
         this._repository._userFollowingsFunc = () =>
@@ -104,7 +107,12 @@ public sealed class PostAggregateHandlerTest
             return userFollowings;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         this._repository._postsFunc = () =>
         {
@@ -149,7 +157,6 @@ public sealed class PostAggregateHandlerTest
                 {
                     return new UserEntity
                     {
-                        EmailAddress = FOLLOWEE_1_EMAIL_ADDRESS,
                         UserName = FOLLOWEE_1_NAME
                     };
                 }
@@ -158,7 +165,6 @@ public sealed class PostAggregateHandlerTest
                 {
                     return new UserEntity
                     {
-                        EmailAddress = FOLLOWEE_2_EMAIL_ADDRESS,
                         UserName = FOLLOWEE_2_NAME
                     };
                 }
@@ -176,10 +182,8 @@ public sealed class PostAggregateHandlerTest
 
         // Assert
         posts.AssertEqual(COUNT, TOTAL_COUNT, PAGE_INDEX, PAGE_COUNT);
-        Assert.Equal(FOLLOWEE_1_EMAIL_ADDRESS, posts[0].CreatorEmailAddress);
         Assert.Equal(FOLLOWEE_1_NAME, posts[0].CreatorName);
         Assert.Equal(1, posts[0].Id);
-        Assert.Equal(FOLLOWEE_2_EMAIL_ADDRESS, posts[1].CreatorEmailAddress);
         Assert.Equal(FOLLOWEE_2_NAME, posts[1].CreatorName);
         Assert.Equal(2, posts[1].Id);
         Assert.Equal(2, posts.Count);

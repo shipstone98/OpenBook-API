@@ -29,7 +29,7 @@ internal sealed class ResourceOwnerAuthorizationHandler
 
         if (
             this._claims.IsAuthenticated
-            && Guid.Equals(this._claims.Id, resource.CreatorId)
+            && Guid.Equals(this._claims.User.Id, resource.CreatorId)
         )
         {
             context.Succeed(requirement);

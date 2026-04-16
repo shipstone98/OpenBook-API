@@ -7,19 +7,22 @@ namespace Shipstone.OpenBook.Api.WebTest.Mocks;
 internal sealed class MockReadOnlySet<T> : IReadOnlySet<T>
 {
     internal Func<T, bool> _containsFunc;
+    internal Func<IEnumerator<T>> _getEnumeratorFunc;
 
     int IReadOnlyCollection<T>.Count => throw new NotImplementedException();
 
-    internal MockReadOnlySet() =>
+    internal MockReadOnlySet()
+    {
         this._containsFunc = _ => throw new NotImplementedException();
+        this._getEnumeratorFunc = () => throw new NotImplementedException();
+    }
 
     bool IReadOnlySet<T>.Contains(T item) => this._containsFunc(item);
 
     IEnumerator IEnumerable.GetEnumerator() =>
         throw new NotImplementedException();
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator() =>
-        throw new NotImplementedException();
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() => this._getEnumeratorFunc();
 
     bool IReadOnlySet<T>.IsProperSubsetOf(IEnumerable<T> other) =>
         throw new NotImplementedException();

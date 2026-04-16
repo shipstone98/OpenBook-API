@@ -2,11 +2,11 @@ using System;
 
 using Shipstone.Extensions.Security;
 
-namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
+namespace Shipstone.OpenBook.Api.Test.Mocks;
 
-internal sealed class MockNormalizationService : INormalizationService
+public sealed class MockNormalizationService : INormalizationService
 {
-    internal Func<String, String> _normalizeFunc;
+    public Func<String, String> _normalizeFunc;
 
     public MockNormalizationService() =>
         this._normalizeFunc = _ => throw new NotImplementedException();

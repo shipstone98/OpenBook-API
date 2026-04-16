@@ -24,9 +24,6 @@ internal sealed class Repository : IRepository
     IUserFollowingRepository IRepository.UserFollowings =>
         this._provider.GetRequiredService<IUserFollowingRepository>();
 
-    IUserRefreshTokenRepository IRepository.UserRefreshTokens =>
-        this._provider.GetRequiredService<IUserRefreshTokenRepository>();
-
     IUserRoleRepository IRepository.UserRoles =>
         this._provider.GetRequiredService<IUserRoleRepository>();
 

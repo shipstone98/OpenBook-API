@@ -2,9 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Shipstone.Utilities;
 using Shipstone.Utilities.Collections;
-
-using Shipstone.OpenBook.Api.Core.Accounts;
 
 namespace Shipstone.OpenBook.Api.Core.Posts;
 

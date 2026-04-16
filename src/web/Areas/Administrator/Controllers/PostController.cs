@@ -58,9 +58,9 @@ internal sealed class PostController : ControllerBase<PostController>
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: Administrator {EmailAddress} failed to delete post with ID {Id} - not authorized",
+                "{TimeStamp}: Administrator {UserName} failed to delete post with ID {Id} - not authorized",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 id
             );
 
@@ -71,9 +71,9 @@ internal sealed class PostController : ControllerBase<PostController>
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: Administrator {EmailAddress} failed to delete post with ID {Id} - ID not found",
+                "{TimeStamp}: Administrator {UserName} failed to delete post with ID {Id} - ID not found",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 id
             );
 
@@ -81,9 +81,9 @@ internal sealed class PostController : ControllerBase<PostController>
         }
 
         this._logger.LogInformation(
-            "{TimeStamp}: Administrator {EmailAddress} deleted post with ID {Id}",
+            "{TimeStamp}: Administrator {UserName} deleted post with ID {Id}",
             post.Updated,
-            claims.EmailAddress,
+            claims.User.UserName,
             id
         );
 

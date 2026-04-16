@@ -20,10 +20,10 @@ public interface IFollowing
     String FolloweeName { get; }
 
     /// <summary>
-    /// Gets the email address of the associated follower.
+    /// Gets the name of the associated follower.
     /// </summary>
-    /// <value>The email address of the associated follower.</value>
-    String FollowerEmailAddress { get; }
+    /// <value>The name of the associated follower.</value>
+    String FollowerName { get; }
 
     /// <summary>
     /// Gets a value indicating whether the associated follower is following the associated followee.

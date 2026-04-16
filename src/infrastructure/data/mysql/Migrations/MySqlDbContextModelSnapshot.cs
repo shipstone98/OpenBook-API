@@ -17,7 +17,7 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.MySql.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -126,42 +126,17 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.MySql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<DateOnly>("Born")
-                        .HasColumnType("date");
-
                     b.Property<DateTime>("Consented")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("EmailAddressNormalized")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Forename")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<Guid>("IdentityId")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Otp")
-                        .HasMaxLength(6)
-                        .HasColumnType("varchar(6)");
-
-                    b.Property<DateTime?>("OtpExpires")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
@@ -175,7 +150,7 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.MySql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmailAddressNormalized")
+                    b.HasIndex("IdentityId")
                         .IsUnique();
 
                     b.HasIndex("UserNameNormalized")
@@ -203,37 +178,6 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.MySql.Migrations
                     b.HasIndex("FolloweeId");
 
                     b.ToTable("UserFollowings");
-                });
-
-            modelBuilder.Entity("Shipstone.OpenBook.Api.Infrastructure.Entities.UserRefreshTokenEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("Expires")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRefreshTokens");
                 });
 
             modelBuilder.Entity("Shipstone.OpenBook.Api.Infrastructure.Entities.UserRoleEntity", b =>
@@ -288,15 +232,6 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.MySql.Migrations
                     b.HasOne("Shipstone.OpenBook.Api.Infrastructure.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("FollowerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Shipstone.OpenBook.Api.Infrastructure.Entities.UserRefreshTokenEntity", b =>
-                {
-                    b.HasOne("Shipstone.OpenBook.Api.Infrastructure.Entities.UserEntity", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -2,68 +2,33 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Shipstone.OpenBook.Api.Infrastructure.Entities;
 using Shipstone.OpenBook.Api.Infrastructure.Mail;
 
 namespace Shipstone.OpenBook.Api.CoreTest.Mocks;
 
 internal sealed class MockMailService : IMailService
 {
-    internal Action<UserEntity, int> _sendOtpAction;
-    internal Action<UserEntity, int> _sendPasswordResetAction;
-    internal Action<UserEntity, int> _sendRegistrationAction;
-    internal Action<String> _sendUnregistrationAction;
+    internal Action _sendRegistrationAction;
+    internal Action _sendUnregistrationAction;
 
     public MockMailService()
     {
-        this._sendOtpAction = (_, _) => throw new NotImplementedException();
-
-        this._sendPasswordResetAction = (_, _) =>
+        this._sendRegistrationAction = () =>
             throw new NotImplementedException();
 
-        this._sendRegistrationAction = (_, _) =>
-            throw new NotImplementedException();
-
-        this._sendUnregistrationAction = _ =>
+        this._sendUnregistrationAction = () =>
             throw new NotImplementedException();
     }
 
-    Task IMailService.SendOtpAsync(
-        UserEntity user,
-        int expiryMinutes,
-        CancellationToken cancellationToken
-    )
+    Task IMailService.SendRegistrationAsync(CancellationToken cancellationToken)
     {
-        this._sendOtpAction(user, expiryMinutes);
+        this._sendRegistrationAction();
         return Task.CompletedTask;
     }
 
-    Task IMailService.SendPasswordResetAsync(
-        UserEntity user,
-        int expiryMinutes,
-        CancellationToken cancellationToken
-    )
+    Task IMailService.SendUnregistrationAsync(CancellationToken cancellationToken)
     {
-        this._sendPasswordResetAction(user, expiryMinutes);
-        return Task.CompletedTask;
-    }
-
-    Task IMailService.SendRegistrationAsync(
-        UserEntity user,
-        int expiryMinutes,
-        CancellationToken cancellationToken
-    )
-    {
-        this._sendRegistrationAction(user, expiryMinutes);
-        return Task.CompletedTask;
-    }
-
-    Task IMailService.SendUnregistrationAsync(
-        String emailAddress,
-        CancellationToken cancellationToken
-    )
-    {
-        this._sendUnregistrationAction(emailAddress);
+        this._sendUnregistrationAction();
         return Task.CompletedTask;
     }
 }

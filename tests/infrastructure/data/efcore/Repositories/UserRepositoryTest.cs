@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Xunit;
 
+using Shipstone.Extensions.Pagination;
 using Shipstone.Extensions.Security;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 using Shipstone.OpenBook.Api.Infrastructure.Entities;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Mocks;
+using Shipstone.OpenBook.Api.Test.Mocks;
 using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Repositories;
@@ -21,7 +23,7 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Rep
 public sealed class UserRepositoryTest
 {
     private readonly MockDataSource _dataSource;
-    private readonly INormalizationService _normalization;
+    private readonly MockNormalizationService _normalization;
     private readonly IUserRepository _repository;
 
     public UserRepositoryTest()
@@ -35,15 +37,16 @@ public sealed class UserRepositoryTest
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
         MockDataSource dataSource = new();
         services.AddSingleton<IDataSource>(dataSource);
+        MockNormalizationService normalization = new();
+        services.AddSingleton<INormalizationService>(normalization);
+        MockPaginationService pagination = new();
+        services.AddSingleton<IPaginationService>(pagination);
         MockOptions<SecurityOptions> securityOptions = new();
         services.AddSingleton<IOptions<SecurityOptions>>(securityOptions);
         securityOptions._valueFunc = () => new();
         IServiceProvider provider = new MockServiceProvider(services);
         this._dataSource = dataSource;
-
-        this._normalization =
-            provider.GetRequiredService<INormalizationService>();
-
+        this._normalization = normalization;
         this._repository = provider.GetRequiredService<IUserRepository>();
     }
 
@@ -164,91 +167,16 @@ public sealed class UserRepositoryTest
                 this._repository.RetrieveAsync(null!, CancellationToken.None));
 
         // Assert
-        Assert.Equal("emailAddress", ex.ParamName);
+        Assert.Equal("userName", ex.ParamName);
     }
 
     [Fact]
     public async Task TestRetrieveAsync_String_Valid_Contains()
     {
         // Arrange
-        const String EMAIL_ADDRESS = "john.doe@contoso.com";
-
-        this._dataSource._usersFunc = () =>
-        {
-            IEnumerable<UserEntity> users = new UserEntity[]
-            {
-                new UserEntity
-                {
-                    EmailAddress = EMAIL_ADDRESS,
-                    EmailAddressNormalized =
-                        this._normalization.Normalize(EMAIL_ADDRESS)
-                }
-            };
-
-            IQueryable<UserEntity> query = users.AsQueryable();
-            return new MockDataSet<UserEntity>(query);
-        };
-
-        // Act
-        UserEntity? user =
-            await this._repository.RetrieveAsync(
-                EMAIL_ADDRESS,
-                CancellationToken.None
-            );
-
-        // Assert
-        Assert.NotNull(user);
-        Assert.Equal(EMAIL_ADDRESS, user.EmailAddress);
-    }
-
-    [Fact]
-    public async Task TestRetrieveAsync_String_Valid_NotContains()
-    {
-        // Arrange
-        this._dataSource._usersFunc = () =>
-        {
-            IQueryable<UserEntity> query =
-                Array
-                    .Empty<UserEntity>()
-                    .AsQueryable();
-
-            return new MockDataSet<UserEntity>(query);
-        };
-
-        // Act
-        UserEntity? user =
-            await this._repository.RetrieveAsync(
-                "john.doe@contoso.com",
-                CancellationToken.None
-            );
-
-        // Assert
-        Assert.Null(user);
-    }
-#endregion
-#endregion
-
-#region RetrieveForName method
-    [Fact]
-    public async Task TestRetrieveForNameAsync_Invalid()
-    {
-        // Act
-        ArgumentException ex =
-            await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                this._repository.RetrieveForNameAsync(
-                    null!,
-                    CancellationToken.None
-                ));
-
-        // Assert
-        Assert.Equal("userName", ex.ParamName);
-    }
-
-    [Fact]
-    public async Task TestRetrieveForNameAsync_Valid_Contains()
-    {
-        // Arrange
         const String USER_NAME = "johndoe2025";
+        const String USER_NAME_NORMALIZED = "JOHNDOE2025";
+        this._normalization._normalizeFunc = _ => USER_NAME_NORMALIZED;
 
         this._dataSource._usersFunc = () =>
         {
@@ -257,8 +185,7 @@ public sealed class UserRepositoryTest
                 new UserEntity
                 {
                     UserName = USER_NAME,
-                    UserNameNormalized =
-                        this._normalization.Normalize(USER_NAME)
+                    UserNameNormalized = USER_NAME_NORMALIZED
                 }
             };
 
@@ -268,7 +195,7 @@ public sealed class UserRepositoryTest
 
         // Act
         UserEntity? user =
-            await this._repository.RetrieveForNameAsync(
+            await this._repository.RetrieveAsync(
                 USER_NAME,
                 CancellationToken.None
             );
@@ -279,9 +206,11 @@ public sealed class UserRepositoryTest
     }
 
     [Fact]
-    public async Task TestRetrieveForNameAsync_Valid_NotContains()
+    public async Task TestRetrieveAsync_String_Valid_NotContains()
     {
         // Arrange
+        this._normalization._normalizeFunc = _ => String.Empty;
+
         this._dataSource._usersFunc = () =>
         {
             IQueryable<UserEntity> query =
@@ -294,8 +223,85 @@ public sealed class UserRepositoryTest
 
         // Act
         UserEntity? user =
-            await this._repository.RetrieveForNameAsync(
+            await this._repository.RetrieveAsync(
                 "johndoe2025",
+                CancellationToken.None
+            );
+
+        // Assert
+        Assert.Null(user);
+    }
+#endregion
+#endregion
+
+#region RetrieveForIdentityIdAsync methods
+    [Fact]
+    public async Task TestRetrieveForIdentityIdAsync_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                this._repository.RetrieveForIdentityIdAsync(
+                    Guid.Empty,
+                    CancellationToken.None
+                ));
+
+        // Assert
+        Assert.Equal("identityId", ex.ParamName);
+    }
+
+    [Fact]
+    public async Task TestRetrieveForIdentityIdAsync_Valid_Contains()
+    {
+        // Arrange
+        Guid identityId = Guid.NewGuid();
+
+        this._dataSource._usersFunc = () =>
+        {
+            IEnumerable<UserEntity> users = new UserEntity[]
+            {
+                new UserEntity
+                {
+                    IdentityId = identityId
+                }
+            };
+
+            IQueryable<UserEntity> query = users.AsQueryable();
+            return new MockDataSet<UserEntity>(query);
+        };
+
+        // Act
+        UserEntity? user =
+            await this._repository.RetrieveForIdentityIdAsync(
+                identityId,
+                CancellationToken.None
+            );
+
+        // Assert
+        Assert.NotNull(user);
+        Assert.Equal(identityId, user.Id);
+    }
+
+    [Fact]
+    public async Task TestRetrieveForIdentityIdAsync_Valid_NotContains()
+    {
+        // Arrange
+        Guid identityId = Guid.NewGuid();
+
+        this._dataSource._usersFunc = () =>
+        {
+            IQueryable<UserEntity> query =
+                Array
+                    .Empty<UserEntity>()
+                    .AsQueryable();
+
+            return new MockDataSet<UserEntity>(query);
+        };
+
+        // Act
+        UserEntity? user =
+            await this._repository.RetrieveForIdentityIdAsync(
+                identityId,
                 CancellationToken.None
             );
 

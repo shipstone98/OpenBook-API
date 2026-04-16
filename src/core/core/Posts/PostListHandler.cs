@@ -60,7 +60,7 @@ internal sealed class PostListHandler : IPostListHandler
     )
     {
         UserEntity? user =
-            await this._repository.Users.RetrieveForNameAsync(
+            await this._repository.Users.RetrieveAsync(
                 userName,
                 cancellationToken
             );
@@ -76,8 +76,7 @@ internal sealed class PostListHandler : IPostListHandler
                 cancellationToken
             );
 
-        return posts.Select((p, _) =>
-            new Post(p, user.EmailAddress, user.UserName));
+        return posts.Select((p, _) => new Post(p, user.UserName));
     }
 
     Task<IReadOnlyPaginatedList<IPost>> IPostListHandler.HandleAsync(

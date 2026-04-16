@@ -30,7 +30,7 @@ internal sealed class PostAggregateHandler : IPostAggregateHandler
     {
         IEnumerable<UserFollowingEntity> userFollowings =
             await this._repository.UserFollowings.ListForFollowerAsync(
-                this._claims.Id,
+                this._claims.User.Id,
                 cancellationToken
             );
 

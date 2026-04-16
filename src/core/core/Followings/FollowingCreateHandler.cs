@@ -38,12 +38,12 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
     )
     {
         UserEntity followee =
-            await this._repository.RetrieveActiveUserForNameAsync(
+            await this._repository.RetrieveActiveUserAsync(
                 userName,
                 cancellationToken
             );
 
-        Guid followerId = this._claims.Id;
+        Guid followerId = this._claims.User.Id;
         Guid followeeId = followee.Id;
 
         if (Guid.Equals(followerId, followeeId))
@@ -84,7 +84,7 @@ internal sealed class FollowingCreateHandler : IFollowingCreateHandler
         );
 
         return new Following(
-            this._claims.EmailAddress,
+            this._claims.User.UserName,
             followee.UserName,
             followed,
             isSubscribed

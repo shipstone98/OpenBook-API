@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Followings;
-using Shipstone.OpenBook.Api.Core.Passwords;
 using Shipstone.OpenBook.Api.Core.Posts;
 using Shipstone.OpenBook.Api.Core.Services;
 using Shipstone.OpenBook.Api.Core.Users;
@@ -27,26 +26,17 @@ public static class CoreServiceCollectionExtensions
 
         return services
             .AddSingleton<IValidationService, ValidationService>()
-            .AddScoped<IAuthenticateHandler, AuthenticateHandler>()
-            .AddScoped<IAuthenticateService, AuthenticateService>()
             .AddScoped<IFollowingCreateHandler, FollowingCreateHandler>()
             .AddScoped<IFollowingDeleteHandler, FollowingDeleteHandler>()
             .AddScoped<IFollowingRetrieveHandler, FollowingRetrieveHandler>()
-            .AddScoped<IOtpAuthenticateHandler, OtpAuthenticateHandler>()
-            .AddScoped<IOtpService, OtpService>()
-            .AddScoped<IPasswordResetHandler, PasswordResetHandler>()
-            .AddScoped<IPasswordSetHandler, PasswordSetHandler>()
-            .AddScoped<IPasswordUpdateHandler, PasswordUpdateHandler>()
             .AddScoped<IPostAggregateHandler, PostAggregateHandler>()
             .AddScoped<IPostCreateHandler, PostCreateHandler>()
             .AddScoped<IPostDeleteHandler, PostDeleteHandler>()
             .AddScoped<IPostListHandler, PostListHandler>()
             .AddScoped<IPostRetrieveHandler, PostRetrieveHandler>()
-            .AddScoped<IRefreshAuthenticateHandler, RefreshAuthenticateHandler>()
             .AddScoped<IRegisterHandler, RegisterHandler>()
             .AddScoped<IUnregisterHandler, UnregisterHandler>()
             .AddScoped<IUserListHandler, UserListHandler>()
-            .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>()
-            .AddScoped<IUserUpdateHandler, UserUpdateHandler>();
+            .AddScoped<IUserRetrieveHandler, UserRetrieveHandler>();
     }
 }

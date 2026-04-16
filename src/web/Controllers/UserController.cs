@@ -1,12 +1,9 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using Shipstone.OpenBook.Api.Core.Accounts;
-using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Web.Models.User;
 
 namespace Shipstone.OpenBook.Api.Web.Controllers;
@@ -18,86 +15,10 @@ internal sealed class UserController(ILogger<UserController> logger)
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status410Gone)]
-    public Task<IActionResult> RetrieveAsync(
-        [FromServices] IUserRetrieveHandler handler,
-        CancellationToken cancellationToken
-    )
+    public IActionResult Retrieve([FromServices] IClaimsService claims)
     {
-        ArgumentNullException.ThrowIfNull(handler);
-        return this.RetrieveAsyncCore(handler, cancellationToken);
-    }
-
-    private async Task<IActionResult> RetrieveAsyncCore(
-        IUserRetrieveHandler handler,
-        CancellationToken cancellationToken
-    )
-    {
-        IUser user = await handler.HandleAsync(cancellationToken);
-        Object? response = new RetrieveResponse(user);
-        return this.Ok(response);
-    }
-
-    [ActionName("Update")]
-    [HttpPut]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status410Gone)]
-    public Task<IActionResult> UpdateAsync(
-        [FromServices] IUserUpdateHandler handler,
-        [FromServices] IClaimsService claims,
-        [FromBody] UpdateRequest request,
-        CancellationToken cancellationToken
-    )
-    {
-        ArgumentNullException.ThrowIfNull(handler);
         ArgumentNullException.ThrowIfNull(claims);
-        ArgumentNullException.ThrowIfNull(request);
-
-        return this.UpdateAsyncCore(
-            handler,
-            claims,
-            request,
-            cancellationToken
-        );
-    }
-
-    private async Task<IActionResult> UpdateAsyncCore(
-        IUserUpdateHandler handler,
-        IClaimsService claims,
-        UpdateRequest request,
-        CancellationToken cancellationToken
-    )
-    {
-        IUser user;
-
-        try
-        {
-            user =
-                await handler.HandleAsync(
-                    request._forename,
-                    request._surname,
-                    cancellationToken
-                );
-        }
-
-        catch (UserNotActiveException ex)
-        {
-            this._logger.LogInformation(
-                ex,
-                "{TimeStamp}: Failed to update user {EmailAddress} - user not active",
-                DateTime.UtcNow,
-                claims.EmailAddress
-            );
-
-            return this.StatusCode(StatusCodes.Status410Gone);
-        }
-
-        this._logger.LogInformation(
-            "{TimeStamp}: User {EmailAddress} updated",
-            user.Updated,
-            user.EmailAddress
-        );
-
-        return this.NoContent();
+        Object? response = new RetrieveResponse(claims.User);
+        return this.Ok(response);
     }
 }

@@ -19,7 +19,6 @@ internal sealed class OpenBookControllerFeatureProvider
             typeof (Areas.Administrator.Controllers.UserController),
             typeof (AccountController),
             typeof (FollowingController),
-            typeof (PasswordController),
             typeof (PostController),
             typeof (UserController)
         };

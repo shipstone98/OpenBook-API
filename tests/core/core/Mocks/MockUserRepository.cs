@@ -15,7 +15,7 @@ internal sealed class MockUserRepository : IUserRepository
     internal Func<IReadOnlyPaginatedList<UserEntity>> _listFunc;
     internal Func<Guid, UserEntity?> _retrieve_GuidFunc;
     internal Func<String, UserEntity?> _retrieve_StringFunc;
-    internal Func<String, UserEntity?> _retrieveForNameFunc;
+    internal Func<Guid, UserEntity?> _retrieveForIdentityIdFunc;
     internal Action<UserEntity> _updateAction;
 
     public MockUserRepository()
@@ -24,7 +24,10 @@ internal sealed class MockUserRepository : IUserRepository
         this._listFunc = () => throw new NotImplementedException();
         this._retrieve_GuidFunc = _ => throw new NotImplementedException();
         this._retrieve_StringFunc = _ => throw new NotImplementedException();
-        this._retrieveForNameFunc = _ => throw new NotImplementedException();
+
+        this._retrieveForIdentityIdFunc = _ =>
+            throw new NotImplementedException();
+
         this._updateAction = _ => throw new NotImplementedException();
     }
 
@@ -44,15 +47,6 @@ internal sealed class MockUserRepository : IUserRepository
     }
 
     Task<UserEntity?> IUserRepository.RetrieveAsync(
-        String emailAddress,
-        CancellationToken cancellationToken
-    )
-    {
-        UserEntity? result = this._retrieve_StringFunc(emailAddress);
-        return Task.FromResult(result);
-    }
-
-    Task<UserEntity?> IUserRepository.RetrieveAsync(
         Guid id,
         CancellationToken cancellationToken
     )
@@ -61,12 +55,21 @@ internal sealed class MockUserRepository : IUserRepository
         return Task.FromResult(result);
     }
 
-    Task<UserEntity?> IUserRepository.RetrieveForNameAsync(
+    Task<UserEntity?> IUserRepository.RetrieveAsync(
         String userName,
         CancellationToken cancellationToken
     )
     {
-        UserEntity? result = this._retrieveForNameFunc(userName);
+        UserEntity? result = this._retrieve_StringFunc(userName);
+        return Task.FromResult(result);
+    }
+
+    Task<UserEntity?> IUserRepository.RetrieveForIdentityIdAsync(
+        Guid identityId,
+        CancellationToken cancellationToken
+    )
+    {
+        UserEntity? result = this._retrieveForIdentityIdFunc(identityId);
         return Task.FromResult(result);
     }
 

@@ -49,7 +49,6 @@ public sealed class UnregisterHandlerTest
     }
 
 #region HandleAsync method
-#region Failure
     [Fact]
     public Task TestHandleAsync_Failure_UserNotActive()
     {
@@ -61,30 +60,18 @@ public sealed class UnregisterHandlerTest
             return users;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         // Act
         return Assert.ThrowsAsync<UserNotActiveException>(() =>
             this._handler.HandleAsync(CancellationToken.None));
 
         // Nothing to assert
-    }
-
-    [Fact]
-    public async Task TestHandleAsync_Failure_UserNotAuthenticated()
-    {
-        // Arrange
-        Exception innerException = new UnauthorizedException();
-        this._repository._usersFunc = () => new MockUserRepository();
-        this._claims._idFunc = () => throw innerException;
-
-        // Act
-        Exception ex =
-            await Assert.ThrowsAsync<UnauthorizedException>(() =>
-                this._handler.HandleAsync(CancellationToken.None));
-
-        // Assert
-        Assert.Same(innerException, ex);
     }
 
     [Fact]
@@ -98,7 +85,12 @@ public sealed class UnregisterHandlerTest
             return users;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         // Act
         return Assert.ThrowsAsync<NotFoundException>(() =>
@@ -106,7 +98,6 @@ public sealed class UnregisterHandlerTest
 
         // Nothing to assert
     }
-#endregion
 
     [Fact]
     public Task TestHandleAsync_Success()
@@ -127,7 +118,12 @@ public sealed class UnregisterHandlerTest
             return users;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         this._repository._userDevicesFunc = () =>
         {
@@ -164,20 +160,6 @@ public sealed class UnregisterHandlerTest
             return userFollowings;
         };
 
-        this._repository._userRefreshTokensFunc = () =>
-        {
-            MockUserRefreshTokenRepository userRefreshTokens = new();
-
-            userRefreshTokens._listForUserFunc = _ =>
-                new UserRefreshTokenEntity[]
-                {
-                    new UserRefreshTokenEntity { }
-                };
-
-            userRefreshTokens._deleteAction = _ => { };
-            return userRefreshTokens;
-        };
-
         this._repository._userRolesFunc = () =>
         {
             MockUserRoleRepository userRoles = new();
@@ -193,8 +175,7 @@ public sealed class UnregisterHandlerTest
         };
 
         this._repository._saveAction = () => { };
-        this._claims._emailAddressFunc = () => String.Empty;
-        this._mail._sendUnregistrationAction = _ => { };
+        this._mail._sendUnregistrationAction = () => { };
 #endregion
 
         // Act

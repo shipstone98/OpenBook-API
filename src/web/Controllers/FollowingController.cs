@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 using Shipstone.Utilities;
 
-using Shipstone.OpenBook.Api.Core;
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Core.Followings;
 using Shipstone.OpenBook.Api.Web.Models.Following;
@@ -66,9 +65,9 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to follow user {UserName} - user is already followed",
+                "{TimeStamp}: User {FollowerName} failed to follow user {FolloweeName} - user is already followed",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 request._userName
             );
 
@@ -79,9 +78,9 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to follow user {UserName} - user is current user",
+                "{TimeStamp}: User {FollowerName} failed to follow user {FolloweeName} - user is current user",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 request._userName
             );
 
@@ -92,9 +91,9 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to follow user {UserName} - user not found",
+                "{TimeStamp}: User {FollowerName} failed to follow user {FolloweeName} - user not found",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 request._userName
             );
 
@@ -105,9 +104,9 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to follow user {UserName} - user not active",
+                "{TimeStamp}: User {FollowerName} failed to follow user {FolloweeName} - user not active",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 request._userName
             );
 
@@ -115,9 +114,9 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         }
 
         this._logger.LogInformation(
-            "{TimeStamp}: User {EmailAddress} followed user {UserName}",
+            "{TimeStamp}: User {FollowerName} followed user {FolloweeName}",
             following.Followed,
-            following.FollowerEmailAddress,
+            following.FollowerName,
             following.FolloweeName
         );
 
@@ -169,9 +168,9 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to unfollow user {UserName} - user is not followed",
+                "{TimeStamp}: User {FollowerName} failed to unfollow user {FolloweeName} - user is not followed",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 userName
             );
 
@@ -182,9 +181,9 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         {
             this._logger.LogInformation(
                 ex,
-                "{TimeStamp}: User {EmailAddress} failed to unfollow user {UserName} - user not active",
+                "{TimeStamp}: User {FollowerName} failed to unfollow user {FolloweeName} - user not active",
                 DateTime.UtcNow,
-                claims.EmailAddress,
+                claims.User.UserName,
                 userName
             );
 
@@ -192,9 +191,9 @@ internal sealed class FollowingController(ILogger<FollowingController> logger)
         }
 
         this._logger.LogInformation(
-            "{TimeStamp}: User {EmailAddress} unfollowed user {UserName}",
+            "{TimeStamp}: User {FollowerName} unfollowed user {FolloweeName}",
             DateTime.UtcNow,
-            following.FollowerEmailAddress,
+            following.FollowerName,
             following.FolloweeName
         );
 

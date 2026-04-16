@@ -13,6 +13,7 @@ using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCore;
 using Shipstone.OpenBook.Api.Infrastructure.Data.Repositories;
 
 using Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Mocks;
+using Shipstone.OpenBook.Api.Test.Mocks;
 using Shipstone.Test.Mocks;
 
 namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Repositories;
@@ -33,12 +34,16 @@ public sealed class RepositoryTest
         services.AddOpenBookInfrastructureDataEntityFrameworkCore();
         MockDataSource dataSource = new();
         services.AddSingleton<IDataSource>(dataSource);
-        MockOptions<SecurityOptions> securityOptions = new();
-        services.AddSingleton<IOptions<SecurityOptions>>(securityOptions);
-        securityOptions._valueFunc = () => new();
+        MockNormalizationService normalization = new();
+        services.AddSingleton<INormalizationService>(normalization);
+        MockPaginationService pagination = new();
+        services.AddSingleton<IPaginationService>(pagination);
         MockOptionsSnapshot<PaginationOptions> paginationOptions = new();
         services.AddSingleton<IOptionsSnapshot<PaginationOptions>>(paginationOptions);
         paginationOptions._valueFunc = () => new();
+        MockOptions<SecurityOptions> securityOptions = new();
+        services.AddSingleton<IOptions<SecurityOptions>>(securityOptions);
+        securityOptions._valueFunc = () => new();
         IServiceProvider provider = new MockServiceProvider(services);
         this._dataSource = dataSource;
         this._repository = provider.GetRequiredService<IRepository>();
@@ -70,13 +75,6 @@ public sealed class RepositoryTest
     {
         // Act and assert
         Assert.NotNull(this._repository.UserFollowings);
-    }
-
-    [Fact]
-    public void TestUserRefreshTokens_Get()
-    {
-        // Act and assert
-        Assert.NotNull(this._repository.UserRefreshTokens);
     }
 
     [Fact]

@@ -54,7 +54,14 @@ public sealed class ResourceOwnerAuthorizationHandlerTest
         MockResource resource = new();
         this._logger._isEnabledFunc = _ => false;
         this._claims._isAuthenticatedFunc = () => true;
-        this._claims._idFunc = () => id;
+
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = () => id;
+            return user;
+        };
+
         resource._creatorIdFunc = () => id;
 
         // Act
@@ -78,7 +85,14 @@ public sealed class ResourceOwnerAuthorizationHandlerTest
         MockResource resource = new();
         this._logger._isEnabledFunc = _ => false;
         this._claims._isAuthenticatedFunc = () => true;
-        this._claims._idFunc = Guid.NewGuid;
+
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
+
         resource._creatorIdFunc = Guid.NewGuid;
 
         // Act

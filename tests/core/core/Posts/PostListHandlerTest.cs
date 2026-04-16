@@ -129,14 +129,12 @@ public sealed class PostListHandlerTest
         DateTime updated2 = created2.AddDays(10);
         Guid creatorId1 = Guid.NewGuid();
         Guid creatorId2 = Guid.NewGuid();
-        const String CREATOR_EMAIL_ADDRESS_1 = "john.doe@contoso.com";
-        const String CREATOR_EMAIL_ADDRESS_2 = "jane.doe@contoso.com";
         const String CREATOR_USER_NAME_1 = "johndoe2025";
         const String CREATOR_USER_NAME_2 = "janedoe2025";
         const long PARENT_ID = 12345;
         const String BODY_1 = "My first post body.";
         const String BODY_2 = "My second post body.";
-        const int TOTAL_COUNT = 31;
+        const int TOTAL_COUNT = 45;
         const int PAGE_INDEX = 17;
         const int PAGE_COUNT = 23;
         const int COUNT = 2;
@@ -183,9 +181,14 @@ public sealed class PostListHandlerTest
         };
 
         this._claims._isAuthenticatedFunc = () => true;
-        this._claims._idFunc = () => creatorId1;
-        this._claims._emailAddressFunc = () => CREATOR_EMAIL_ADDRESS_1;
-        this._claims._userNameFunc = () => CREATOR_USER_NAME_1;
+
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = () => creatorId1;
+            user._userNameFunc = () => CREATOR_USER_NAME_1;
+            return user;
+        };
 
         this._repository._usersFunc = () =>
         {
@@ -194,7 +197,6 @@ public sealed class PostListHandlerTest
             users._retrieve_GuidFunc = _ =>
                 new UserEntity
                 {
-                    EmailAddress = CREATOR_EMAIL_ADDRESS_2,
                     UserName = CREATOR_USER_NAME_2
                 };
 
@@ -213,7 +215,6 @@ public sealed class PostListHandlerTest
             ID_1,
             created1,
             updated1,
-            CREATOR_EMAIL_ADDRESS_1,
             CREATOR_USER_NAME_1,
             BODY_1,
             PARENT_ID
@@ -223,7 +224,6 @@ public sealed class PostListHandlerTest
             ID_2,
             created2,
             updated2,
-            CREATOR_EMAIL_ADDRESS_2,
             CREATOR_USER_NAME_2,
             BODY_2,
             PARENT_ID
@@ -243,14 +243,12 @@ public sealed class PostListHandlerTest
         DateTime updated2 = created2.AddDays(10);
         Guid creatorId1 = Guid.NewGuid();
         Guid creatorId2 = Guid.NewGuid();
-        const String CREATOR_EMAIL_ADDRESS_1 = "john.doe@contoso.com";
-        const String CREATOR_EMAIL_ADDRESS_2 = "jane.doe@contoso.com";
         const String CREATOR_USER_NAME_1 = "johndoe2025";
         const String CREATOR_USER_NAME_2 = "janedoe2025";
         const long PARENT_ID = 12345;
         const String BODY_1 = "My first post body.";
         const String BODY_2 = "My second post body.";
-        const int TOTAL_COUNT = 31;
+        const int TOTAL_COUNT = 45;
         const int PAGE_INDEX = 17;
         const int PAGE_COUNT = 23;
         const int COUNT = 2;
@@ -297,7 +295,13 @@ public sealed class PostListHandlerTest
         };
 
         this._claims._isAuthenticatedFunc = () => true;
-        this._claims._idFunc = Guid.NewGuid;
+
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         this._repository._usersFunc = () =>
         {
@@ -309,7 +313,6 @@ public sealed class PostListHandlerTest
                 {
                     return new UserEntity
                     {
-                        EmailAddress = CREATOR_EMAIL_ADDRESS_1,
                         UserName = CREATOR_USER_NAME_1
                     };
                 }
@@ -317,7 +320,6 @@ public sealed class PostListHandlerTest
                 return Guid.Equals(id, creatorId2)
                     ? new UserEntity
                     {
-                        EmailAddress = CREATOR_EMAIL_ADDRESS_2,
                         UserName = CREATOR_USER_NAME_2
                     }
                     : null;
@@ -338,7 +340,6 @@ public sealed class PostListHandlerTest
             ID_1,
             created1,
             updated1,
-            CREATOR_EMAIL_ADDRESS_1,
             CREATOR_USER_NAME_1,
             BODY_1,
             PARENT_ID
@@ -348,7 +349,6 @@ public sealed class PostListHandlerTest
             ID_2,
             created2,
             updated2,
-            CREATOR_EMAIL_ADDRESS_2,
             CREATOR_USER_NAME_2,
             BODY_2,
             PARENT_ID
@@ -368,14 +368,12 @@ public sealed class PostListHandlerTest
         DateTime updated2 = created2.AddDays(10);
         Guid creatorId1 = Guid.NewGuid();
         Guid creatorId2 = Guid.NewGuid();
-        const String CREATOR_EMAIL_ADDRESS_1 = "john.doe@contoso.com";
-        const String CREATOR_EMAIL_ADDRESS_2 = "jane.doe@contoso.com";
         const String CREATOR_USER_NAME_1 = "johndoe2025";
         const String CREATOR_USER_NAME_2 = "janedoe2025";
         const long PARENT_ID = 12345;
         const String BODY_1 = "My first post body.";
         const String BODY_2 = "My second post body.";
-        const int TOTAL_COUNT = 31;
+        const int TOTAL_COUNT = 45;
         const int PAGE_INDEX = 17;
         const int PAGE_COUNT = 23;
         const int COUNT = 2;
@@ -433,7 +431,6 @@ public sealed class PostListHandlerTest
                 {
                     return new UserEntity
                     {
-                        EmailAddress = CREATOR_EMAIL_ADDRESS_1,
                         UserName = CREATOR_USER_NAME_1
                     };
                 }
@@ -441,7 +438,6 @@ public sealed class PostListHandlerTest
                 return Guid.Equals(id, creatorId2)
                     ? new UserEntity
                     {
-                        EmailAddress = CREATOR_EMAIL_ADDRESS_2,
                         UserName = CREATOR_USER_NAME_2
                     }
                     : null;
@@ -462,7 +458,6 @@ public sealed class PostListHandlerTest
             ID_1,
             created1,
             updated1,
-            CREATOR_EMAIL_ADDRESS_1,
             CREATOR_USER_NAME_1,
             BODY_1,
             PARENT_ID
@@ -472,7 +467,6 @@ public sealed class PostListHandlerTest
             ID_2,
             created2,
             updated2,
-            CREATOR_EMAIL_ADDRESS_2,
             CREATOR_USER_NAME_2,
             BODY_2,
             PARENT_ID
@@ -504,7 +498,7 @@ public sealed class PostListHandlerTest
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._retrieveForNameFunc = _ => null;
+            users._retrieve_StringFunc = _ => null;
             return users;
         };
 
@@ -520,7 +514,7 @@ public sealed class PostListHandlerTest
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._retrieveForNameFunc = _ => new();
+            users._retrieve_StringFunc = _ => new();
             return users;
         };
 
@@ -567,13 +561,12 @@ public sealed class PostListHandlerTest
         DateTime created2 = created1.AddDays(10);
         DateTime updated1 = created1.AddDays(12345);
         DateTime updated2 = created2.AddDays(12345);
-        const String CREATOR_EMAIL_ADDRESS = "john.doe@contoso.com";
         const String CREATOR_USER_NAME = "johndoe2025";
         const long PARENT_ID_1 = 678;
         const long PARENT_ID_2 = 890;
         const String BODY_1 = "Hello, world!";
         const String BODY_2 = "Hello, world! This is a second post.";
-        const int TOTAL_COUNT = 12345;
+        const int TOTAL_COUNT = 61;
         const int PAGE_INDEX = 17;
         const int PAGE_COUNT = 31;
         const int COUNT = 2;
@@ -582,10 +575,9 @@ public sealed class PostListHandlerTest
         {
             MockUserRepository users = new();
 
-            users._retrieveForNameFunc = _ =>
+            users._retrieve_StringFunc = _ =>
                 new UserEntity
                 {
-                    EmailAddress = CREATOR_EMAIL_ADDRESS,
                     UserName = CREATOR_USER_NAME
                 };
 
@@ -645,7 +637,6 @@ public sealed class PostListHandlerTest
             ID_1,
             created1,
             updated1,
-            CREATOR_EMAIL_ADDRESS,
             CREATOR_USER_NAME,
             BODY_1,
             PARENT_ID_1
@@ -655,7 +646,6 @@ public sealed class PostListHandlerTest
             ID_2,
             created2,
             updated2,
-            CREATOR_EMAIL_ADDRESS,
             CREATOR_USER_NAME,
             BODY_2,
             PARENT_ID_2

@@ -92,13 +92,7 @@ public sealed class UserListHandlerTest
         DateTime systemAdministratorUpdated =
             systemAdministratorCreated.AddDays(10);
 
-        const String SYSTEM_ADMINISTRATOR_EMAIL_ADDRESS =
-            "jane.doe@contoso.com";
-
         const String SYSTEM_ADMINISTRATOR_USER_NAME = "janedoe2025";
-        const String SYSTEM_ADMINISTRATOR_FORENAME = "Jane";
-        const String SYSTEM_ADMINISTRATOR_SURNAME = "Doe";
-        DateOnly systemAdministratorBorn = new(1960, 1, 2);
 
         DateTime systemAdministratorConsented =
             systemAdministratorCreated.AddDays(1);
@@ -106,36 +100,24 @@ public sealed class UserListHandlerTest
         Guid userId = Guid.NewGuid();
         DateTime userCreated = DateTime.UtcNow;
         DateTime userUpdated = userCreated.AddDays(10);
-        const String USER_EMAIL_ADDRESS = "john.doe@contoso.com";
         const String USER_USER_NAME = "johndoe2025";
-        const String USER_FORENAME = "John";
-        const String USER_SURNAME = "Doe";
-        DateOnly userBorn = new(1970, 3, 4);
         DateTime userConsented = userCreated.AddDays(1);
 
         IEnumerable<UserEntity> userCollection = new UserEntity[]
         {
             new UserEntity
             {
-                Born = systemAdministratorBorn,
                 Consented = systemAdministratorConsented,
                 Created = systemAdministratorCreated,
-                EmailAddress = SYSTEM_ADMINISTRATOR_EMAIL_ADDRESS,
-                Forename = SYSTEM_ADMINISTRATOR_FORENAME,
                 Id = systemAdministratorId,
-                Surname = SYSTEM_ADMINISTRATOR_SURNAME,
                 Updated = systemAdministratorUpdated,
                 UserName = SYSTEM_ADMINISTRATOR_USER_NAME
             },
             new UserEntity
             {
-                Born = userBorn,
                 Consented = userConsented,
                 Created = userCreated,
-                EmailAddress = USER_EMAIL_ADDRESS,
-                Forename = USER_FORENAME,
                 Id = userId,
-                Surname = USER_SURNAME,
                 Updated = userUpdated,
                 UserName = USER_USER_NAME
             }
@@ -253,11 +235,7 @@ public sealed class UserListHandlerTest
             systemAdministratorId,
             systemAdministratorCreated,
             systemAdministratorUpdated,
-            SYSTEM_ADMINISTRATOR_EMAIL_ADDRESS,
             SYSTEM_ADMINISTRATOR_USER_NAME,
-            SYSTEM_ADMINISTRATOR_FORENAME,
-            SYSTEM_ADMINISTRATOR_SURNAME,
-            systemAdministratorBorn,
             systemAdministratorConsented,
             systemAdministratorRoles
         );
@@ -266,11 +244,7 @@ public sealed class UserListHandlerTest
             userId,
             userCreated,
             userUpdated,
-            USER_EMAIL_ADDRESS,
             USER_USER_NAME,
-            USER_FORENAME,
-            USER_SURNAME,
-            userBorn,
             userConsented,
             userRoles
         );

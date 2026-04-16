@@ -38,12 +38,6 @@ public interface IDataSource
     IDataSet<UserFollowingEntity> UserFollowings { get; }
 
     /// <summary>
-    /// Gets the user refresh token data set.
-    /// </summary>
-    /// <value>An <see cref="IDataSet{TEntity}" /> containing the user refresh tokens.</value>
-    IDataSet<UserRefreshTokenEntity> UserRefreshTokens { get; }
-
-    /// <summary>
     /// Gets the user-role association data set.
     /// </summary>
     /// <value>An <see cref="IDataSet{TEntity}" /> containing the user-role associations.</value>

@@ -54,16 +54,24 @@ public sealed class AdministratorAuthorizationHandlerTest
         String creatorRole
     )
     {
+#region Arrange
         // Arrange
         ClaimsPrincipal user = new();
         MockResource resource = new();
         this._claims._isAuthenticatedFunc = () => true;
 
-        this._claims._rolesFunc = () =>
+        this._claims._userFunc = () =>
         {
-            MockReadOnlySet<String> roles = new();
-            roles._containsFunc = i => String.Equals(role, i);
-            return roles;
+            MockUser user = new();
+
+            user._rolesFunc = () =>
+            {
+                MockReadOnlySet<String> roles = new();
+                roles._containsFunc = i => String.Equals(role, i);
+                return roles;
+            };
+
+            return user;
         };
 
         resource._creatorRolesFunc = () =>
@@ -74,6 +82,7 @@ public sealed class AdministratorAuthorizationHandlerTest
         };
 
         this._logger._isEnabledFunc = _ => false;
+#endregion
 
         // Act
         AuthorizationResult result =
@@ -100,16 +109,24 @@ public sealed class AdministratorAuthorizationHandlerTest
         String creatorRole
     )
     {
+#region Arrange
         // Arrange
         ClaimsPrincipal user = new();
         MockResource resource = new();
         this._claims._isAuthenticatedFunc = () => true;
 
-        this._claims._rolesFunc = () =>
+        this._claims._userFunc = () =>
         {
-            MockReadOnlySet<String> roles = new();
-            roles._containsFunc = i => String.Equals(role, i);
-            return roles;
+            MockUser user = new();
+
+            user._rolesFunc = () =>
+            {
+                MockReadOnlySet<String> roles = new();
+                roles._containsFunc = i => String.Equals(role, i);
+                return roles;
+            };
+
+            return user;
         };
 
         resource._creatorRolesFunc = () =>
@@ -120,6 +137,7 @@ public sealed class AdministratorAuthorizationHandlerTest
         };
 
         this._logger._isEnabledFunc = _ => false;
+#endregion
 
         // Act
         AuthorizationResult result =

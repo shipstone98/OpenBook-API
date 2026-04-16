@@ -20,12 +20,6 @@ public interface IPost
     DateTime Created { get; }
 
     /// <summary>
-    /// Gets the email address of the user that created the <see cref="IPost" />.
-    /// </summary>
-    /// <value>The email address of the user that created the <see cref="IPost" />.</value>
-    String CreatorEmailAddress { get; }
-
-    /// <summary>
     /// Gets the name of the user that created the <see cref="IPost" />.
     /// </summary>
     /// <value>The name of the user that created the <see cref="IPost" />.</value>

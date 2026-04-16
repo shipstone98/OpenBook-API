@@ -83,26 +83,6 @@ internal sealed class UnregisterHandler : IUnregisterHandler
         }
     }
 
-    private async Task DeleteUserRefreshTokensAsync(
-        Guid userId,
-        CancellationToken cancellationToken
-    )
-    {
-        IEnumerable<UserRefreshTokenEntity> userRefreshTokens =
-            await this._repository.UserRefreshTokens.ListForUserAsync(
-                userId,
-                cancellationToken
-            );
-
-        foreach (UserRefreshTokenEntity userRefreshToken in userRefreshTokens)
-        {
-            await this._repository.UserRefreshTokens.DeleteAsync(
-                userRefreshToken,
-                cancellationToken
-            );
-        }
-    }
-
     private async Task DeleteUserRolesAsync(
         Guid userId,
         CancellationToken cancellationToken
@@ -131,29 +111,16 @@ internal sealed class UnregisterHandler : IUnregisterHandler
                 cancellationToken
             );
 
-        user.Born = DateOnly.MinValue;
-        user.EmailAddress = String.Empty;
-        user.EmailAddressNormalized = null;
-        user.Forename = String.Empty;
-        user.IsActive = false;
-        user.Otp = null;
-        user.OtpExpires = null;
-        user.PasswordHash = null;
-        user.Surname = String.Empty;
+        user.IdentityId = Guid.Empty;
         user.Updated = DateTime.UtcNow;
         user.UserName = String.Empty;
         user.UserNameNormalized = null;
         Guid userId = user.Id;
         await this.DeleteUserDevicesAsync(userId, cancellationToken);
         await this.DeleteUserFollowingsAsync(userId, cancellationToken);
-        await this.DeleteUserRefreshTokensAsync(userId, cancellationToken);
         await this.DeleteUserRolesAsync(userId, cancellationToken);
         await this._repository.Users.UpdateAsync(user, cancellationToken);
         await this._repository.SaveAsync(cancellationToken);
-
-        await this._mail.SendUnregistrationAsync(
-            this._claims.EmailAddress,
-            cancellationToken
-        );
+        await this._mail.SendUnregistrationAsync(cancellationToken);
     }
 }

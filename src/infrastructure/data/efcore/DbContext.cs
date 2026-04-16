@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,6 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
     private readonly DbSet<RoleEntity> _roles;
     private readonly DbSet<UserDeviceEntity> _userDevices;
     private readonly DbSet<UserFollowingEntity> _userFollowings;
-    private readonly DbSet<UserRefreshTokenEntity> _userRefreshTokens;
     private readonly DbSet<UserRoleEntity> _userRoles;
     private readonly DbSet<UserEntity> _users;
 
@@ -31,10 +31,6 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
     public DbSet<RoleEntity> Roles => this._roles;
     public DbSet<UserDeviceEntity> UserDevices => this._userDevices;
     public DbSet<UserFollowingEntity> UserFollowings => this._userFollowings;
-
-    public DbSet<UserRefreshTokenEntity> UserRefreshTokens =>
-        this._userRefreshTokens;
-
     public DbSet<UserRoleEntity> UserRoles => this._userRoles;
     public DbSet<UserEntity> Users => this._users;
 
@@ -49,9 +45,6 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
 
     IDataSet<UserFollowingEntity> IDataSource.UserFollowings =>
         new DataSet<UserFollowingEntity>(this._userFollowings);
-
-    IDataSet<UserRefreshTokenEntity> IDataSource.UserRefreshTokens =>
-        new DataSet<UserRefreshTokenEntity>(this._userRefreshTokens);
 
     IDataSet<UserRoleEntity> IDataSource.UserRoles =>
         new DataSet<UserRoleEntity>(this._userRoles);
@@ -70,7 +63,6 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
         this._roles = this.Set<RoleEntity>();
         this._userDevices = this.Set<UserDeviceEntity>();
         this._userFollowings = this.Set<UserFollowingEntity>();
-        this._userRefreshTokens = this.Set<UserRefreshTokenEntity>();
         this._userRoles = this.Set<UserRoleEntity>();
         this._users = this.Set<UserEntity>();
     }
@@ -101,6 +93,10 @@ public abstract class DbContext<TContext> : DbContext, IDataSource
             .ApplyConfiguration(userFollowingConfiguration)
             .ApplyConfiguration(userRoleConfiguration);
     }
+
+    /// <inheritdoc />
+    public sealed override DbSet<TEntity> Set<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties | DynamicallyAccessedMemberTypes.Interfaces)] TEntity>() =>
+        base.Set<TEntity>();
 
     Task IDataSource.SaveAsync(CancellationToken cancellationToken) =>
         this.SaveChangesAsync(cancellationToken);

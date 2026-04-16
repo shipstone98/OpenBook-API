@@ -36,23 +36,6 @@ internal sealed class UserRepository : IUserRepository
     }
 
     private async Task<UserEntity?> RetrieveAsync(
-        String emailAddress,
-        CancellationToken cancellationToken
-    )
-    {
-        String emailAddressNormalized =
-            this._normalization.Normalize(emailAddress);
-
-        IEnumerable<UserEntity> users =
-            await this._dataSource.Users
-                .Where(u =>
-                    emailAddressNormalized.Equals(u.EmailAddressNormalized))
-                .ToArrayAsync(cancellationToken);
-
-        return users.FirstOrDefault(u => emailAddress.Equals(u.EmailAddress));
-    }
-
-    private async Task<UserEntity?> RetrieveForNameAsync(
         String userName,
         CancellationToken cancellationToken
     )
@@ -93,15 +76,6 @@ internal sealed class UserRepository : IUserRepository
     }
 
     Task<UserEntity?> IUserRepository.RetrieveAsync(
-        String emailAddress,
-        CancellationToken cancellationToken
-    )
-    {
-        ArgumentNullException.ThrowIfNull(emailAddress);
-        return this.RetrieveAsync(emailAddress, cancellationToken);
-    }
-
-    Task<UserEntity?> IUserRepository.RetrieveAsync(
         Guid id,
         CancellationToken cancellationToken
     )
@@ -120,13 +94,32 @@ internal sealed class UserRepository : IUserRepository
         );
     }
 
-    Task<UserEntity?> IUserRepository.RetrieveForNameAsync(
+    Task<UserEntity?> IUserRepository.RetrieveAsync(
         String userName,
         CancellationToken cancellationToken
     )
     {
         ArgumentNullException.ThrowIfNull(userName);
-        return this.RetrieveForNameAsync(userName, cancellationToken);
+        return this.RetrieveAsync(userName, cancellationToken);
+    }
+
+    Task<UserEntity?> IUserRepository.RetrieveForIdentityIdAsync(
+        Guid identityId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (Guid.Equals(identityId, Guid.Empty))
+        {
+            throw new ArgumentException(
+                $"{nameof (identityId)} is equal to Guid.Empty.",
+                nameof (identityId)
+            );
+        }
+
+        return this._dataSource.Users.FirstOrDefaultAsync(
+            u => Guid.Equals(identityId, u.IdentityId),
+            cancellationToken
+        );
     }
 
     Task IUserRepository.UpdateAsync(

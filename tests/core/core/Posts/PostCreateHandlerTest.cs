@@ -67,7 +67,12 @@ public sealed class PostCreateHandlerTest
     public Task TestHandleAsync_Valid_Failure_ParentIdNotNull()
     {
         // Arrange
-        this._claims._idFunc = Guid.NewGuid;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         this._repository._postsFunc = () =>
         {
@@ -94,7 +99,13 @@ public sealed class PostCreateHandlerTest
     {
         // Arrange
         Exception innerException = new();
-        this._claims._idFunc = Guid.NewGuid;
+
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         this._repository._postsFunc = () =>
         {
@@ -123,13 +134,19 @@ public sealed class PostCreateHandlerTest
 #region Arrange
         // Arrange
         const long ID = 12345;
-        const String CREATOR_EMAIL_ADDRESS = "john.doe@lampada.co";
         const String CREATOR_USER_NAME = "johndoe2025";
         const long PARENT_ID = 67890;
         const String BODY = "My post body.";
         Guid followee1Id = Guid.NewGuid();
         Guid followee2Id = Guid.NewGuid();
-        this._claims._idFunc = Guid.NewGuid;
+
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            user._userNameFunc = () => CREATOR_USER_NAME;
+            return user;
+        };
 
         this._repository._postsFunc = () =>
         {
@@ -139,8 +156,6 @@ public sealed class PostCreateHandlerTest
         };
 
         this._repository._saveAction = () => { };
-        this._claims._emailAddressFunc = () => CREATOR_EMAIL_ADDRESS;
-        this._claims._userNameFunc = () => CREATOR_USER_NAME;
 
         this._repository._userFollowingsFunc = () =>
         {
@@ -216,7 +231,6 @@ public sealed class PostCreateHandlerTest
             ID,
             post.Created,
             post.Created,
-            CREATOR_EMAIL_ADDRESS,
             CREATOR_USER_NAME,
             BODY,
             PARENT_ID

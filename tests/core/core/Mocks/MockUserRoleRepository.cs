@@ -15,8 +15,8 @@ internal sealed class MockUserRoleRepository : IUserRoleRepository
 
     internal MockUserRoleRepository()
     {
-        this._createAction = _ => { };
-        this._deleteAction = _ => { };
+        this._createAction = _ => throw new NotImplementedException();
+        this._deleteAction = _ => throw new NotImplementedException();
         this._listForUserFunc = _ => throw new NotImplementedException();
     }
 

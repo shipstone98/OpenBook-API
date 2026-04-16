@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
+using Shipstone.Utilities;
+
 using Shipstone.OpenBook.Api.Core.Accounts;
 using Shipstone.OpenBook.Api.Web;
 
@@ -28,20 +30,6 @@ public sealed class ClaimsServiceTest
     }
 
     [Fact]
-    public void TestEmailAddress_Get()
-    {
-        // Act and assert
-        Assert.Throws<UnauthorizedException>(() => this._claims.EmailAddress);
-    }
-
-    [Fact]
-    public void TestId_Get()
-    {
-        // Act and assert
-        Assert.Throws<UnauthorizedException>(() => this._claims.Id);
-    }
-
-    [Fact]
     public void TestIsAuthenticated_Get()
     {
         // Act and assert
@@ -49,16 +37,9 @@ public sealed class ClaimsServiceTest
     }
 
     [Fact]
-    public void TestRoles_Get()
+    public void TestUser_Get()
     {
         // Act and assert
-        Assert.Throws<UnauthorizedException>(() => this._claims.Roles);
-    }
-
-    [Fact]
-    public void TestUserName_Get()
-    {
-        // Act and assert
-        Assert.Throws<UnauthorizedException>(() => this._claims.UserName);
+        Assert.Throws<UnauthorizedException>(() => this._claims.User);
     }
 }

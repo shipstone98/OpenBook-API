@@ -113,7 +113,6 @@ public sealed class PostRetrieveHandlerTest
         DateTime created = DateTime.UnixEpoch.ToUniversalTime();
         DateTime updated = created.AddDays(12345);
         Guid creatorId = Guid.NewGuid();
-        const String CREATOR_EMAIL_ADDRESS = "john.doe@contoso.com";
         const String CREATOR_USER_NAME = "johndoe2025";
         const long PARENT_ID = 67890;
         const String BODY = "Hello, world!";
@@ -137,9 +136,14 @@ public sealed class PostRetrieveHandlerTest
         };
 
         this._claims._isAuthenticatedFunc = () => true;
-        this._claims._idFunc = () => creatorId;
-        this._claims._emailAddressFunc = () => CREATOR_EMAIL_ADDRESS;
-        this._claims._userNameFunc = () => CREATOR_USER_NAME;
+
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = () => creatorId;
+            user._userNameFunc = () => CREATOR_USER_NAME;
+            return user;
+        };
 #endregion
 
         // Act
@@ -151,7 +155,6 @@ public sealed class PostRetrieveHandlerTest
             ID,
             created,
             updated,
-            CREATOR_EMAIL_ADDRESS,
             CREATOR_USER_NAME,
             BODY,
             PARENT_ID
@@ -166,7 +169,6 @@ public sealed class PostRetrieveHandlerTest
         const long ID = 12345;
         DateTime created = DateTime.UnixEpoch.ToUniversalTime();
         DateTime updated = created.AddDays(12345);
-        const String CREATOR_EMAIL_ADDRESS = "john.doe@contoso.com";
         const String CREATOR_USER_NAME = "johndoe2025";
         const long PARENT_ID = 67890;
         const String BODY = "Hello, world!";
@@ -189,7 +191,13 @@ public sealed class PostRetrieveHandlerTest
         };
 
         this._claims._isAuthenticatedFunc = () => true;
-        this._claims._idFunc = Guid.NewGuid;
+
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         this._repository._usersFunc = () =>
         {
@@ -198,7 +206,6 @@ public sealed class PostRetrieveHandlerTest
             users._retrieve_GuidFunc = _ =>
                 new UserEntity
                 {
-                    EmailAddress = CREATOR_EMAIL_ADDRESS,
                     UserName = CREATOR_USER_NAME
                 };
 
@@ -215,7 +222,6 @@ public sealed class PostRetrieveHandlerTest
             ID,
             created,
             updated,
-            CREATOR_EMAIL_ADDRESS,
             CREATOR_USER_NAME,
             BODY,
             PARENT_ID
@@ -230,7 +236,6 @@ public sealed class PostRetrieveHandlerTest
         const long ID = 12345;
         DateTime created = DateTime.UnixEpoch.ToUniversalTime();
         DateTime updated = created.AddDays(12345);
-        const String CREATOR_EMAIL_ADDRESS = "john.doe@contoso.com";
         const String CREATOR_USER_NAME = "johndoe2025";
         const long PARENT_ID = 67890;
         const String BODY = "Hello, world!";
@@ -262,7 +267,6 @@ public sealed class PostRetrieveHandlerTest
             users._retrieve_GuidFunc = _ =>
                 new UserEntity
                 {
-                    EmailAddress = CREATOR_EMAIL_ADDRESS,
                     UserName = CREATOR_USER_NAME
                 };
 
@@ -279,7 +283,6 @@ public sealed class PostRetrieveHandlerTest
             ID,
             created,
             updated,
-            CREATOR_EMAIL_ADDRESS,
             CREATOR_USER_NAME,
             BODY,
             PARENT_ID

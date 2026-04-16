@@ -34,12 +34,6 @@ public interface IRepository
     IUserFollowingRepository UserFollowings { get; }
 
     /// <summary>
-    /// Gets the user refresh token repository.
-    /// </summary>
-    /// <value>The user refresh token repository.</value>
-    IUserRefreshTokenRepository UserRefreshTokens { get; }
-
-    /// <summary>
     /// Gets the user-role association repository.
     /// </summary>
     /// <value>The user-role association repository.</value>

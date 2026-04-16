@@ -21,7 +21,6 @@ namespace Shipstone.OpenBook.Api.Infrastructure.Data.EntityFrameworkCoreTest.Rep
 public sealed class PostRepositoryTest
 {
     private readonly MockDataSource _dataSource;
-    private readonly PaginationOptions _options;
     private readonly IPostRepository _repository;
 
     public PostRepositoryTest()
@@ -39,9 +38,10 @@ public sealed class PostRepositoryTest
         services.AddSingleton<IOptionsSnapshot<PaginationOptions>>(options);
         PaginationOptions optionsValue = new();
         options._valueFunc = () => optionsValue;
+        MockPaginationService pagination = new();
+        services.AddSingleton<IPaginationService>(pagination);
         IServiceProvider provider = new MockServiceProvider(services);
         this._dataSource = dataSource;
-        this._options = optionsValue;
         this._repository = provider.GetRequiredService<IPostRepository>();
     }
 

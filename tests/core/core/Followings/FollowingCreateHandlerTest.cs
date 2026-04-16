@@ -71,6 +71,7 @@ public sealed class FollowingCreateHandlerTest
     [Fact]
     public async Task TestHandleAsync_Valid_Failure_UserAlreadyFollowed()
     {
+#region Arrange
         // Arrange
         Exception innerException = new();
 
@@ -78,7 +79,7 @@ public sealed class FollowingCreateHandlerTest
         {
             MockUserRepository users = new();
 
-            users._retrieveForNameFunc = _ =>
+            users._retrieve_StringFunc = _ =>
                 new UserEntity
                 {
                     IsActive = true
@@ -87,7 +88,12 @@ public sealed class FollowingCreateHandlerTest
             return users;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            return user;
+        };
 
         this._repository._userFollowingsFunc = () =>
         {
@@ -95,6 +101,7 @@ public sealed class FollowingCreateHandlerTest
             userFollowings._createAction = _ => throw innerException;
             return userFollowings;
         };
+#endregion
 
         // Act
         Exception ex =
@@ -119,7 +126,7 @@ public sealed class FollowingCreateHandlerTest
         {
             MockUserRepository users = new();
 
-            users._retrieveForNameFunc = _ =>
+            users._retrieve_StringFunc = _ =>
                 new UserEntity
                 {
                     Id = id,
@@ -129,7 +136,12 @@ public sealed class FollowingCreateHandlerTest
             return users;
         };
 
-        this._claims._idFunc = () => id;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = () => id;
+            return user;
+        };
 
         // Act and assert
         return Assert.ThrowsAsync<ForbiddenException>(() =>
@@ -147,7 +159,7 @@ public sealed class FollowingCreateHandlerTest
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._retrieveForNameFunc = _ => new();
+            users._retrieve_StringFunc = _ => new();
             return users;
         };
 
@@ -167,7 +179,7 @@ public sealed class FollowingCreateHandlerTest
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
-            users._retrieveForNameFunc = _ => null;
+            users._retrieve_StringFunc = _ => null;
             return users;
         };
 
@@ -188,14 +200,14 @@ public sealed class FollowingCreateHandlerTest
     {
 #region Arrange
         // Arrange
-        const String FOLLOWER_EMAIL_ADDRESS = "john.doe@contoso.com";
+        const String FOLLOWER_NAME = "johndoe2025";
         const String FOLLOWEE_NAME = "janedoe2025";
 
         this._repository._usersFunc = () =>
         {
             MockUserRepository users = new();
 
-            users._retrieveForNameFunc = un =>
+            users._retrieve_StringFunc = un =>
                 new UserEntity
                 {
                     IsActive = true,
@@ -205,7 +217,13 @@ public sealed class FollowingCreateHandlerTest
             return users;
         };
 
-        this._claims._idFunc = Guid.NewGuid;
+        this._claims._userFunc = () =>
+        {
+            MockUser user = new();
+            user._idFunc = Guid.NewGuid;
+            user._userNameFunc = () => FOLLOWER_NAME;
+            return user;
+        };
 
         this._repository._userFollowingsFunc = () =>
         {
@@ -230,7 +248,6 @@ public sealed class FollowingCreateHandlerTest
         };
 
         this._notification._sendUserFollowedAction = (_, _) => { };
-        this._claims._emailAddressFunc = () => FOLLOWER_EMAIL_ADDRESS;
         DateTime notBefore = DateTime.UtcNow;
 #endregion
 
@@ -246,10 +263,10 @@ public sealed class FollowingCreateHandlerTest
         Assert.False(DateTime.Compare(notBefore, following.Followed) > 0);
 
         following.AssertEqual(
-            following.FollowerEmailAddress,
-            following.FolloweeName,
+            FOLLOWER_NAME,
+            FOLLOWEE_NAME,
             following.Followed,
-            following.IsSubscribed
+            isSubscribed
         );
     }
 #endregion

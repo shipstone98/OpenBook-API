@@ -221,7 +221,7 @@ BEGIN
     IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20250828110934_RoleSeed') THEN
 
     INSERT INTO `Roles` (`Id`, `Created`, `Updated`, `Name`, `NameNormalized`)
-    VALUES (2, TIMESTAMP '2026-04-14 10:19:12', TIMESTAMP '2026-04-14 10:19:12', 'Administrator', 'ADMINISTRATOR');
+    VALUES (2, TIMESTAMP '2026-04-15 15:28:50', TIMESTAMP '2026-04-15 15:28:50', 'Administrator', 'ADMINISTRATOR');
 
     END IF;
 END //
@@ -236,7 +236,7 @@ BEGIN
     IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20250828110934_RoleSeed') THEN
 
     INSERT INTO `Roles` (`Id`, `Created`, `Updated`, `Name`, `NameNormalized`)
-    VALUES (3, TIMESTAMP '2026-04-14 10:19:12', TIMESTAMP '2026-04-14 10:19:12', 'System Administrator', 'SYSTEM ADMINISTRATOR');
+    VALUES (3, TIMESTAMP '2026-04-15 15:28:50', TIMESTAMP '2026-04-15 15:28:50', 'System Administrator', 'SYSTEM ADMINISTRATOR');
 
     END IF;
 END //
@@ -251,7 +251,7 @@ BEGIN
     IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20250828110934_RoleSeed') THEN
 
     INSERT INTO `Roles` (`Id`, `Created`, `Updated`, `Name`, `NameNormalized`)
-    VALUES (1, TIMESTAMP '2026-04-14 10:19:12', TIMESTAMP '2026-04-14 10:19:12', 'User', 'USER');
+    VALUES (1, TIMESTAMP '2026-04-15 15:28:50', TIMESTAMP '2026-04-15 15:28:50', 'User', 'USER');
 
     END IF;
 END //
@@ -522,6 +522,175 @@ BEGIN
 
     INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
     VALUES ('20251204101910_NormalizedNull', '9.0.14');
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    DROP TABLE `UserRefreshTokens`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP INDEX `IX_Users_EmailAddressNormalized`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP COLUMN `Born`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP COLUMN `EmailAddress`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP COLUMN `EmailAddressNormalized`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP COLUMN `Forename`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP COLUMN `Otp`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP COLUMN `OtpExpires`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP COLUMN `PasswordHash`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` DROP COLUMN `Surname`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    ALTER TABLE `Users` ADD `IdentityId` char(36) COLLATE ascii_general_ci NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20260415152800_Authenticator') THEN
+
+    INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+    VALUES ('20260415152800_Authenticator', '9.0.14');
 
     END IF;
 END //

@@ -32,19 +32,6 @@ public interface IUserRepository
     Task<IReadOnlyPaginatedList<UserEntity>> ListAsync(CancellationToken cancellationToken);
 
     /// <summary>
-    /// Asynchronously retrieves a user with the specified email address.
-    /// </summary>
-    /// <param name="emailAddress">The email address of the user to retrieve.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous retrieve operation. The value of <see cref="Task{TResult}.Result" /> contains the retrieved user, if found; otherwise, <c>null</c>.</returns>
-    /// <exception cref="ArgumentNullException"><c><paramref name="emailAddress" /></c> is <c>null</c>.</exception>
-    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
-    Task<UserEntity?> RetrieveAsync(
-        String emailAddress,
-        CancellationToken cancellationToken
-    );
-
-    /// <summary>
     /// Asynchronously retrieves a user with the specified ID.
     /// </summary>
     /// <param name="id">A <see cref="Guid" /> containing the ID of the user to retrieve.</param>
@@ -65,8 +52,21 @@ public interface IUserRepository
     /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous retrieve operation. The value of <see cref="Task{TResult}.Result" /> contains the retrieved user, if found; otherwise, <c>null</c>.</returns>
     /// <exception cref="ArgumentNullException"><c><paramref name="userName" /></c> is <c>null</c>.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
-    Task<UserEntity?> RetrieveForNameAsync(
+    Task<UserEntity?> RetrieveAsync(
         String userName,
+        CancellationToken cancellationToken
+    );
+
+    /// <summary>
+    /// Asynchronously retrieves a user with the specified identity ID.
+    /// </summary>
+    /// <param name="identityId">A <see cref="Guid" /> containing the identity ID of the user to retrieve.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A <see cref="Task{TResult}" /> that represents the asynchronous retrieve operation. The value of <see cref="Task{TResult}.Result" /> contains the retrieved user, if found; otherwise, <c>null</c>.</returns>
+    /// <exception cref="ArgumentException"><c><paramref name="identityId" /></c> is equal to <see cref="Guid.Empty" />.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+    Task<UserEntity?> RetrieveForIdentityIdAsync(
+        Guid identityId,
         CancellationToken cancellationToken
     );
 
