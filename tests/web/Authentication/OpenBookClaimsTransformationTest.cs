@@ -88,8 +88,7 @@ public sealed class OpenBookClaimsTransformationTest
             await this._transformation.TransformAsync(principal);
 
         // Assert
-
-        Assert.Contains(
+        Assert.Single(
             result.Claims,
             c =>
                 c.Type.Equals(ClaimTypes.NameIdentifier)
@@ -107,8 +106,12 @@ public sealed class OpenBookClaimsTransformationTest
                 .NewGuid()
                 .ToString();
 
-        Claim claim = new(ClaimTypes.NameIdentifier, identityIdString);
-        IEnumerable<Claim> principalClaims = new Claim[1] { claim };
+        Claim nameIdClaim = new(ClaimTypes.NameIdentifier, identityIdString);
+        Claim roleClaim = new(ClaimTypes.Role, Roles.User);
+
+        IEnumerable<Claim> principalClaims =
+            new Claim[2] { nameIdClaim, roleClaim };
+
         IIdentity identity = new ClaimsIdentity(principalClaims);
         ClaimsPrincipal principal = new(identity);
 
@@ -149,11 +152,11 @@ public sealed class OpenBookClaimsTransformationTest
                 .Where(c => c.Type.Equals(ClaimTypes.Role))
                 .Select(c => c.Value);
 
-        Assert.Contains(roles, Roles.Administrator.Equals);
-        Assert.Contains(roles, Roles.SystemAdministrator.Equals);
-        Assert.Contains(roles, Roles.User.Equals);
+        Assert.Single(roles, Roles.Administrator.Equals);
+        Assert.Single(roles, Roles.SystemAdministrator.Equals);
+        Assert.Single(roles, Roles.User.Equals);
 
-        Assert.Contains(
+        Assert.Single(
             result.Claims,
             c =>
                 c.Type.Equals(ClaimTypes.NameIdentifier)

@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 
+using Shipstone.Utilities.Linq;
+
 using Shipstone.OpenBook.Api.Core.Users;
 using Shipstone.OpenBook.Api.Web.Services;
 
@@ -35,7 +37,6 @@ internal sealed class OpenBookClaimsTransformation : IClaimsTransformation
         return principal;
     }
 
-#warning Change to handle only adding if not contained
     private async Task<IEnumerable<Claim>> TransformClaimsAsync(ClaimsPrincipal principal)
     {
         Claim? nameIdClaim =
@@ -64,7 +65,15 @@ internal sealed class OpenBookClaimsTransformation : IClaimsTransformation
         }
 
         this._claims._user = user;
-        return user.Roles.Select(r => new Claim(ClaimTypes.Role, r));
+        SortedSet<String> roles = user.Roles.ToSortedSet();
+
+        IEnumerable<String> claimedRoles =
+            principal.Claims
+                .Where(c => c.Type.Equals(ClaimTypes.Role))
+                .Select(c => c.Value);
+
+        roles.ExceptWith(claimedRoles);
+        return roles.Select(r => new Claim(ClaimTypes.Role, r));
     }
 
     Task<ClaimsPrincipal> IClaimsTransformation.TransformAsync(ClaimsPrincipal principal)
