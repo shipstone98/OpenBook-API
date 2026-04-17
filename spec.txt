@@ -1,0 +1,5 @@
+Originally, my Product API generated its own access and refresh tokens, and looked after users and passwords.
+I moved this functionality into an Authenticator API.
+Authenticator API generates access and refresh tokens for Product API
+However, currently Product API uses access token from Authenticator API to retrieve user from DB to get Product API-specific claims
+The Authenticator API is centralised identity like Microsoft or Google to issue access tokens for all my different APIs
