@@ -114,7 +114,7 @@ public sealed class RegisterHandlerTest
             return userRoles;
         };
 
-        this._repository._saveAction = () => { };
+        this._repository._saveAction = () => throw innerException;
 
         // Act
         Exception ex =
